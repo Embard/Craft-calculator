@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bezzumie Craft | Зона</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Oswald:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="noise"></div>
+  <div class="scanlines"></div>
+
+  <div class="app-shell">
+    <header class="hero panel">
+      <div class="hero-copy">
+        <div class="hero-topline">
+          <span class="top-badge warning">☢ ЗОНА</span>
+          <span class="top-badge">CRAFT PROTOCOL</span>
+        </div>
+        <h1>Bezzumie Craft</h1>
+        <p>
+          Калькулятор крафта в атмосфере Зоны: выбери категорию, добавь предметы в список и получи сводку по нужным ресурсам.
+        </p>
+        <div class="hero-meta">
+          <div class="meta-chip">Постапокалиптический стиль</div>
+          <div class="meta-chip">Только нужные ресурсы</div>
+          <div class="meta-chip">Готов к изображениям предметов</div>
+        </div>
+      </div>
+
+      <div class="hero-side panel-inset">
+        <div class="hero-side-label">Активный предмет</div>
+        <div class="selected-preview" id="selectedPreview">
+          <div class="selected-thumb item-thumb large placeholder">?</div>
+          <div>
+            <div class="selected-title">Выбери предмет</div>
+            <div class="selected-subtitle">Категория и рецепт появятся здесь</div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="layout">
+      <section class="panel controls-panel">
+        <div class="panel-head">
+          <div>
+            <div class="panel-kicker">Добавление</div>
+            <h2>Новый предмет</h2>
+          </div>
+          <div class="status-pill" id="itemsCountBadge">0 позиций</div>
+        </div>
+
+        <div class="field-stack">
+          <label class="field">
+            <span>Категория</span>
+            <select id="categorySelect"></select>
+          </label>
+
+          <label class="field">
+            <span>Предмет</span>
+            <select id="itemSelect"></select>
+          </label>
+
+          <label class="field qty-field">
+            <span>Количество</span>
+            <input id="qtyInput" type="number" min="1" step="1" value="1" />
+          </label>
+
+          <button id="addBtn" class="primary-btn" type="button">Добавить в список</button>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <div class="panel-subtitle">Категории</div>
+        <div class="category-pills" id="categoryPills"></div>
+      </section>
+
+      <section class="panel queue-panel">
+        <div class="panel-head">
+          <div>
+            <div class="panel-kicker">Список</div>
+            <h2>Что крафтим</h2>
+          </div>
+          <div class="status-pill muted">Набор предметов</div>
+        </div>
+
+        <div id="queueList" class="queue-list empty-state-box">
+          <div class="empty-state">
+            <div class="empty-icon">☢</div>
+            <div class="empty-title">Список пока пуст</div>
+            <div class="empty-text">Добавь предмет слева — и калькулятор сразу соберёт итоговые ресурсы.</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel summary-panel">
+        <div class="panel-head">
+          <div>
+            <div class="panel-kicker">Сводка</div>
+            <h2>Нужно для крафта</h2>
+          </div>
+          <div class="status-pill accent" id="resourcesCountBadge">0 ресурсов</div>
+        </div>
+
+        <div class="summary-head">
+          <div>Ресурс</div>
+          <div>Количество</div>
+        </div>
+        <div id="summaryList" class="summary-list empty-state-box">
+          <div class="empty-state compact">
+            <div class="empty-title">Пока нечего считать</div>
+            <div class="empty-text">Выбери предмет и добавь его в список.</div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
