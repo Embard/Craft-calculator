@@ -1,215 +1,3872 @@
 window.CRAFT_DATA = {
-  categories: [
+  "categories": [
     {
-      id: 'containers',
-      name: 'Контейнеры',
-      icon: '☢',
-      items: [
+      "id": "containers",
+      "name": "Контейнеры",
+      "icon": "☢",
+      "items": [
         {
-          id: 'container-2',
-          name: 'Контейнер 2 слота',
-          thumbLabel: 'C2',
-          recipe: [
-            { name: 'Контейнер 1 слот', qty: 1, thumbLabel: 'C1' },
-            { name: 'Сырая резина', qty: 20, thumbLabel: 'РЗ' },
-            { name: 'Набор инструментов для тонкой работы', qty: 100, thumbLabel: 'ИН' },
-            { name: 'Клей ПВА', qty: 10, thumbLabel: 'ПВА' }
+          "id": "konteyner-2-slota",
+          "name": "Контейнер 2 слота",
+          "thumbLabel": "К2",
+          "recipe": [
+            {
+              "name": "Контейнер 1 слот",
+              "qty": 1
+            },
+            {
+              "name": "Сырая резина",
+              "qty": 20
+            },
+            {
+              "name": "Набор инструментов для тонкой работы",
+              "qty": 100
+            },
+            {
+              "name": "Клей ПВА",
+              "qty": 10
+            }
           ]
         },
         {
-          id: 'container-3',
-          name: 'Контейнер 3 артефакта',
-          thumbLabel: 'C3',
-          recipe: [
-            { name: 'Контейнер 2 слота', qty: 1, thumbLabel: 'C2' },
-            { name: 'Сырая резина', qty: 30, thumbLabel: 'РЗ' },
-            { name: 'Набор инструментов для тонкой работы', qty: 150, thumbLabel: 'ИН' },
-            { name: 'Клей ПВА', qty: 15, thumbLabel: 'ПВА' }
+          "id": "konteyner-3-artefakta",
+          "name": "Контейнер 3 артефакта",
+          "thumbLabel": "К3",
+          "recipe": [
+            {
+              "name": "Контейнер 2 слота",
+              "qty": 1
+            },
+            {
+              "name": "Сырая резина",
+              "qty": 30
+            },
+            {
+              "name": "Набор инструментов для тонкой работы",
+              "qty": 150
+            },
+            {
+              "name": "Клей ПВА",
+              "qty": 15
+            }
           ]
         },
         {
-          id: 'container-4',
-          name: 'Контейнер 4 артефакта',
-          thumbLabel: 'C4',
-          recipe: [
-            { name: 'Контейнер 3 артефакта', qty: 1, thumbLabel: 'C3' },
-            { name: 'Сырая резина', qty: 50, thumbLabel: 'РЗ' },
-            { name: 'Набор инструментов для тонкой работы', qty: 200, thumbLabel: 'ИН' },
-            { name: 'Клей ПВА', qty: 20, thumbLabel: 'ПВА' }
+          "id": "konteyner-4-artefakta",
+          "name": "Контейнер 4 артефакта",
+          "thumbLabel": "К4",
+          "recipe": [
+            {
+              "name": "Контейнер 3 артефакта",
+              "qty": 1
+            },
+            {
+              "name": "Сырая резина",
+              "qty": 50
+            },
+            {
+              "name": "Набор инструментов для тонкой работы",
+              "qty": 200
+            },
+            {
+              "name": "Клей ПВА",
+              "qty": 20
+            }
           ]
         },
         {
-          id: 'container-5',
-          name: 'Контейнер 5 артефактов',
-          thumbLabel: 'C5',
-          recipe: [
-            { name: 'Контейнер 4 артефакта', qty: 1, thumbLabel: 'C4' },
-            { name: 'Сырая резина', qty: 70, thumbLabel: 'РЗ' },
-            { name: 'Набор инструментов для тонкой работы', qty: 300, thumbLabel: 'ИН' },
-            { name: 'Клей ПВА', qty: 30, thumbLabel: 'ПВА' }
+          "id": "konteyner-5-artefaktov",
+          "name": "Контейнер 5 артефактов",
+          "thumbLabel": "К5",
+          "recipe": [
+            {
+              "name": "Контейнер 4 артефакта",
+              "qty": 1
+            },
+            {
+              "name": "Сырая резина",
+              "qty": 70
+            },
+            {
+              "name": "Набор инструментов для тонкой работы",
+              "qty": 300
+            },
+            {
+              "name": "Клей ПВА",
+              "qty": 30
+            }
           ]
         },
         {
-          id: 'container-6',
-          name: 'Контейнер 6 артефактов',
-          thumbLabel: 'C6',
-          recipe: [
-            { name: 'Контейнер 5 артефактов', qty: 1, thumbLabel: 'C5' },
-            { name: 'Сырая резина', qty: 100, thumbLabel: 'РЗ' },
-            { name: 'Набор инструментов для тонкой работы', qty: 400, thumbLabel: 'ИН' },
-            { name: 'Клей ПВА', qty: 40, thumbLabel: 'ПВА' }
+          "id": "konteyner-6-artefaktov",
+          "name": "Контейнер 6 артефактов",
+          "thumbLabel": "К6",
+          "recipe": [
+            {
+              "name": "Контейнер 5 артефактов",
+              "qty": 1
+            },
+            {
+              "name": "Сырая резина",
+              "qty": 100
+            },
+            {
+              "name": "Набор инструментов для тонкой работы",
+              "qty": 400
+            },
+            {
+              "name": "Клей ПВА",
+              "qty": 40
+            }
           ]
         },
         {
-          id: 'container-7',
-          name: 'Контейнер 7 артефактов',
-          thumbLabel: 'C7',
-          recipe: [
-            { name: 'Контейнер 6 артефактов', qty: 1, thumbLabel: 'C6' },
-            { name: 'Сырая резина', qty: 150, thumbLabel: 'РЗ' },
-            { name: 'Набор инструментов для тонкой работы', qty: 500, thumbLabel: 'ИН' },
-            { name: 'Клей ПВА', qty: 50, thumbLabel: 'ПВА' }
+          "id": "konteyner-7-artefaktov",
+          "name": "Контейнер 7 артефактов",
+          "thumbLabel": "К7",
+          "recipe": [
+            {
+              "name": "Контейнер 6 артефактов",
+              "qty": 1
+            },
+            {
+              "name": "Сырая резина",
+              "qty": 150
+            },
+            {
+              "name": "Набор инструментов для тонкой работы",
+              "qty": 500
+            },
+            {
+              "name": "Клей ПВА",
+              "qty": 50
+            }
           ]
         },
         {
-          id: 'container-8',
-          name: 'Контейнер 8 слотов',
-          thumbLabel: 'C8',
-          recipe: [
-            { name: 'Контейнер 7 артефактов', qty: 1, thumbLabel: 'C7' },
-            { name: 'Сырая резина', qty: 200, thumbLabel: 'РЗ' },
-            { name: 'Набор инструментов для тонкой работы', qty: 600, thumbLabel: 'ИН' },
-            { name: 'Клей ПВА', qty: 70, thumbLabel: 'ПВА' }
+          "id": "konteyner-8-slotov",
+          "name": "Контейнер 8 слотов",
+          "thumbLabel": "К8",
+          "recipe": [
+            {
+              "name": "Контейнер 7 артефактов",
+              "qty": 1
+            },
+            {
+              "name": "Сырая резина",
+              "qty": 200
+            },
+            {
+              "name": "Набор инструментов для тонкой работы",
+              "qty": 600
+            },
+            {
+              "name": "Клей ПВА",
+              "qty": 70
+            }
           ]
         },
         {
-          id: 'container-9',
-          name: 'Контейнер 9 артефактов',
-          thumbLabel: 'C9',
-          recipe: [
-            { name: 'Контейнер 8 слотов', qty: 1, thumbLabel: 'C8' },
-            { name: 'Сырая резина', qty: 300, thumbLabel: 'РЗ' },
-            { name: 'Набор инструментов для тонкой работы', qty: 800, thumbLabel: 'ИН' },
-            { name: 'Клей ПВА', qty: 200, thumbLabel: 'ПВА' }
+          "id": "konteyner-9-artefaktov",
+          "name": "Контейнер 9 артефактов",
+          "thumbLabel": "К9",
+          "recipe": [
+            {
+              "name": "Контейнер 8 слотов",
+              "qty": 1
+            },
+            {
+              "name": "Сырая резина",
+              "qty": 300
+            },
+            {
+              "name": "Набор инструментов для тонкой работы",
+              "qty": 800
+            },
+            {
+              "name": "Клей ПВА",
+              "qty": 200
+            }
           ]
         },
         {
-          id: 'container-10',
-          name: 'Контейнер 10 артефактов',
-          thumbLabel: 'C10',
-          recipe: [
-            { name: 'Контейнер 9 артефактов', qty: 1, thumbLabel: 'C9' },
-            { name: 'Сырая резина', qty: 400, thumbLabel: 'РЗ' },
-            { name: 'Набор инструментов для тонкой работы', qty: 900, thumbLabel: 'ИН' },
-            { name: 'Клей ПВА', qty: 300, thumbLabel: 'ПВА' }
+          "id": "konteyner-10-artefaktov",
+          "name": "Контейнер 10 артефактов",
+          "thumbLabel": "К1",
+          "recipe": [
+            {
+              "name": "Контейнер 9 артефактов",
+              "qty": 1
+            },
+            {
+              "name": "Сырая резина",
+              "qty": 400
+            },
+            {
+              "name": "Набор инструментов для тонкой работы",
+              "qty": 900
+            },
+            {
+              "name": "Клей ПВА",
+              "qty": 300
+            }
           ]
         }
       ]
     },
     {
-      id: 'electronics',
-      name: 'Электроника',
-      icon: '⚡',
-      items: [
+      "id": "batteries",
+      "name": "Батарейки",
+      "icon": "🔋",
+      "items": [
         {
-          id: 'battery-9v-x5',
-          name: 'Батарея 9В x5',
-          thumbLabel: '9V',
-          recipe: [
-            { name: 'Набор инструментов для тонкой работы', qty: 20, thumbLabel: 'ИН' },
-            { name: 'Пучок проводов', qty: 1, thumbLabel: 'ПР' },
-            { name: 'WD-40', qty: 20, thumbLabel: 'WD' },
-            { name: 'Батарея 9В', qty: 6, thumbLabel: '9V' }
+          "id": "batareya-na-9-v-x5",
+          "name": "Батарея на 9 В (X5)",
+          "thumbLabel": "БН",
+          "recipe": [
+            {
+              "name": "Набор инструментов для тонкой работы",
+              "qty": 20
+            },
+            {
+              "name": "Пучок проводов",
+              "qty": 1
+            },
+            {
+              "name": "WD-40",
+              "qty": 20
+            },
+            {
+              "name": "Батарея на 9 В",
+              "qty": 64
+            }
+          ]
+        },
+        {
+          "id": "batareya-na-9-v-x15",
+          "name": "Батарея на 9 В (X15)",
+          "thumbLabel": "БН",
+          "recipe": [
+            {
+              "name": "Набор инструментов для тонкой работы",
+              "qty": 50
+            },
+            {
+              "name": "Пучок проводов",
+              "qty": 2
+            },
+            {
+              "name": "WD-40",
+              "qty": 40
+            },
+            {
+              "name": "Батарея на 9 В (X5)",
+              "qty": 128
+            }
+          ]
+        },
+        {
+          "id": "batareya-na-9-v-x25",
+          "name": "Батарея на 9 В (X25)",
+          "thumbLabel": "БН",
+          "recipe": [
+            {
+              "name": "Набор инструментов для тонкой работы",
+              "qty": 120
+            },
+            {
+              "name": "Пучок проводов",
+              "qty": 3
+            },
+            {
+              "name": "WD-40",
+              "qty": 80
+            },
+            {
+              "name": "Батарея на 9 В (X15)",
+              "qty": 512
+            }
+          ]
+        },
+        {
+          "id": "9v-uranium-battery",
+          "name": "9V Uranium Battery",
+          "thumbLabel": "9U",
+          "recipe": [
+            {
+              "name": "Набор инструментов для тонкой работы",
+              "qty": 300
+            },
+            {
+              "name": "Пучок проводов",
+              "qty": 6
+            },
+            {
+              "name": "WD-40",
+              "qty": 200
+            },
+            {
+              "name": "Батарея на 9 В (X25)",
+              "qty": 1024
+            }
           ]
         }
       ]
     },
     {
-      id: 'weapons',
-      name: 'Оружие',
-      icon: '🔫',
-      items: [
+      "id": "quests",
+      "name": "Квесты",
+      "icon": "🧭",
+      "items": [
         {
-          id: 'mps-auto-assault-12',
-          name: 'MPS Auto Assault-12',
-          image: 'assets/mps-auto-assault-12.png',
-          thumbLabel: 'MPS',
-          recipe: [
-            { name: 'USAS-12', qty: 1, image: 'assets/usas-12.png', thumbLabel: 'USA' },
-            { name: 'Старый магнит', qty: 2, image: 'assets/old-magnet.png', thumbLabel: 'МАГ' },
-            { name: 'Конденсаторы', qty: 100, image: 'assets/capacitors.png', thumbLabel: 'КНД' },
-            { name: 'Медная катушка', qty: 100, image: 'assets/copper-coil.png', thumbLabel: 'МК' }
+          "id": "staryy-tolstyy-list-metalla",
+          "name": "Старый толстый лист металла",
+          "thumbLabel": "СТ",
+          "recipe": [
+            {
+              "name": "Скальпель хирургический",
+              "qty": 25
+            },
+            {
+              "name": "Пучок проводов",
+              "qty": 25
+            },
+            {
+              "name": "Печатная плата",
+              "qty": 25
+            },
+            {
+              "name": "Старый магнит",
+              "qty": 25
+            },
+            {
+              "name": "Сломанный дисплей",
+              "qty": 25
+            },
+            {
+              "name": "Двусторонняя, старая печатная плата",
+              "qty": 25
+            },
+            {
+              "name": "Двусторонняя печатная плата",
+              "qty": 25
+            },
+            {
+              "name": "Грязный-Солнечный модуль OS 380M",
+              "qty": 25
+            }
           ]
         },
         {
-          id: 'benelli-m4-super-90-12k',
-          name: 'Ружье Benelli M4 Super 90 12к',
-          image: 'assets/benelli-m4-super-90-12k.png',
-          thumbLabel: 'BM4',
-          recipe: [
-            { name: 'Ружье Benelli M3 Super 90 12к', qty: 1, image: 'assets/benelli-m3-super-90-12k.png', thumbLabel: 'BM3' },
-            { name: 'Пучок проводов', qty: 1, image: 'assets/wire-bundle.png', thumbLabel: 'ПР' },
-            { name: 'Конденсаторы', qty: 50, image: 'assets/capacitors.png', thumbLabel: 'КНД' },
-            { name: 'Медная катушка', qty: 50, image: 'assets/copper-coil.png', thumbLabel: 'МК' }
+          "id": "zhestkiy-disk-emkostyu-1tv",
+          "name": "Жесткий диск емкостью 1ТВ",
+          "thumbLabel": "ЖД",
+          "recipe": [
+            {
+              "name": "Рубанок деревообрабатывающий",
+              "qty": 2
+            },
+            {
+              "name": "Двусторонняя печатная плата FP1",
+              "qty": 10
+            },
+            {
+              "name": "Солнечный модуль OS 380M",
+              "qty": 10
+            },
+            {
+              "name": "Гайка шестигранная оцинкованная",
+              "qty": 10
+            },
+            {
+              "name": "Лебедка",
+              "qty": 2
+            },
+            {
+              "name": "Шестерня электропривода",
+              "qty": 2
+            },
+            {
+              "name": "Бронеплита 1 класса защиты",
+              "qty": 5
+            },
+            {
+              "name": "FIT Шило для прокалывания отверстий",
+              "qty": 10
+            }
           ]
         },
         {
-          id: 'homemade-rifle',
-          name: 'Самодельный автомат',
-          image: 'assets/homemade-rifle.png',
-          thumbLabel: 'СА',
-          recipe: [
-            { name: 'Изолента', qty: 10, image: 'assets/duct-tape.png', thumbLabel: 'ИЗО' },
-            { name: 'Предохранители', qty: 5, image: 'assets/fuses.png', thumbLabel: 'ПРД' },
-            { name: 'Ржавые гайки', qty: 5, image: 'assets/rusty-nuts.png', thumbLabel: 'РГ' },
-            { name: 'Набор инструментов для черновых работ', qty: 10, image: 'assets/rough-tools.png', thumbLabel: 'НИЧ' }
+          "id": "svyataya-ikona",
+          "name": "Святая икона",
+          "thumbLabel": "СИ",
+          "recipe": [
+            {
+              "name": "Леска",
+              "qty": 50
+            },
+            {
+              "name": "Конверт X2",
+              "qty": 1
+            },
+            {
+              "name": "WD-40",
+              "qty": 50
+            },
+            {
+              "name": "Изолента",
+              "qty": 50
+            }
           ]
         },
         {
-          id: 'pp-19-vityaz-9x19',
-          name: 'ПП-19-01 Витязь 9x19',
-          image: 'assets/pp-19-vityaz-9x19.png',
-          thumbLabel: 'ПП19',
-          recipe: [
-            { name: 'АПС 9x18ПМ', qty: 1, image: 'assets/aps-9x18pm.png', thumbLabel: 'АПС' },
-            { name: 'Двусторонняя печатная плата FP1', qty: 10, image: 'assets/fp1-board.png', thumbLabel: 'FP1' },
-            { name: 'Гайка шестигранная оцинкованная', qty: 10, image: 'assets/hex-nut-galvanized.png', thumbLabel: 'ГШО' },
-            { name: 'Инструменты калибровки', qty: 3000, image: 'assets/calibration-tools.png', thumbLabel: 'ИК' },
-            { name: 'Предохранители', qty: 800, image: 'assets/fuses-bulk.png', thumbLabel: 'ПРД' },
-            { name: 'Ржавые гайки', qty: 1000, image: 'assets/rusty-nuts-bulk.png', thumbLabel: 'РГ' },
-            { name: 'Медная катушка', qty: 1600, image: 'assets/copper-coil-bulk.png', thumbLabel: 'МК' },
-            { name: 'Ржавые болты', qty: 1000, image: 'assets/rusty-bolts.png', thumbLabel: 'РБ' }
+          "id": "samoe-tsennoe-chto-est-na-etom-servere",
+          "name": "Самое ценное что есть на этом сервере",
+          "thumbLabel": "СЦ",
+          "recipe": [
+            {
+              "name": "Леска",
+              "qty": 100
+            },
+            {
+              "name": "Конверт X3",
+              "qty": 1
+            },
+            {
+              "name": "Святая икона",
+              "qty": 1
+            },
+            {
+              "name": "Золотой православный крест",
+              "qty": 1
+            }
           ]
         },
         {
-          id: 'aps-9x18pm',
-          name: 'АПС 9x18ПМ',
-          image: 'assets/aps-9x18pm-top.png',
-          thumbLabel: 'АПС',
-          recipe: [
-            { name: 'МР-443 Грач 9x19', qty: 1, image: 'assets/mp-443-grach-9x19.png', thumbLabel: 'МР' },
-            { name: 'Двусторонняя печатная плата FP1', qty: 5, image: 'assets/fp1-board.png', thumbLabel: 'FP1' },
-            { name: 'Гайка шестигранная оцинкованная', qty: 5, image: 'assets/hex-nut-galvanized.png', thumbLabel: 'ГШО' },
-            { name: 'Инструменты калибровки', qty: 1500, image: 'assets/calibration-tools.png', thumbLabel: 'ИК' },
-            { name: 'Предохранители', qty: 500, image: 'assets/fuses-bulk.png', thumbLabel: 'ПРД' },
-            { name: 'Ржавые гайки', qty: 500, image: 'assets/rusty-nuts-bulk.png', thumbLabel: 'РГ' },
-            { name: 'Медная катушка', qty: 800, image: 'assets/copper-coil-aps.png', thumbLabel: 'МК' },
-            { name: 'Ржавые болты', qty: 500, image: 'assets/rusty-bolts-aps.png', thumbLabel: 'РБ' }
+          "id": "sony-ericsson-w610i",
+          "name": "Sony Ericsson W610i",
+          "thumbLabel": "SE",
+          "recipe": [
+            {
+              "name": "WD-40",
+              "qty": 100
+            },
+            {
+              "name": "Кусочки пластика",
+              "qty": 50
+            }
+          ]
+        },
+        {
+          "id": "circuit-board-mk1",
+          "name": "Circuit Board - MK1",
+          "thumbLabel": "CB",
+          "recipe": [
+            {
+              "name": "Двусторонняя печатная плата",
+              "qty": 4
+            }
+          ]
+        },
+        {
+          "id": "circuit-board-mk2",
+          "name": "Circuit Board - MK2",
+          "thumbLabel": "CB",
+          "recipe": [
+            {
+              "name": "Грязный-Солнечный модуль OS 380M",
+              "qty": 2
+            }
+          ]
+        },
+        {
+          "id": "circuit-board-mk3",
+          "name": "Circuit Board - MK3",
+          "thumbLabel": "CB",
+          "recipe": [
+            {
+              "name": "Печатная плата",
+              "qty": 1
+            },
+            {
+              "name": "Двусторонняя печатная плата",
+              "qty": 1
+            },
+            {
+              "name": "Двусторонняя, старая печатная плата",
+              "qty": 1
+            }
+          ]
+        },
+        {
+          "id": "boltorez",
+          "name": "Болторез",
+          "thumbLabel": "Б",
+          "recipe": [
+            {
+              "name": "Рубанок деревообрабатывающий",
+              "qty": 2
+            }
+          ]
+        },
+        {
+          "id": "epoksidnaya-smola",
+          "name": "Эпоксидная Смола",
+          "thumbLabel": "ЭС",
+          "recipe": [
+            {
+              "name": "Старый магнит",
+              "qty": 10
+            }
           ]
         }
       ]
     },
     {
-      id: 'quests',
-      name: 'Квесты',
-      icon: '🧭',
-      items: []
+      "id": "cases",
+      "name": "Кейсы",
+      "icon": "🎒",
+      "items": [
+        {
+          "id": "keys-dlya-20-chastey-mutantov",
+          "name": "Кейс для 20 частей мутантов",
+          "thumbLabel": "КД",
+          "recipe": [
+            {
+              "name": "Кейс для 10 частей мутантов",
+              "qty": 1
+            },
+            {
+              "name": "Набор инструментов для черновых работ",
+              "qty": 200
+            },
+            {
+              "name": "WD-40",
+              "qty": 100
+            },
+            {
+              "name": "Клей ПВА",
+              "qty": 100
+            },
+            {
+              "name": "Кусочки металлических деталей",
+              "qty": 100
+            },
+            {
+              "name": "Грязный-Солнечный модуль OS 380M",
+              "qty": 2
+            }
+          ]
+        },
+        {
+          "id": "keys-dlya-30-chastey-mutantov",
+          "name": "Кейс для 30 частей мутантов",
+          "thumbLabel": "КД",
+          "recipe": [
+            {
+              "name": "Кейс для 20 частей мутантов",
+              "qty": 1
+            },
+            {
+              "name": "Набор инструментов для черновых работ",
+              "qty": 400
+            },
+            {
+              "name": "WD-40",
+              "qty": 200
+            },
+            {
+              "name": "Клей ПВА",
+              "qty": 200
+            },
+            {
+              "name": "Кусочки металлических деталей",
+              "qty": 200
+            },
+            {
+              "name": "Грязный-Солнечный модуль OS 380M",
+              "qty": 4
+            }
+          ]
+        },
+        {
+          "id": "keys-dlya-50-chastey-mutantov",
+          "name": "Кейс для 50 частей мутантов",
+          "thumbLabel": "КД",
+          "recipe": [
+            {
+              "name": "Кейс для 30 частей мутантов",
+              "qty": 1
+            },
+            {
+              "name": "Набор инструментов для черновых работ",
+              "qty": 700
+            },
+            {
+              "name": "WD-40",
+              "qty": 300
+            },
+            {
+              "name": "Клей ПВА",
+              "qty": 300
+            },
+            {
+              "name": "Кусочки металлических деталей",
+              "qty": 300
+            },
+            {
+              "name": "Грязный-Солнечный модуль OS 380M",
+              "qty": 8
+            }
+          ]
+        },
+        {
+          "id": "keys-dlya-100-chastey-mutantov",
+          "name": "Кейс для 100 частей мутантов",
+          "thumbLabel": "КД",
+          "recipe": [
+            {
+              "name": "Кейс для 50 частей мутантов",
+              "qty": 1
+            },
+            {
+              "name": "Набор инструментов для черновых работ",
+              "qty": 1000
+            },
+            {
+              "name": "WD-40",
+              "qty": 500
+            },
+            {
+              "name": "Клей ПВА",
+              "qty": 500
+            },
+            {
+              "name": "Кусочки металлических деталей",
+              "qty": 500
+            },
+            {
+              "name": "Грязный-Солнечный модуль OS 380M",
+              "qty": 16
+            }
+          ]
+        },
+        {
+          "id": "keys-100",
+          "name": "Кейс 100",
+          "thumbLabel": "К1",
+          "recipe": [
+            {
+              "name": "Кейс 50",
+              "qty": 1
+            },
+            {
+              "name": "Изолента",
+              "qty": 100
+            },
+            {
+              "name": "Кусочки пластика",
+              "qty": 100
+            },
+            {
+              "name": "Набор инструментов для черновых работ",
+              "qty": 200
+            },
+            {
+              "name": "Грязный-Солнечный модуль OS 380M",
+              "qty": 2
+            }
+          ]
+        },
+        {
+          "id": "keys-250",
+          "name": "Кейс 250",
+          "thumbLabel": "К2",
+          "recipe": [
+            {
+              "name": "Кейс 100",
+              "qty": 1
+            },
+            {
+              "name": "Изолента",
+              "qty": 200
+            },
+            {
+              "name": "Кусочки пластика",
+              "qty": 200
+            },
+            {
+              "name": "Набор инструментов для черновых работ",
+              "qty": 400
+            },
+            {
+              "name": "Грязный-Солнечный модуль OS 380M",
+              "qty": 4
+            }
+          ]
+        },
+        {
+          "id": "keys-500",
+          "name": "Кейс 500",
+          "thumbLabel": "К5",
+          "recipe": [
+            {
+              "name": "Кейс 250",
+              "qty": 1
+            },
+            {
+              "name": "Изолента",
+              "qty": 300
+            },
+            {
+              "name": "Кусочки пластика",
+              "qty": 300
+            },
+            {
+              "name": "Набор инструментов для черновых работ",
+              "qty": 600
+            },
+            {
+              "name": "Грязный-Солнечный модуль OS 380M",
+              "qty": 8
+            }
+          ]
+        },
+        {
+          "id": "keys-1000",
+          "name": "Кейс 1000",
+          "thumbLabel": "К1",
+          "recipe": [
+            {
+              "name": "Кейс 500",
+              "qty": 2
+            },
+            {
+              "name": "Провода для пайки",
+              "qty": 5
+            }
+          ]
+        },
+        {
+          "id": "keys-260",
+          "name": "Кейс 260",
+          "thumbLabel": "К2",
+          "recipe": [
+            {
+              "name": "Контейнер для 10 артефактов",
+              "qty": 7
+            },
+            {
+              "name": "Простая ткань",
+              "qty": 10
+            }
+          ]
+        },
+        {
+          "id": "keys-zaryadzhalka-i-chinilka",
+          "name": "Кейс заряджалка и чинилка.",
+          "thumbLabel": "КЗ",
+          "recipe": [
+            {
+              "name": "Прочная веревка",
+              "qty": 10
+            },
+            {
+              "name": "Кейс заряджалка.",
+              "qty": 1
+            },
+            {
+              "name": "Кейс чинилка.",
+              "qty": 1
+            }
+          ]
+        },
+        {
+          "id": "keys-spasatelya",
+          "name": "Кейс Спасателя",
+          "thumbLabel": "КС",
+          "recipe": [
+            {
+              "name": "Паяльник стенли",
+              "qty": 10
+            },
+            {
+              "name": "Кейс 1000",
+              "qty": 1
+            },
+            {
+              "name": "Кейс охотника",
+              "qty": 1
+            },
+            {
+              "name": "Лебедка",
+              "qty": 5
+            },
+            {
+              "name": "Прочная веревка",
+              "qty": 5
+            },
+            {
+              "name": "Провода для пайки",
+              "qty": 5
+            }
+          ]
+        },
+        {
+          "id": "keys-ohotnika",
+          "name": "Кейс охотника",
+          "thumbLabel": "КО",
+          "recipe": [
+            {
+              "name": "Кейс 50",
+              "qty": 1
+            },
+            {
+              "name": "Изолента",
+              "qty": 200
+            },
+            {
+              "name": "Кусочки пластика",
+              "qty": 200
+            },
+            {
+              "name": "Набор инструментов для черновых работ",
+              "qty": 400
+            },
+            {
+              "name": "Грязный-Солнечный модуль OS 380M",
+              "qty": 2
+            }
+          ]
+        },
+        {
+          "id": "keys-chinilka",
+          "name": "Кейс чинилка.",
+          "thumbLabel": "КЧ",
+          "recipe": [
+            {
+              "name": "Набор инструментов для черновых работ",
+              "qty": 1000
+            },
+            {
+              "name": "Изолента",
+              "qty": 500
+            },
+            {
+              "name": "Кусочки пластика",
+              "qty": 500
+            },
+            {
+              "name": "Медная катушка",
+              "qty": 400
+            },
+            {
+              "name": "Солнечный модуль OS 380M",
+              "qty": 10
+            },
+            {
+              "name": "Кейс 500",
+              "qty": 1
+            }
+          ]
+        },
+        {
+          "id": "keys-zaryadzhalka",
+          "name": "Кейс заряджалка.",
+          "thumbLabel": "КЗ",
+          "recipe": [
+            {
+              "name": "Набор инструментов для черновых работ",
+              "qty": 1000
+            },
+            {
+              "name": "Изолента",
+              "qty": 500
+            },
+            {
+              "name": "Кусочки пластика",
+              "qty": 500
+            },
+            {
+              "name": "Медная катушка",
+              "qty": 400
+            },
+            {
+              "name": "Солнечный модуль OS 380M",
+              "qty": 10
+            },
+            {
+              "name": "Кейс 500",
+              "qty": 1
+            }
+          ]
+        },
+        {
+          "id": "keys-zaryadzhalka-2",
+          "name": "Кейс заряджалка. 2",
+          "thumbLabel": "КЗ",
+          "recipe": [
+            {
+              "name": "Набор инструментов для черновых работ",
+              "qty": 1500
+            },
+            {
+              "name": "Изолента",
+              "qty": 700
+            },
+            {
+              "name": "Кусочки пластика",
+              "qty": 800
+            },
+            {
+              "name": "Медная катушка",
+              "qty": 600
+            },
+            {
+              "name": "Солнечный модуль OS 380M",
+              "qty": 10
+            },
+            {
+              "name": "Кейс заряджалка.",
+              "qty": 1
+            }
+          ]
+        }
+      ]
     },
     {
-      id: 'other',
-      name: 'Разное',
-      icon: '🧰',
-      items: []
+      "id": "weapons",
+      "name": "Оружие",
+      "icon": "🔫",
+      "items": [
+        {
+          "id": "aps-9x18pm",
+          "name": "АПС 9x18ПМ",
+          "thumbLabel": "А9",
+          "recipe": [
+            {
+              "name": "MP-443 Грач 9x19",
+              "qty": 1
+            },
+            {
+              "name": "Двусторонняя печатная плата FP1",
+              "qty": 5
+            },
+            {
+              "name": "Гайка шестигранная оцинкованная",
+              "qty": 5
+            },
+            {
+              "name": "Инструменты калибровки",
+              "qty": 1500
+            },
+            {
+              "name": "Предохранители",
+              "qty": 500
+            },
+            {
+              "name": "Ржавые гайки",
+              "qty": 500
+            },
+            {
+              "name": "Медная катушка",
+              "qty": 800
+            },
+            {
+              "name": "Ржавые болты",
+              "qty": 500
+            }
+          ]
+        },
+        {
+          "id": "pp-19-01-vityaz-9x19",
+          "name": "ПП-19-01 Витязь 9x19",
+          "thumbLabel": "П1",
+          "recipe": [
+            {
+              "name": "АПС 9x18ПМ",
+              "qty": 1
+            },
+            {
+              "name": "Двусторонняя печатная плата FP1",
+              "qty": 10
+            },
+            {
+              "name": "Гайка шестигранная оцинкованная",
+              "qty": 10
+            },
+            {
+              "name": "Инструменты калибровки",
+              "qty": 3000
+            },
+            {
+              "name": "Предохранители",
+              "qty": 800
+            },
+            {
+              "name": "Ржавые гайки",
+              "qty": 1000
+            },
+            {
+              "name": "Медная катушка",
+              "qty": 1600
+            },
+            {
+              "name": "Ржавые болты",
+              "qty": 1000
+            }
+          ]
+        },
+        {
+          "id": "samodelnyy-avtomat",
+          "name": "Самодельный автомат",
+          "thumbLabel": "СА",
+          "recipe": [
+            {
+              "name": "Изолента",
+              "qty": 10
+            },
+            {
+              "name": "Предохранители",
+              "qty": 5
+            },
+            {
+              "name": "Ржавые гайки",
+              "qty": 5
+            },
+            {
+              "name": "Набор инструментов для черновых работ",
+              "qty": 10
+            }
+          ]
+        },
+        {
+          "id": "ruzhe-benelli-m4-super-90-12k",
+          "name": "Ружье Benelli M4 Super 90 12к",
+          "thumbLabel": "РB",
+          "recipe": [
+            {
+              "name": "Ружье Benelli M3 Super 90 12к",
+              "qty": 1
+            },
+            {
+              "name": "Пучок проводов",
+              "qty": 1
+            },
+            {
+              "name": "Конденсаторы",
+              "qty": 50
+            },
+            {
+              "name": "Медная катушка",
+              "qty": 50
+            }
+          ]
+        },
+        {
+          "id": "mps-auto-assault-12",
+          "name": "MPS Auto Assault-12",
+          "thumbLabel": "MA",
+          "recipe": [
+            {
+              "name": "USAS-12",
+              "qty": 1
+            },
+            {
+              "name": "Старый магнит",
+              "qty": 2
+            },
+            {
+              "name": "Конденсаторы",
+              "qty": 100
+            },
+            {
+              "name": "Медная катушка",
+              "qty": 100
+            }
+          ]
+        },
+        {
+          "id": "lobaev-arms-dvl-10-diversant-7-62x51",
+          "name": "LOBAEV Arms ДВЛ-10 Диверсант 7.62x51",
+          "thumbLabel": "LA",
+          "recipe": [
+            {
+              "name": "Винтовка Мосина 1891г. 7.62x54R",
+              "qty": 1
+            },
+            {
+              "name": "Старый магнит",
+              "qty": 10
+            },
+            {
+              "name": "Пучок проводов",
+              "qty": 10
+            },
+            {
+              "name": "Инструменты калибровки",
+              "qty": 500
+            },
+            {
+              "name": "Конденсаторы",
+              "qty": 500
+            }
+          ]
+        },
+        {
+          "id": "avtomat-kalashnikova-akmn",
+          "name": "Автомат Калашникова АКМН",
+          "thumbLabel": "АК",
+          "recipe": [
+            {
+              "name": "АК-103 7.62x39",
+              "qty": 1
+            },
+            {
+              "name": "Старый магнит",
+              "qty": 10
+            },
+            {
+              "name": "Инструменты калибровки",
+              "qty": 1500
+            },
+            {
+              "name": "Предохранители",
+              "qty": 500
+            },
+            {
+              "name": "Ржавые гайки",
+              "qty": 500
+            },
+            {
+              "name": "Медная катушка",
+              "qty": 800
+            },
+            {
+              "name": "Ржавые болты",
+              "qty": 500
+            }
+          ]
+        },
+        {
+          "id": "steyr-aug-a3-5-56x45mm",
+          "name": "Steyr AUG A3 5.56x45mm",
+          "thumbLabel": "SA",
+          "recipe": [
+            {
+              "name": "FN SCAR-H 7.62x51",
+              "qty": 1
+            },
+            {
+              "name": "Старый магнит",
+              "qty": 10
+            },
+            {
+              "name": "Инструменты калибровки",
+              "qty": 1500
+            },
+            {
+              "name": "Предохранители",
+              "qty": 500
+            },
+            {
+              "name": "Ржавые гайки",
+              "qty": 500
+            },
+            {
+              "name": "Медная катушка",
+              "qty": 800
+            },
+            {
+              "name": "Ржавые болты",
+              "qty": 500
+            }
+          ]
+        },
+        {
+          "id": "rpk-203-7-62x39",
+          "name": "РПК-203 7.62x39",
+          "thumbLabel": "Р2",
+          "recipe": [
+            {
+              "name": "Автомат Калашникова АКМН",
+              "qty": 1
+            },
+            {
+              "name": "Старый магнит",
+              "qty": 20
+            },
+            {
+              "name": "Инструменты калибровки",
+              "qty": 3000
+            },
+            {
+              "name": "Предохранители",
+              "qty": 800
+            },
+            {
+              "name": "Ржавые гайки",
+              "qty": 1000
+            },
+            {
+              "name": "Медная катушка",
+              "qty": 1600
+            },
+            {
+              "name": "Ржавые болты",
+              "qty": 1000
+            }
+          ]
+        },
+        {
+          "id": "avtomat-ash-12-12-7x55",
+          "name": "Автомат АШ-12 12.7x55",
+          "thumbLabel": "АА",
+          "recipe": [
+            {
+              "name": "Steyr AUG A3 5.56x45mm",
+              "qty": 1
+            },
+            {
+              "name": "Старый магнит",
+              "qty": 20
+            },
+            {
+              "name": "Инструменты калибровки",
+              "qty": 3000
+            },
+            {
+              "name": "Предохранители",
+              "qty": 800
+            },
+            {
+              "name": "Ржавые гайки",
+              "qty": 1000
+            },
+            {
+              "name": "Медная катушка",
+              "qty": 1600
+            },
+            {
+              "name": "Ржавые болты",
+              "qty": 1000
+            }
+          ]
+        },
+        {
+          "id": "avtomat-spetsialnyy-val-9x39",
+          "name": "Автомат Специальный «Вал» 9x39",
+          "thumbLabel": "АС",
+          "recipe": [
+            {
+              "name": "Steyr AUG A3 5.56x45mm",
+              "qty": 1
+            },
+            {
+              "name": "Старый магнит",
+              "qty": 20
+            },
+            {
+              "name": "Инструменты калибровки",
+              "qty": 3000
+            },
+            {
+              "name": "Предохранители",
+              "qty": 800
+            },
+            {
+              "name": "Ржавые гайки",
+              "qty": 1000
+            },
+            {
+              "name": "Медная катушка",
+              "qty": 1600
+            },
+            {
+              "name": "Ржавые болты",
+              "qty": 1000
+            }
+          ]
+        },
+        {
+          "id": "vss-vintorez-9x39",
+          "name": "ВСС «Винторез» 9x39",
+          "thumbLabel": "ВВ",
+          "recipe": [
+            {
+              "name": "Автомат Специальный «Вал» 9x39",
+              "qty": 1
+            },
+            {
+              "name": "Старый магнит",
+              "qty": 10
+            },
+            {
+              "name": "Инструменты калибровки",
+              "qty": 1000
+            },
+            {
+              "name": "Предохранители",
+              "qty": 400
+            },
+            {
+              "name": "Ржавые гайки",
+              "qty": 500
+            },
+            {
+              "name": "Медная катушка",
+              "qty": 800
+            },
+            {
+              "name": "Ржавые болты",
+              "qty": 500
+            }
+          ]
+        },
+        {
+          "id": "ksvk-12-7-108-mm",
+          "name": "КСВК 12,7×108 мм",
+          "thumbLabel": "К1",
+          "recipe": [
+            {
+              "name": "LOBAEV Arms ДВЛ-10 Диверсант 7.62x51",
+              "qty": 1
+            },
+            {
+              "name": "Старый магнит",
+              "qty": 10
+            },
+            {
+              "name": "Пучок проводов",
+              "qty": 30
+            },
+            {
+              "name": "Изолента",
+              "qty": 1000
+            },
+            {
+              "name": "Конденсаторы",
+              "qty": 1000
+            },
+            {
+              "name": "Шестерня электропривода",
+              "qty": 10
+            }
+          ]
+        },
+        {
+          "id": "vintovka-springfield-armory-m1a-7-62x51",
+          "name": "Винтовка Springfield Armory M1A 7.62x51",
+          "thumbLabel": "ВS",
+          "recipe": [
+            {
+              "name": "ORSIS T-5000M .338LM",
+              "qty": 1
+            },
+            {
+              "name": "Шестерня электропривода",
+              "qty": 10
+            },
+            {
+              "name": "Инструменты калибровки",
+              "qty": 3000
+            },
+            {
+              "name": "Предохранители",
+              "qty": 1000
+            },
+            {
+              "name": "Ржавые гайки",
+              "qty": 1000
+            },
+            {
+              "name": "Медная катушка",
+              "qty": 1000
+            }
+          ]
+        },
+        {
+          "id": "vssk-vyhlop",
+          "name": "VSSK Выхлоп",
+          "thumbLabel": "VВ",
+          "recipe": [
+            {
+              "name": "AWM .338LM",
+              "qty": 1
+            },
+            {
+              "name": "Шестерня электропривода",
+              "qty": 10
+            },
+            {
+              "name": "Инструменты калибровки",
+              "qty": 3000
+            },
+            {
+              "name": "Предохранители",
+              "qty": 1000
+            },
+            {
+              "name": "Ржавые гайки",
+              "qty": 1000
+            },
+            {
+              "name": "Медная катушка",
+              "qty": 1000
+            }
+          ]
+        },
+        {
+          "id": "gaus-pushka-gauss",
+          "name": "Гаус-пушка Gauss",
+          "thumbLabel": "ГП",
+          "recipe": [
+            {
+              "name": "Лебедка",
+              "qty": 10
+            },
+            {
+              "name": "РПК-203 7.62x39",
+              "qty": 1
+            },
+            {
+              "name": "Старый магнит",
+              "qty": 50
+            },
+            {
+              "name": "Пучок проводов",
+              "qty": 50
+            },
+            {
+              "name": "Инструменты калибровки",
+              "qty": 2000
+            },
+            {
+              "name": "Ржавые гайки",
+              "qty": 1000
+            }
+          ]
+        },
+        {
+          "id": "svds-7-62x54snb",
+          "name": "СВДС 7.62x54SNB",
+          "thumbLabel": "С7",
+          "recipe": [
+            {
+              "name": "Лебедка",
+              "qty": 10
+            },
+            {
+              "name": "Автомат АШ-12 12.7x55",
+              "qty": 1
+            },
+            {
+              "name": "Старый магнит",
+              "qty": 50
+            },
+            {
+              "name": "Пучок проводов",
+              "qty": 50
+            },
+            {
+              "name": "Инструменты калибровки",
+              "qty": 2000
+            },
+            {
+              "name": "Ржавые гайки",
+              "qty": 1000
+            }
+          ]
+        },
+        {
+          "id": "barret",
+          "name": "Barret",
+          "thumbLabel": "B",
+          "recipe": [
+            {
+              "name": "AWM .338LM",
+              "qty": 1
+            },
+            {
+              "name": "Шестерня электропривода",
+              "qty": 10
+            },
+            {
+              "name": "Инструменты калибровки",
+              "qty": 3000
+            },
+            {
+              "name": "Предохранители",
+              "qty": 1000
+            },
+            {
+              "name": "Ржавые гайки",
+              "qty": 1000
+            },
+            {
+              "name": "Медная катушка",
+              "qty": 1000
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "belts",
+      "name": "Поясы",
+      "icon": "🧷",
+      "items": [
+        {
+          "id": "remen-dlya-konteynerov",
+          "name": "Ремень для контейнеров",
+          "thumbLabel": "РД",
+          "recipe": [
+            {
+              "name": "Набор инструментов для тонкой работы",
+              "qty": 700
+            },
+            {
+              "name": "Предохранители",
+              "qty": 200
+            },
+            {
+              "name": "Пучок проводов",
+              "qty": 10
+            },
+            {
+              "name": "Леска",
+              "qty": 500
+            }
+          ]
+        },
+        {
+          "id": "poyas-dlya-5-konteynerov",
+          "name": "Пояс для 5 контейнеров",
+          "thumbLabel": "ПД",
+          "recipe": [
+            {
+              "name": "Набор инструментов для тонкой работы",
+              "qty": 700
+            },
+            {
+              "name": "Предохранители",
+              "qty": 200
+            },
+            {
+              "name": "Пучок проводов",
+              "qty": 10
+            },
+            {
+              "name": "Леска",
+              "qty": 500
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "roulette",
+      "name": "Рулетка",
+      "icon": "🎲",
+      "items": [
+        {
+          "id": "solnechnyy-modul-os-380m-10",
+          "name": "Солнечный модуль OS 380M (10%)",
+          "thumbLabel": "СМ",
+          "recipe": [
+            {
+              "name": "Грязный-Солнечный модуль OS 380M",
+              "qty": 1
+            }
+          ]
+        },
+        {
+          "id": "solnechnyy-modul-os-380m-30",
+          "name": "Солнечный модуль OS 380M (30%)",
+          "thumbLabel": "СМ",
+          "recipe": [
+            {
+              "name": "Грязный-Солнечный модуль OS 380M",
+              "qty": 2
+            }
+          ]
+        },
+        {
+          "id": "solnechnyy-modul-os-380m-70",
+          "name": "Солнечный модуль OS 380M (70%)",
+          "thumbLabel": "СМ",
+          "recipe": [
+            {
+              "name": "Грязный-Солнечный модуль OS 380M",
+              "qty": 3
+            }
+          ]
+        },
+        {
+          "id": "solnechnyy-modul-os-380m-100",
+          "name": "Солнечный модуль OS 380M (100%)",
+          "thumbLabel": "СМ",
+          "recipe": [
+            {
+              "name": "Грязный-Солнечный модуль OS 380M",
+              "qty": 4
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "stash",
+      "name": "Схрон",
+      "icon": "🛡️",
+      "items": [
+        {
+          "id": "broneplita-2-y-stepeni-zaschity",
+          "name": "Бронеплита 2-й степени защиты",
+          "thumbLabel": "Б2",
+          "recipe": [
+            {
+              "name": "Леска",
+              "qty": 50
+            }
+          ]
+        },
+        {
+          "id": "broneplita-3-y-stepeni-zaschity",
+          "name": "Бронеплита 3-й степени защиты",
+          "thumbLabel": "Б3",
+          "recipe": [
+            {
+              "name": "WD-40",
+              "qty": 100
+            }
+          ]
+        },
+        {
+          "id": "broneplita-4-klassa",
+          "name": "Бронеплита 4 класса",
+          "thumbLabel": "Б4",
+          "recipe": [
+            {
+              "name": "Печатная плата",
+              "qty": 2
+            }
+          ]
+        },
+        {
+          "id": "broneplita-5-y-stepeni-zaschity",
+          "name": "Бронеплита 5-й степени защиты",
+          "thumbLabel": "Б5",
+          "recipe": [
+            {
+              "name": "Двусторонняя, старая печатная плата",
+              "qty": 3
+            }
+          ]
+        },
+        {
+          "id": "broneplita-6-y-stepeni-zaschity",
+          "name": "Бронеплита 6-й степени защиты",
+          "thumbLabel": "Б6",
+          "recipe": [
+            {
+              "name": "Двусторонняя печатная плата",
+              "qty": 3
+            }
+          ]
+        },
+        {
+          "id": "broneplita-7-y-stepeni-zaschity",
+          "name": "Бронеплита 7-й степени защиты",
+          "thumbLabel": "Б7",
+          "recipe": [
+            {
+              "name": "Сломанный дисплей",
+              "qty": 5
+            }
+          ]
+        },
+        {
+          "id": "broneplita-8-y-stepeni-zaschity",
+          "name": "Бронеплита 8-й степени защиты",
+          "thumbLabel": "Б8",
+          "recipe": [
+            {
+              "name": "Скальпель хирургический",
+              "qty": 5
+            }
+          ]
+        },
+        {
+          "id": "broneplita-9-y-stepeni-zaschity",
+          "name": "Бронеплита 9-й степени защиты",
+          "thumbLabel": "Б9",
+          "recipe": [
+            {
+              "name": "Двусторонняя печатная плата FP1",
+              "qty": 5
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "detectors",
+      "name": "Детекторы",
+      "icon": "📟",
+      "items": [
+        {
+          "id": "detektor-artefaktov-gilka",
+          "name": "Детектор артефактов \"Гилка\"",
+          "thumbLabel": "ДА",
+          "recipe": [
+            {
+              "name": "Инструменты калибровки",
+              "qty": 500
+            },
+            {
+              "name": "Сломанный дисплей",
+              "qty": 2
+            },
+            {
+              "name": "Кусочки металлических деталей",
+              "qty": 100
+            },
+            {
+              "name": "Пучок проводов",
+              "qty": 5
+            },
+            {
+              "name": "Двусторонняя, старая печатная плата",
+              "qty": 1
+            },
+            {
+              "name": "Детектор артефактов \"Медведь\"",
+              "qty": 1
+            }
+          ]
+        },
+        {
+          "id": "detektor-artefaktov-veles",
+          "name": "Детектор артефактов \"Велес\"",
+          "thumbLabel": "ДА",
+          "recipe": [
+            {
+              "name": "Инструменты калибровки",
+              "qty": 1000
+            },
+            {
+              "name": "Сломанный дисплей",
+              "qty": 5
+            },
+            {
+              "name": "Кусочки металлических деталей",
+              "qty": 200
+            },
+            {
+              "name": "Пучок проводов",
+              "qty": 10
+            },
+            {
+              "name": "Двусторонняя печатная плата",
+              "qty": 1
+            },
+            {
+              "name": "Детектор артефактов \"Гилка\"",
+              "qty": 1
+            }
+          ]
+        },
+        {
+          "id": "detektor-artefaktov-svarog",
+          "name": "Детектор артефактов \"Сварог\"",
+          "thumbLabel": "ДА",
+          "recipe": [
+            {
+              "name": "Инструменты калибровки",
+              "qty": 1500
+            },
+            {
+              "name": "Сломанный дисплей",
+              "qty": 10
+            },
+            {
+              "name": "Кусочки металлических деталей",
+              "qty": 400
+            },
+            {
+              "name": "Пучок проводов",
+              "qty": 20
+            },
+            {
+              "name": "Двусторонняя печатная плата FP1",
+              "qty": 1
+            },
+            {
+              "name": "Детектор артефактов \"Велес\"",
+              "qty": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "magazines",
+      "name": "Магазины",
+      "icon": "🧱",
+      "items": [
+        {
+          "id": "magazin-vss-1000",
+          "name": "Магазин ВСС 1000",
+          "thumbLabel": "МВ",
+          "recipe": [
+            {
+              "name": "Магазин СР3М.130 на 500 патронов 9x39",
+              "qty": 1
+            },
+            {
+              "name": "Старый магнит",
+              "qty": 5
+            },
+            {
+              "name": "Инструменты калибровки",
+              "qty": 400
+            },
+            {
+              "name": "Предохранители",
+              "qty": 200
+            },
+            {
+              "name": "Ржавые гайки",
+              "qty": 200
+            },
+            {
+              "name": "Медная катушка",
+              "qty": 300
+            }
+          ]
+        },
+        {
+          "id": "magazin-barabannyy-x-products-x-47-na-500-patronov-7-62x39",
+          "name": "Магазин барабанный X Products X-47 на 500 патронов 7.62x39",
+          "thumbLabel": "МБ",
+          "recipe": [
+            {
+              "name": "Магазин барабанный на 95 патронов 5.45x39 для РПК",
+              "qty": 1
+            },
+            {
+              "name": "Старый магнит",
+              "qty": 3
+            },
+            {
+              "name": "Инструменты калибровки",
+              "qty": 300
+            },
+            {
+              "name": "Предохранители",
+              "qty": 150
+            },
+            {
+              "name": "Ржавые гайки",
+              "qty": 150
+            },
+            {
+              "name": "Медная катушка",
+              "qty": 300
+            }
+          ]
+        },
+        {
+          "id": "magazin-na-500-patronov-57x28-dlya-aps",
+          "name": "Магазин на 500 патронов 57x28 для АПС",
+          "thumbLabel": "МН",
+          "recipe": [
+            {
+              "name": "Магазин на 18 патронов 9x19 для MP-443 Грач",
+              "qty": 1
+            },
+            {
+              "name": "Двусторонняя печатная плата FP1",
+              "qty": 2
+            },
+            {
+              "name": "Инструменты калибровки",
+              "qty": 300
+            },
+            {
+              "name": "Предохранители",
+              "qty": 150
+            },
+            {
+              "name": "Ржавые гайки",
+              "qty": 150
+            },
+            {
+              "name": "Медная катушка",
+              "qty": 300
+            }
+          ]
+        },
+        {
+          "id": "magazin-na-500-patronov-556x45-dlya-aug",
+          "name": "Магазин на 500 патронов 556x45 для AUG",
+          "thumbLabel": "МН",
+          "recipe": [
+            {
+              "name": "Магазин на 250 патронов 308Win M993 для FN SCAR-…",
+              "qty": 1
+            },
+            {
+              "name": "Старый магнит",
+              "qty": 3
+            },
+            {
+              "name": "Инструменты калибровки",
+              "qty": 300
+            },
+            {
+              "name": "Предохранители",
+              "qty": 150
+            },
+            {
+              "name": "Ржавые гайки",
+              "qty": 150
+            },
+            {
+              "name": "Медная катушка",
+              "qty": 300
+            }
+          ]
+        },
+        {
+          "id": "magazin-na-40-patronov-dlya-aa-12",
+          "name": "Магазин на 40 патронов для АА-12",
+          "thumbLabel": "МН",
+          "recipe": [
+            {
+              "name": "USAS-12 Барабан на 20птр",
+              "qty": 1
+            },
+            {
+              "name": "Инструменты калибровки",
+              "qty": 20
+            }
+          ]
+        },
+        {
+          "id": "magazin-na-20-patronov-7-62x51-dlya-dvl-10",
+          "name": "Магазин на 20 патронов 7.62x51 для ДВЛ-10",
+          "thumbLabel": "МН",
+          "recipe": [
+            {
+              "name": "Пучок проводов",
+              "qty": 10
+            },
+            {
+              "name": "Изолента",
+              "qty": 1000
+            }
+          ]
+        },
+        {
+          "id": "magazin-dlya-ksvk",
+          "name": "Магазин для КСВК",
+          "thumbLabel": "МД",
+          "recipe": [
+            {
+              "name": "Пучок проводов",
+              "qty": 20
+            },
+            {
+              "name": "Изолента",
+              "qty": 2000
+            },
+            {
+              "name": "Магазин на 20 патронов 7.62x51 для ДВЛ-10",
+              "qty": 1
+            },
+            {
+              "name": "Шестерня электропривода",
+              "qty": 1
+            }
+          ]
+        },
+        {
+          "id": "magazin-avtomata",
+          "name": "Магазин автомата",
+          "thumbLabel": "МА",
+          "recipe": [
+            {
+              "name": "Изолента",
+              "qty": 5
+            },
+            {
+              "name": "Предохранители",
+              "qty": 2
+            },
+            {
+              "name": "Ржавые гайки",
+              "qty": 2
+            },
+            {
+              "name": "Набор инструментов для черновых работ",
+              "qty": 5
+            }
+          ]
+        },
+        {
+          "id": "magazin-barabannyy-promag-ak-a-16-na-73-patrona-7-62x39",
+          "name": "Магазин барабанный ProMag AK-A-16 на 73 патрона 7.62x39",
+          "thumbLabel": "МБ",
+          "recipe": [
+            {
+              "name": "Магазин барабанный X Products X-47 на 500 патронов 7.62x39",
+              "qty": 1
+            },
+            {
+              "name": "Старый магнит",
+              "qty": 10
+            },
+            {
+              "name": "Инструменты калибровки",
+              "qty": 800
+            },
+            {
+              "name": "Предохранители",
+              "qty": 400
+            },
+            {
+              "name": "Ржавые гайки",
+              "qty": 400
+            },
+            {
+              "name": "Медная катушка",
+              "qty": 600
+            }
+          ]
+        },
+        {
+          "id": "magazin-9x19-dlya-pp-19-01",
+          "name": "Магазин 9x19 для ПП-19-01",
+          "thumbLabel": "М9",
+          "recipe": [
+            {
+              "name": "Магазин на 500 патронов 57x28 для АПС",
+              "qty": 1
+            },
+            {
+              "name": "Двусторонняя печатная плата FP1",
+              "qty": 5
+            },
+            {
+              "name": "Инструменты калибровки",
+              "qty": 800
+            },
+            {
+              "name": "Предохранители",
+              "qty": 400
+            },
+            {
+              "name": "Ржавые гайки",
+              "qty": 400
+            },
+            {
+              "name": "Медная катушка",
+              "qty": 600
+            }
+          ]
+        },
+        {
+          "id": "magazin-na-1000-patronov-12-7x55-dlya-ash-12",
+          "name": "Магазин на 1000 патронов 12.7x55 для АШ-12",
+          "thumbLabel": "МН",
+          "recipe": [
+            {
+              "name": "Магазин на 500 патронов 556x45 для AUG",
+              "qty": 1
+            },
+            {
+              "name": "Старый магнит",
+              "qty": 5
+            },
+            {
+              "name": "Инструменты калибровки",
+              "qty": 400
+            },
+            {
+              "name": "Предохранители",
+              "qty": 200
+            },
+            {
+              "name": "Ржавые гайки",
+              "qty": 200
+            },
+            {
+              "name": "Медная катушка",
+              "qty": 300
+            }
+          ]
+        },
+        {
+          "id": "magazin-slr-na-1000-patronov-308-dlya-sa-58-fal",
+          "name": "Магазин SLR на 1000 патронов .308 для SA-58/FAL",
+          "thumbLabel": "МS",
+          "recipe": [
+            {
+              "name": "Шестерня электропривода",
+              "qty": 4
+            },
+            {
+              "name": "Инструменты калибровки",
+              "qty": 1000
+            },
+            {
+              "name": "Предохранители",
+              "qty": 500
+            },
+            {
+              "name": "Ржавые гайки",
+              "qty": 500
+            },
+            {
+              "name": "Медная катушка",
+              "qty": 500
+            }
+          ]
+        },
+        {
+          "id": "magazin-dlya-barreta-1000",
+          "name": "Магазин для Баррета 1000",
+          "thumbLabel": "МД",
+          "recipe": [
+            {
+              "name": "Шестерня электропривода",
+              "qty": 4
+            },
+            {
+              "name": "Инструменты калибровки",
+              "qty": 1000
+            },
+            {
+              "name": "Предохранители",
+              "qty": 600
+            },
+            {
+              "name": "Ржавые гайки",
+              "qty": 600
+            },
+            {
+              "name": "Медная катушка",
+              "qty": 600
+            }
+          ]
+        },
+        {
+          "id": "magazin-dlya-barreta-500",
+          "name": "Магазин для Баррета 500",
+          "thumbLabel": "МД",
+          "recipe": [
+            {
+              "name": "Шестерня электропривода",
+              "qty": 2
+            },
+            {
+              "name": "Инструменты калибровки",
+              "qty": 500
+            },
+            {
+              "name": "Предохранители",
+              "qty": 300
+            },
+            {
+              "name": "Ржавые гайки",
+              "qty": 300
+            },
+            {
+              "name": "Медная катушка",
+              "qty": 300
+            }
+          ]
+        },
+        {
+          "id": "magazin-dlya-barreta-300",
+          "name": "Магазин для Баррета 300",
+          "thumbLabel": "МД",
+          "recipe": [
+            {
+              "name": "Шестерня электропривода",
+              "qty": 1
+            },
+            {
+              "name": "Инструменты калибровки",
+              "qty": 300
+            },
+            {
+              "name": "Предохранители",
+              "qty": 200
+            },
+            {
+              "name": "Ржавые гайки",
+              "qty": 200
+            },
+            {
+              "name": "Медная катушка",
+              "qty": 200
+            }
+          ]
+        },
+        {
+          "id": "magazin-dlya-vyhlopa-300",
+          "name": "Магазин для Выхлопа 300",
+          "thumbLabel": "МД",
+          "recipe": [
+            {
+              "name": "Шестерня электропривода",
+              "qty": 1
+            },
+            {
+              "name": "Инструменты калибровки",
+              "qty": 300
+            },
+            {
+              "name": "Предохранители",
+              "qty": 200
+            },
+            {
+              "name": "Ржавые гайки",
+              "qty": 200
+            },
+            {
+              "name": "Медная катушка",
+              "qty": 200
+            }
+          ]
+        },
+        {
+          "id": "magazin-dlya-gaus-pushki",
+          "name": "Магазин для Гаус-пушки",
+          "thumbLabel": "МД",
+          "recipe": [
+            {
+              "name": "Старый магнит",
+              "qty": 10
+            },
+            {
+              "name": "Пучок проводов",
+              "qty": 20
+            },
+            {
+              "name": "Инструменты калибровки",
+              "qty": 1000
+            },
+            {
+              "name": "Ржавые гайки",
+              "qty": 200
+            },
+            {
+              "name": "Медная катушка",
+              "qty": 200
+            }
+          ]
+        },
+        {
+          "id": "magazin-na-1000-patronov-7-62x54r-dlya-svd",
+          "name": "Магазин на 1000 патронов 7.62x54R для СВД",
+          "thumbLabel": "МН",
+          "recipe": [
+            {
+              "name": "Старый магнит",
+              "qty": 10
+            },
+            {
+              "name": "Пучок проводов",
+              "qty": 20
+            },
+            {
+              "name": "Инструменты калибровки",
+              "qty": 1000
+            },
+            {
+              "name": "Ржавые гайки",
+              "qty": 200
+            },
+            {
+              "name": "Медная катушка",
+              "qty": 200
+            }
+          ]
+        },
+        {
+          "id": "magazin-dlya-vyhlopa-500",
+          "name": "Магазин для Выхлопа 500",
+          "thumbLabel": "МД",
+          "recipe": [
+            {
+              "name": "Шестерня электропривода",
+              "qty": 2
+            },
+            {
+              "name": "Инструменты калибровки",
+              "qty": 500
+            },
+            {
+              "name": "Предохранители",
+              "qty": 300
+            },
+            {
+              "name": "Ржавые гайки",
+              "qty": 300
+            },
+            {
+              "name": "Медная катушка",
+              "qty": 300
+            }
+          ]
+        },
+        {
+          "id": "magazin-dlya-vyhlopa-1000",
+          "name": "Магазин для Выхлопа 1000",
+          "thumbLabel": "МД",
+          "recipe": [
+            {
+              "name": "Шестерня электропривода",
+              "qty": 4
+            },
+            {
+              "name": "Инструменты калибровки",
+              "qty": 1000
+            },
+            {
+              "name": "Предохранители",
+              "qty": 500
+            },
+            {
+              "name": "Ржавые гайки",
+              "qty": 500
+            },
+            {
+              "name": "Медная катушка",
+              "qty": 500
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ammo",
+      "name": "Патроны",
+      "icon": "🧨",
+      "items": [
+        {
+          "id": "9-109x55",
+          "name": "9.109x55",
+          "thumbLabel": "91",
+          "recipe": [
+            {
+              "name": "Патроны 9x39 мм",
+              "qty": 200
+            },
+            {
+              "name": "Вспышка",
+              "qty": 1
+            }
+          ]
+        },
+        {
+          "id": "6-99x77",
+          "name": "6.99x77",
+          "thumbLabel": "69",
+          "recipe": [
+            {
+              "name": "Патроны 5.45x39 мм",
+              "qty": 200
+            },
+            {
+              "name": "Клякса",
+              "qty": 1
+            }
+          ]
+        },
+        {
+          "id": "7-66x33",
+          "name": "7.66x33",
+          "thumbLabel": "76",
+          "recipe": [
+            {
+              "name": "Патроны 7.62x39 мм",
+              "qty": 200
+            },
+            {
+              "name": "Панцирь",
+              "qty": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "knives",
+      "name": "Ножи",
+      "icon": "🔪",
+      "items": [
+        {
+          "id": "nozhik-5-sek",
+          "name": "Ножик 5 сек",
+          "thumbLabel": "Н5",
+          "recipe": [
+            {
+              "name": "Конденсаторы",
+              "qty": 30
+            },
+            {
+              "name": "Набор инструментов для черновых работ",
+              "qty": 100
+            },
+            {
+              "name": "Скальпель хирургический",
+              "qty": 1
+            },
+            {
+              "name": "Изолента",
+              "qty": 20
+            },
+            {
+              "name": "Ножик 9 сек",
+              "qty": 1
+            }
+          ]
+        },
+        {
+          "id": "nozhik-2-sek",
+          "name": "Ножик 2 сек",
+          "thumbLabel": "Н2",
+          "recipe": [
+            {
+              "name": "Конденсаторы",
+              "qty": 60
+            },
+            {
+              "name": "Набор инструментов для черновых работ",
+              "qty": 200
+            },
+            {
+              "name": "Скальпель хирургический",
+              "qty": 2
+            },
+            {
+              "name": "Изолента",
+              "qty": 40
+            },
+            {
+              "name": "Ножик 5 сек",
+              "qty": 1
+            }
+          ]
+        },
+        {
+          "id": "nozhik-1-sek",
+          "name": "Ножик 1 сек",
+          "thumbLabel": "Н1",
+          "recipe": [
+            {
+              "name": "Конденсаторы",
+              "qty": 90
+            },
+            {
+              "name": "Набор инструментов для черновых работ",
+              "qty": 300
+            },
+            {
+              "name": "Скальпель хирургический",
+              "qty": 5
+            },
+            {
+              "name": "Изолента",
+              "qty": 60
+            },
+            {
+              "name": "Ножик 2 сек",
+              "qty": 1
+            }
+          ]
+        },
+        {
+          "id": "nozhik-mikrosekunda",
+          "name": "Ножик микросекунда",
+          "thumbLabel": "НМ",
+          "recipe": [
+            {
+              "name": "Конденсаторы",
+              "qty": 100
+            },
+            {
+              "name": "Набор инструментов для черновых работ",
+              "qty": 400
+            },
+            {
+              "name": "Скальпель хирургический",
+              "qty": 10
+            },
+            {
+              "name": "Изолента",
+              "qty": 100
+            },
+            {
+              "name": "Рубанок деревообрабатывающий",
+              "qty": 2
+            },
+            {
+              "name": "Ножик 1 сек",
+              "qty": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "nightvision",
+      "name": "ПНВ",
+      "icon": "🌙",
+      "items": [
+        {
+          "id": "remeshok-dlya-ochkov-nochnogo-videniya",
+          "name": "Ремешок для очков ночного видения",
+          "thumbLabel": "РД",
+          "recipe": [
+            {
+              "name": "Набор инструментов для тонкой работы",
+              "qty": 20
+            },
+            {
+              "name": "Изолента",
+              "qty": 10
+            }
+          ]
+        },
+        {
+          "id": "ochki-nochnogo-videniya",
+          "name": "Очки ночного видения",
+          "thumbLabel": "ОН",
+          "recipe": [
+            {
+              "name": "Набор инструментов для тонкой работы",
+              "qty": 70
+            },
+            {
+              "name": "Изолента",
+              "qty": 30
+            },
+            {
+              "name": "Ржавые гайки",
+              "qty": 20
+            }
+          ]
+        },
+        {
+          "id": "pribor-nochnogo-videniya-m1-chernyy",
+          "name": "Прибор ночного видения (M1 Черный)",
+          "thumbLabel": "ПН",
+          "recipe": [
+            {
+              "name": "Набор инструментов для тонкой работы",
+              "qty": 200
+            },
+            {
+              "name": "Изолента",
+              "qty": 100
+            },
+            {
+              "name": "Ржавые гайки",
+              "qty": 50
+            },
+            {
+              "name": "Печатная плата",
+              "qty": 1
+            },
+            {
+              "name": "Очки ночного видения",
+              "qty": 1
+            }
+          ]
+        },
+        {
+          "id": "pribor-nochnogo-videniya-m1-bezhevyy",
+          "name": "Прибор ночного видения (M1 Бежевый)",
+          "thumbLabel": "ПН",
+          "recipe": [
+            {
+              "name": "Набор инструментов для тонкой работы",
+              "qty": 200
+            },
+            {
+              "name": "Изолента",
+              "qty": 100
+            },
+            {
+              "name": "Ржавые гайки",
+              "qty": 50
+            },
+            {
+              "name": "Печатная плата",
+              "qty": 1
+            },
+            {
+              "name": "Очки ночного видения",
+              "qty": 1
+            }
+          ]
+        },
+        {
+          "id": "pribor-nochnogo-videniya-m2-chernyy",
+          "name": "Прибор ночного видения (M2 Черный)",
+          "thumbLabel": "ПН",
+          "recipe": [
+            {
+              "name": "Набор инструментов для тонкой работы",
+              "qty": 200
+            },
+            {
+              "name": "Изолента",
+              "qty": 100
+            },
+            {
+              "name": "Ржавые гайки",
+              "qty": 50
+            },
+            {
+              "name": "Печатная плата",
+              "qty": 1
+            },
+            {
+              "name": "Очки ночного видения",
+              "qty": 1
+            }
+          ]
+        },
+        {
+          "id": "pribor-nochnogo-videniya-m3-zelenyy",
+          "name": "Прибор ночного видения (M3 Зеленый)",
+          "thumbLabel": "ПН",
+          "recipe": [
+            {
+              "name": "Набор инструментов для тонкой работы",
+              "qty": 200
+            },
+            {
+              "name": "Изолента",
+              "qty": 100
+            },
+            {
+              "name": "Ржавые гайки",
+              "qty": 50
+            },
+            {
+              "name": "Печатная плата",
+              "qty": 1
+            },
+            {
+              "name": "Очки ночного видения",
+              "qty": 1
+            }
+          ]
+        },
+        {
+          "id": "filtr-svetlo-siniy-br",
+          "name": "Фильтр светло-синий (БР)",
+          "thumbLabel": "ФС",
+          "recipe": [
+            {
+              "name": "Конденсаторы",
+              "qty": 50
+            },
+            {
+              "name": "Старый магнит",
+              "qty": 1
+            },
+            {
+              "name": "Сырая резина",
+              "qty": 30
+            },
+            {
+              "name": "Пучок проводов",
+              "qty": 2
+            }
+          ]
+        },
+        {
+          "id": "filtr-fioletovyy-br",
+          "name": "Фильтр фиолетовый (БР)",
+          "thumbLabel": "ФФ",
+          "recipe": [
+            {
+              "name": "Конденсаторы",
+              "qty": 50
+            },
+            {
+              "name": "Старый магнит",
+              "qty": 1
+            },
+            {
+              "name": "Сырая резина",
+              "qty": 30
+            },
+            {
+              "name": "Пучок проводов",
+              "qty": 2
+            }
+          ]
+        },
+        {
+          "id": "filtr-zheltyy-br",
+          "name": "Фильтр желтый (БР)",
+          "thumbLabel": "ФЖ",
+          "recipe": [
+            {
+              "name": "Конденсаторы",
+              "qty": 50
+            },
+            {
+              "name": "Старый магнит",
+              "qty": 1
+            },
+            {
+              "name": "Сырая резина",
+              "qty": 30
+            },
+            {
+              "name": "Пучок проводов",
+              "qty": 2
+            }
+          ]
+        },
+        {
+          "id": "filtr-bezhevyy-br",
+          "name": "Фильтр бежевый (БР)",
+          "thumbLabel": "ФБ",
+          "recipe": [
+            {
+              "name": "Конденсаторы",
+              "qty": 50
+            },
+            {
+              "name": "Старый магнит",
+              "qty": 1
+            },
+            {
+              "name": "Сырая резина",
+              "qty": 30
+            },
+            {
+              "name": "Пучок проводов",
+              "qty": 2
+            }
+          ]
+        },
+        {
+          "id": "filtr-svetlo-zelenyy-br",
+          "name": "Фильтр светло-зеленый (БР)",
+          "thumbLabel": "ФС",
+          "recipe": [
+            {
+              "name": "Конденсаторы",
+              "qty": 50
+            },
+            {
+              "name": "Старый магнит",
+              "qty": 1
+            },
+            {
+              "name": "Сырая резина",
+              "qty": 30
+            },
+            {
+              "name": "Пучок проводов",
+              "qty": 2
+            }
+          ]
+        },
+        {
+          "id": "filtr-belyy-br",
+          "name": "Фильтр белый (БР)",
+          "thumbLabel": "ФБ",
+          "recipe": [
+            {
+              "name": "Конденсаторы",
+              "qty": 70
+            },
+            {
+              "name": "Старый магнит",
+              "qty": 2
+            },
+            {
+              "name": "Сырая резина",
+              "qty": 40
+            },
+            {
+              "name": "Пучок проводов",
+              "qty": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "disassembly",
+      "name": "Разборка",
+      "icon": "🪛",
+      "items": [
+        {
+          "id": "kondensatory",
+          "name": "Конденсаторы",
+          "thumbLabel": "К",
+          "recipe": [
+            {
+              "name": "Двусторонняя печатная плата",
+              "qty": 1
+            }
+          ]
+        },
+        {
+          "id": "predohraniteli",
+          "name": "Предохранители",
+          "thumbLabel": "П",
+          "recipe": [
+            {
+              "name": "Двусторонняя, старая печатная плата",
+              "qty": 1
+            }
+          ]
+        },
+        {
+          "id": "kusochki-plastika",
+          "name": "Кусочки пластика",
+          "thumbLabel": "КП",
+          "recipe": [
+            {
+              "name": "Печатная плата",
+              "qty": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "repair",
+      "name": "Ремонт",
+      "icon": "🩹",
+      "items": [
+        {
+          "id": "ochki-nochnogo-videniya",
+          "name": "Очки ночного видения",
+          "thumbLabel": "ОН",
+          "recipe": [
+            {
+              "name": "Очки ночного видения",
+              "qty": 1
+            },
+            {
+              "name": "Изолента",
+              "qty": 10
+            }
+          ]
+        },
+        {
+          "id": "remeshok-dlya-ochkov-nochnogo-videniya",
+          "name": "Ремешок для очков ночного видения",
+          "thumbLabel": "РД",
+          "recipe": [
+            {
+              "name": "Ремешок для очков ночного видения",
+              "qty": 1
+            },
+            {
+              "name": "Изолента",
+              "qty": 5
+            }
+          ]
+        },
+        {
+          "id": "protivogaz",
+          "name": "Противогаз",
+          "thumbLabel": "П",
+          "recipe": [
+            {
+              "name": "Противогаз",
+              "qty": 1
+            },
+            {
+              "name": "Изолента",
+              "qty": 1
+            }
+          ]
+        },
+        {
+          "id": "detektor-artefaktov-otklik",
+          "name": "Детектор артефактов “Отклик”",
+          "thumbLabel": "ДА",
+          "recipe": [
+            {
+              "name": "Детектор артефактов “Отклик”",
+              "qty": 1
+            },
+            {
+              "name": "Изолента",
+              "qty": 10
+            }
+          ]
+        },
+        {
+          "id": "detektor-artefaktov-medved",
+          "name": "Детектор артефактов “Медведь”",
+          "thumbLabel": "ДА",
+          "recipe": [
+            {
+              "name": "Детектор артефактов “Медведь”",
+              "qty": 1
+            },
+            {
+              "name": "Изолента",
+              "qty": 20
+            }
+          ]
+        },
+        {
+          "id": "detektor-artefaktov-gilka",
+          "name": "Детектор артефактов “Гилка”",
+          "thumbLabel": "ДА",
+          "recipe": [
+            {
+              "name": "Детектор артефактов “Гилка”",
+              "qty": 1
+            },
+            {
+              "name": "Изолента",
+              "qty": 30
+            }
+          ]
+        },
+        {
+          "id": "detektor-artefaktov-veles",
+          "name": "Детектор артефактов “Велес”",
+          "thumbLabel": "ДА",
+          "recipe": [
+            {
+              "name": "Детектор артефактов “Велес”",
+              "qty": 1
+            },
+            {
+              "name": "Изолента",
+              "qty": 40
+            }
+          ]
+        },
+        {
+          "id": "detektor-artefaktov-svarog",
+          "name": "Детектор артефактов “Сварог”",
+          "thumbLabel": "ДА",
+          "recipe": [
+            {
+              "name": "Детектор артефактов “Сварог”",
+              "qty": 1
+            },
+            {
+              "name": "Изолента",
+              "qty": 50
+            }
+          ]
+        },
+        {
+          "id": "pbs-1",
+          "name": "ПБС-1",
+          "thumbLabel": "П1",
+          "recipe": [
+            {
+              "name": "ПБС-1",
+              "qty": 1
+            },
+            {
+              "name": "Изолента",
+              "qty": 10
+            }
+          ]
+        },
+        {
+          "id": "pbs-4",
+          "name": "ПБС-4",
+          "thumbLabel": "П4",
+          "recipe": [
+            {
+              "name": "ПБС-4",
+              "qty": 1
+            },
+            {
+              "name": "Изолента",
+              "qty": 10
+            }
+          ]
+        },
+        {
+          "id": "derevyannaya-udochka-siniy",
+          "name": "Деревянная удочка (Синий)",
+          "thumbLabel": "ДУ",
+          "recipe": [
+            {
+              "name": "Деревянная удочка (Синий)",
+              "qty": 1
+            },
+            {
+              "name": "Изолента",
+              "qty": 1
+            }
+          ]
+        },
+        {
+          "id": "derevyannaya-udochka-zelenyy",
+          "name": "Деревянная удочка (Зелёный)",
+          "thumbLabel": "ДУ",
+          "recipe": [
+            {
+              "name": "Деревянная удочка (Зелёный)",
+              "qty": 1
+            },
+            {
+              "name": "Изолента",
+              "qty": 1
+            }
+          ]
+        },
+        {
+          "id": "derevyannaya-udochka-zheltyy",
+          "name": "Деревянная удочка (Жёлтый)",
+          "thumbLabel": "ДУ",
+          "recipe": [
+            {
+              "name": "Деревянная удочка (Жёлтый)",
+              "qty": 1
+            },
+            {
+              "name": "Изолента",
+              "qty": 1
+            }
+          ]
+        },
+        {
+          "id": "plastikovaya-udochka-krasnyy",
+          "name": "Пластиковая удочка (Красный)",
+          "thumbLabel": "ПУ",
+          "recipe": [
+            {
+              "name": "Пластиковая удочка (Красный)",
+              "qty": 1
+            },
+            {
+              "name": "Изолента",
+              "qty": 2
+            }
+          ]
+        },
+        {
+          "id": "pribor-nochnogo-videniya-m1-chernyy",
+          "name": "Прибор ночного видения (M1 Черный)",
+          "thumbLabel": "ПН",
+          "recipe": [
+            {
+              "name": "Прибор ночного видения (M1 Черный)",
+              "qty": 1
+            },
+            {
+              "name": "Изолента",
+              "qty": 20
+            }
+          ]
+        },
+        {
+          "id": "pribor-nochnogo-videniya-m1-bezhevyy",
+          "name": "Прибор ночного видения (M1 Бежевый)",
+          "thumbLabel": "ПН",
+          "recipe": [
+            {
+              "name": "Прибор ночного видения (M1 Бежевый)",
+              "qty": 1
+            },
+            {
+              "name": "Изолента",
+              "qty": 20
+            }
+          ]
+        },
+        {
+          "id": "pribor-nochnogo-videniya-m2-chernyy",
+          "name": "Прибор ночного видения (M2 Черный)",
+          "thumbLabel": "ПН",
+          "recipe": [
+            {
+              "name": "Прибор ночного видения (M2 Черный)",
+              "qty": 1
+            },
+            {
+              "name": "Изолента",
+              "qty": 20
+            }
+          ]
+        },
+        {
+          "id": "pribor-nochnogo-videniya-m3-zelenyy",
+          "name": "Прибор ночного видения (M3 Зеленый)",
+          "thumbLabel": "ПН",
+          "recipe": [
+            {
+              "name": "Прибор ночного видения (M3 Зеленый)",
+              "qty": 1
+            },
+            {
+              "name": "Изолента",
+              "qty": 20
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "backpacks",
+      "name": "Рюкзаки",
+      "icon": "🎒",
+      "items": [
+        {
+          "id": "ekzoskelet",
+          "name": "Экзоскелет",
+          "thumbLabel": "Э",
+          "recipe": [
+            {
+              "name": "Инструменты калибровки",
+              "qty": 2000
+            },
+            {
+              "name": "Ржавые гайки",
+              "qty": 800
+            },
+            {
+              "name": "Предохранители",
+              "qty": 800
+            },
+            {
+              "name": "Медная катушка",
+              "qty": 800
+            },
+            {
+              "name": "Гайка шестигранная оцинкованная",
+              "qty": 10
+            },
+            {
+              "name": "Конденсаторы",
+              "qty": 400
+            }
+          ]
+        },
+        {
+          "id": "ryukzak-bracken",
+          "name": "Рюкзак Bracken",
+          "thumbLabel": "РB",
+          "recipe": [
+            {
+              "name": "STR_MAP2_EPOX_backpack",
+              "qty": 1
+            },
+            {
+              "name": "FIT Шило для прокалывания отверстий",
+              "qty": 10
+            },
+            {
+              "name": "Инструменты калибровки",
+              "qty": 600
+            },
+            {
+              "name": "Предохранители",
+              "qty": 300
+            },
+            {
+              "name": "Ржавые гайки",
+              "qty": 300
+            },
+            {
+              "name": "Медная катушка",
+              "qty": 400
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "fishing",
+      "name": "Удочки",
+      "icon": "🎣",
+      "items": [
+        {
+          "id": "derevyannaya-udochka-siniy",
+          "name": "Деревянная удочка (Синий)",
+          "thumbLabel": "ДУ",
+          "recipe": [
+            {
+              "name": "Заводская удочка",
+              "qty": 1
+            },
+            {
+              "name": "Леска",
+              "qty": 10
+            }
+          ]
+        },
+        {
+          "id": "derevyannaya-udochka-zelenyy",
+          "name": "Деревянная удочка (Зелёный)",
+          "thumbLabel": "ДУ",
+          "recipe": [
+            {
+              "name": "Деревянная удочка (Синий)",
+              "qty": 1
+            },
+            {
+              "name": "Леска",
+              "qty": 20
+            }
+          ]
+        },
+        {
+          "id": "derevyannaya-udochka-zheltyy",
+          "name": "Деревянная удочка (Жёлтый)",
+          "thumbLabel": "ДУ",
+          "recipe": [
+            {
+              "name": "Деревянная удочка (Зелёный)",
+              "qty": 1
+            },
+            {
+              "name": "Леска",
+              "qty": 30
+            }
+          ]
+        },
+        {
+          "id": "plastikovaya-udochka-krasnyy",
+          "name": "Пластиковая удочка (Красный)",
+          "thumbLabel": "ПУ",
+          "recipe": [
+            {
+              "name": "Деревянная удочка (Жёлтый)",
+              "qty": 1
+            },
+            {
+              "name": "Леска",
+              "qty": 50
+            }
+          ]
+        },
+        {
+          "id": "samodelnaya-blesna",
+          "name": "Самодельная блесна",
+          "thumbLabel": "СБ",
+          "recipe": [
+            {
+              "name": "Дрова",
+              "qty": 1
+            }
+          ]
+        },
+        {
+          "id": "blesna-rzhavye-bolty",
+          "name": "Блесна (Ржавые болты)",
+          "thumbLabel": "БР",
+          "recipe": [
+            {
+              "name": "Ржавые болты",
+              "qty": 1
+            }
+          ]
+        },
+        {
+          "id": "blesna-kusochki-plastika",
+          "name": "Блесна (Кусочки пластика)",
+          "thumbLabel": "БК",
+          "recipe": [
+            {
+              "name": "Кусочки пластика",
+              "qty": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sets",
+      "name": "Сеты",
+      "icon": "🧥",
+      "items": [
+        {
+          "id": "maska-cherep-bracken",
+          "name": "Маска Череп Bracken",
+          "thumbLabel": "МЧ",
+          "recipe": [
+            {
+              "name": "Шлем Lucky Charm",
+              "qty": 1
+            },
+            {
+              "name": "Набор инструментов для тонкой работы",
+              "qty": 900
+            },
+            {
+              "name": "Конденсаторы",
+              "qty": 200
+            },
+            {
+              "name": "Леска",
+              "qty": 400
+            },
+            {
+              "name": "Бронеплита 1 класса защиты",
+              "qty": 2
+            },
+            {
+              "name": "FIT Шило для прокалывания отверстий",
+              "qty": 5
+            }
+          ],
+          "image": "assets/sets/bracken-skull-mask.png"
+        },
+        {
+          "id": "perchatki-bracken",
+          "name": "Перчатки Bracken",
+          "thumbLabel": "ПB",
+          "recipe": [
+            {
+              "name": "Перчатки Lucky Charm",
+              "qty": 1
+            },
+            {
+              "name": "Набор инструментов для тонкой работы",
+              "qty": 900
+            },
+            {
+              "name": "Конденсаторы",
+              "qty": 200
+            },
+            {
+              "name": "Леска",
+              "qty": 400
+            },
+            {
+              "name": "Бронеплита 1 класса защиты",
+              "qty": 2
+            },
+            {
+              "name": "FIT Шило для прокалывания отверстий",
+              "qty": 5
+            }
+          ],
+          "image": "assets/sets/bracken-gloves.png"
+        },
+        {
+          "id": "botinki-bracken",
+          "name": "Ботинки Bracken",
+          "thumbLabel": "БB",
+          "recipe": [
+            {
+              "name": "Ботинки Lucky Charm",
+              "qty": 1
+            },
+            {
+              "name": "Набор инструментов для тонкой работы",
+              "qty": 900
+            },
+            {
+              "name": "Конденсаторы",
+              "qty": 200
+            },
+            {
+              "name": "Леска",
+              "qty": 400
+            },
+            {
+              "name": "Бронеплита 1 класса защиты",
+              "qty": 2
+            },
+            {
+              "name": "FIT Шило для прокалывания отверстий",
+              "qty": 5
+            }
+          ],
+          "image": "assets/sets/bracken-boots.png"
+        },
+        {
+          "id": "ghillie-bracken",
+          "name": "Ghillie Bracken",
+          "thumbLabel": "GB",
+          "recipe": [
+            {
+              "name": "Маскировочный костюм Lucky Charm",
+              "qty": 1
+            },
+            {
+              "name": "Набор инструментов для тонкой работы",
+              "qty": 3000
+            },
+            {
+              "name": "Конденсаторы",
+              "qty": 400
+            },
+            {
+              "name": "Леска",
+              "qty": 500
+            },
+            {
+              "name": "Бронеплита 1 класса защиты",
+              "qty": 3
+            },
+            {
+              "name": "FIT Шило для прокалывания отверстий",
+              "qty": 8
+            },
+            {
+              "name": "лебедка",
+              "qty": 2
+            }
+          ],
+          "image": "assets/sets/bracken-ghillie.png"
+        },
+        {
+          "id": "kurtka-iz-tryapok",
+          "name": "Куртка из тряпок",
+          "thumbLabel": "КИ",
+          "recipe": [
+            {
+              "name": "Куртка с защитой Вышибалы",
+              "qty": 1
+            },
+            {
+              "name": "Набор инструментов для тонкой работы",
+              "qty": 1500
+            },
+            {
+              "name": "Конденсаторы",
+              "qty": 500
+            },
+            {
+              "name": "Леска",
+              "qty": 800
+            },
+            {
+              "name": "Бронеплита 1 класса защиты",
+              "qty": 5
+            },
+            {
+              "name": "FIT Шило для прокалывания отверстий",
+              "qty": 10
+            }
+          ],
+          "image": "assets/sets/cloth-jacket.png"
+        },
+        {
+          "id": "bronya-iz-kozhi-i-tryapok",
+          "name": "Броня из кожи и тряпок",
+          "thumbLabel": "БИ",
+          "recipe": [
+            {
+              "name": "Разгрузка Вышибалы",
+              "qty": 1
+            },
+            {
+              "name": "Набор инструментов для тонкой работы",
+              "qty": 1500
+            },
+            {
+              "name": "Конденсаторы",
+              "qty": 500
+            },
+            {
+              "name": "Леска",
+              "qty": 800
+            },
+            {
+              "name": "Бронеплита 1 класса защиты",
+              "qty": 5
+            },
+            {
+              "name": "FIT Шило для прокалывания отверстий",
+              "qty": 10
+            }
+          ],
+          "image": "assets/sets/cloth-armor.png"
+        },
+        {
+          "id": "shtany-iz-tkani",
+          "name": "Штаны из ткани",
+          "thumbLabel": "ШИ",
+          "recipe": [
+            {
+              "name": "Штаны Вышибалы",
+              "qty": 1
+            },
+            {
+              "name": "Набор инструментов для тонкой работы",
+              "qty": 1500
+            },
+            {
+              "name": "Конденсаторы",
+              "qty": 500
+            },
+            {
+              "name": "Леска",
+              "qty": 800
+            },
+            {
+              "name": "Бронеплита 1 класса защиты",
+              "qty": 5
+            },
+            {
+              "name": "FIT Шило для прокалывания отверстий",
+              "qty": 10
+            }
+          ],
+          "image": "assets/sets/cloth-pants.png"
+        },
+        {
+          "id": "kapyushon-iz-tryapok",
+          "name": "Капюшон из тряпок",
+          "thumbLabel": "КИ",
+          "recipe": [
+            {
+              "name": "Наушники Вышибалы",
+              "qty": 1
+            },
+            {
+              "name": "Набор инструментов для тонкой работы",
+              "qty": 900
+            },
+            {
+              "name": "Конденсаторы",
+              "qty": 200
+            },
+            {
+              "name": "Леска",
+              "qty": 400
+            },
+            {
+              "name": "Бронеплита 1 класса защиты",
+              "qty": 2
+            },
+            {
+              "name": "FIT Шило для прокалывания отверстий",
+              "qty": 5
+            }
+          ],
+          "image": "assets/sets/cloth-hood.png"
+        },
+        {
+          "id": "peschannye-perchatki",
+          "name": "Песчанные перчатки",
+          "thumbLabel": "ПП",
+          "recipe": [
+            {
+              "name": "Перчатки Вышибалы",
+              "qty": 1
+            },
+            {
+              "name": "Набор инструментов для тонкой работы",
+              "qty": 900
+            },
+            {
+              "name": "Конденсаторы",
+              "qty": 200
+            },
+            {
+              "name": "Леска",
+              "qty": 400
+            },
+            {
+              "name": "Бронеплита 1 класса защиты",
+              "qty": 2
+            },
+            {
+              "name": "FIT Шило для прокалывания отверстий",
+              "qty": 5
+            }
+          ],
+          "image": "assets/sets/sand-gloves.png"
+        },
+        {
+          "id": "botinki-iz-tryapok",
+          "name": "Ботинки из тряпок",
+          "thumbLabel": "БИ",
+          "recipe": [
+            {
+              "name": "Ботинки Вышибалы",
+              "qty": 1
+            },
+            {
+              "name": "Набор инструментов для тонкой работы",
+              "qty": 900
+            },
+            {
+              "name": "Конденсаторы",
+              "qty": 200
+            },
+            {
+              "name": "Леска",
+              "qty": 400
+            },
+            {
+              "name": "Бронеплита 1 класса защиты",
+              "qty": 2
+            },
+            {
+              "name": "FIT Шило для прокалывания отверстий",
+              "qty": 5
+            }
+          ],
+          "image": "assets/sets/cloth-boots.png"
+        },
+        {
+          "id": "maska",
+          "name": "Маска",
+          "thumbLabel": "М",
+          "recipe": [
+            {
+              "name": "Экран",
+              "qty": 1
+            },
+            {
+              "name": "Набор инструментов для тонкой работы",
+              "qty": 2500
+            },
+            {
+              "name": "Конденсаторы",
+              "qty": 200
+            },
+            {
+              "name": "Леска",
+              "qty": 400
+            },
+            {
+              "name": "Бронеплита 1 класса защиты",
+              "qty": 2
+            },
+            {
+              "name": "FIT Шило для прокалывания отверстий",
+              "qty": 5
+            }
+          ],
+          "image": "assets/sets/mask.png"
+        },
+        {
+          "id": "maska-vikinga",
+          "name": "Маска Викинга",
+          "thumbLabel": "МВ",
+          "recipe": [
+            {
+              "name": "Грязный зуб",
+              "qty": 1
+            },
+            {
+              "name": "Маска",
+              "qty": 1
+            }
+          ],
+          "image": "assets/sets/viking-mask.png"
+        },
+        {
+          "id": "kurtka-quebec",
+          "name": "Куртка Quebec",
+          "thumbLabel": "КQ",
+          "recipe": [
+            {
+              "name": "Золотой зуб человека",
+              "qty": 1
+            },
+            {
+              "name": "Куртка из тряпок",
+              "qty": 1
+            }
+          ],
+          "image": "assets/sets/quebec-jacket.png"
+        },
+        {
+          "id": "bronezhilet-quebec",
+          "name": "Бронежилет Quebec",
+          "thumbLabel": "БQ",
+          "recipe": [
+            {
+              "name": "Золотой зуб человека",
+              "qty": 1
+            },
+            {
+              "name": "Броня из кожи и тряпок",
+              "qty": 1
+            }
+          ],
+          "image": "assets/sets/quebec-armor.png"
+        },
+        {
+          "id": "shtany-quebec",
+          "name": "Штаны Quebec",
+          "thumbLabel": "ШQ",
+          "recipe": [
+            {
+              "name": "Золотой зуб человека",
+              "qty": 1
+            },
+            {
+              "name": "Штаны из ткани",
+              "qty": 1
+            }
+          ],
+          "image": "assets/sets/quebec-pants.png"
+        },
+        {
+          "id": "maska-quebec",
+          "name": "Маска Quebec",
+          "thumbLabel": "МQ",
+          "recipe": [
+            {
+              "name": "Золотой зуб человека",
+              "qty": 1
+            },
+            {
+              "name": "Капюшон из тряпок",
+              "qty": 1
+            }
+          ],
+          "image": "assets/sets/quebec-mask.png"
+        },
+        {
+          "id": "perchatki-him-zaschity-quebec",
+          "name": "Перчатки хим.защиты Quebec",
+          "thumbLabel": "ПХ",
+          "recipe": [
+            {
+              "name": "Золотой зуб человека",
+              "qty": 1
+            },
+            {
+              "name": "Песчанные перчатки",
+              "qty": 1
+            }
+          ],
+          "image": "assets/sets/quebec-gloves.png"
+        },
+        {
+          "id": "botinki-quebec",
+          "name": "Ботинки Quebec",
+          "thumbLabel": "БQ",
+          "recipe": [
+            {
+              "name": "Золотой зуб человека",
+              "qty": 1
+            },
+            {
+              "name": "Ботинки из тряпок",
+              "qty": 1
+            }
+          ],
+          "image": "assets/sets/quebec-boots.png"
+        },
+        {
+          "id": "kurtka-evropeyskogo-palacha",
+          "name": "Куртка Европейского Палача",
+          "thumbLabel": "КЕ",
+          "recipe": [
+            {
+              "name": "Грязный зуб",
+              "qty": 1
+            },
+            {
+              "name": "Куртка Quebec",
+              "qty": 1
+            }
+          ],
+          "image": "assets/sets/euro-jacket.png"
+        },
+        {
+          "id": "bronezhilet-evropeyskogo-palacha",
+          "name": "Бронежилет Европейского Палача",
+          "thumbLabel": "БЕ",
+          "recipe": [
+            {
+              "name": "Грязный зуб",
+              "qty": 1
+            },
+            {
+              "name": "Бронежилет Quebec",
+              "qty": 1
+            }
+          ],
+          "image": "assets/sets/euro-armor.png"
+        },
+        {
+          "id": "shtany-evropeyskogo-palacha",
+          "name": "Штаны Европейского Палача",
+          "thumbLabel": "ШЕ",
+          "recipe": [
+            {
+              "name": "Грязный зуб",
+              "qty": 1
+            },
+            {
+              "name": "Штаны Quebec",
+              "qty": 1
+            }
+          ],
+          "image": "assets/sets/euro-pants.png"
+        },
+        {
+          "id": "shlem-evropeyskogo-palacha",
+          "name": "Шлем Европейского Палача",
+          "thumbLabel": "ШЕ",
+          "recipe": [
+            {
+              "name": "Грязный зуб",
+              "qty": 1
+            },
+            {
+              "name": "Маска Quebec",
+              "qty": 1
+            }
+          ],
+          "image": "assets/sets/euro-helmet.png"
+        },
+        {
+          "id": "perchatki-evropeyskogo-palacha",
+          "name": "Перчатки Европейского Палача",
+          "thumbLabel": "ПЕ",
+          "recipe": [
+            {
+              "name": "Грязный зуб",
+              "qty": 1
+            },
+            {
+              "name": "Перчатки хим.защиты Quebec",
+              "qty": 1
+            }
+          ],
+          "image": "assets/sets/euro-gloves.png"
+        },
+        {
+          "id": "botinki-evropeyskogo-palacha",
+          "name": "Ботинки Европейского Палача",
+          "thumbLabel": "БЕ",
+          "recipe": [
+            {
+              "name": "Грязный зуб",
+              "qty": 1
+            },
+            {
+              "name": "Ботинки Quebec",
+              "qty": 1
+            }
+          ],
+          "image": "assets/sets/euro-boots.png"
+        }
+      ]
     }
   ]
 };
