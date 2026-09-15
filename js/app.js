@@ -318,6 +318,5 @@ function initBgLoop() {
 
 document.addEventListener("DOMContentLoaded", () => {
   initBgLoop();
-  initSparks();
   if (document.body.dataset.page === "craft") initCraftPage();
 });
