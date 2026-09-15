@@ -264,7 +264,60 @@ function initCraftPage() {
   renderTree();
 }
 
+function initBgLoop() {
+  const clips = Array.from(document.querySelectorAll(".bg-video__clip"));
+  if (clips.length < 2) return;
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+  const FADE_SEC = 1.4;
+  let active = 0;
+  let switching = false;
+
+  clips.forEach((video) => {
+    video.muted = true;
+    video.loop = false;
+    video.playsInline = true;
+  });
+
+  const playSafe = (video) => {
+    const p = video.play();
+    if (p && typeof p.catch === "function") p.catch(() => {});
+  };
+
+  playSafe(clips[0]);
+
+  const tick = () => {
+    const current = clips[active];
+    if (!current.duration || Number.isNaN(current.duration) || switching) {
+      requestAnimationFrame(tick);
+      return;
+    }
+
+    const remaining = current.duration - current.currentTime;
+    if (remaining <= FADE_SEC) {
+      switching = true;
+      const next = clips[1 - active];
+      next.currentTime = 0;
+      playSafe(next);
+      next.classList.add("is-active");
+      current.classList.remove("is-active");
+      active = 1 - active;
+
+      setTimeout(() => {
+        current.pause();
+        current.currentTime = 0;
+        switching = false;
+      }, FADE_SEC * 1000);
+    }
+
+    requestAnimationFrame(tick);
+  };
+
+  requestAnimationFrame(tick);
+}
+
 document.addEventListener("DOMContentLoaded", () => {
+  initBgLoop();
   initSparks();
   if (document.body.dataset.page === "craft") initCraftPage();
 });
