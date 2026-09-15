@@ -31,10 +31,12 @@ function initSparks() {
     }
 
     spark.classList.add(sparkType);
-    spark.style.left = Math.random() * 100 + "%";
-    const maxHeight = 60 + Math.random() * 35;
-    const windDirection = (Math.random() - 0.5) * 2;
-    const windStrength = 50 + Math.random() * 150;
+    /* Искры поднимаются от зоны костра */
+    spark.style.left = 22 + Math.random() * 36 + "%";
+    spark.style.bottom = 4 + Math.random() * 10 + "%";
+    const maxHeight = 45 + Math.random() * 40;
+    const windDirection = (Math.random() - 0.35) * 2;
+    const windStrength = 40 + Math.random() * 120;
 
     function getWindPoint(progress) {
       const baseWind = windDirection * windStrength * progress;
@@ -70,13 +72,13 @@ function initSparks() {
   }
 
   function sparkBurst() {
-    const count = 2 + Math.floor(Math.random() * 3);
-    for (let i = 0; i < count; i++) setTimeout(() => createSpark(), i * 80);
+    const count = 3 + Math.floor(Math.random() * 4);
+    for (let i = 0; i < count; i++) setTimeout(() => createSpark(), i * 60);
   }
 
   function sparkLoop() {
     sparkBurst();
-    setTimeout(sparkLoop, 150 + Math.random() * 250);
+    setTimeout(sparkLoop, 110 + Math.random() * 180);
   }
 
   sparkLoop();
