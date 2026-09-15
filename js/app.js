@@ -2,8 +2,8 @@ function toggleHeader() {
   var header = document.getElementById("full-header");
   var btn = document.querySelector(".menu-toggle");
   if (!header || !btn) return;
-    header.classList.toggle("expanded");
-    btn.setAttribute("aria-expanded", header.classList.contains("expanded") ? "true" : "false");
+  header.classList.toggle("expanded");
+  btn.setAttribute("aria-expanded", header.classList.contains("expanded") ? "true" : "false");
 }
 
 function initSparks() {
@@ -90,25 +90,14 @@ function hasExpandable(item) {
   return Boolean((item.recipe && item.recipe.length) || (item.tools && item.tools.length));
 }
 
-function collectTotals(itemId) {
-  const item = itemById(itemId);
-  const acc = {};
-  (item.recipe || []).forEach((part) => {
-    acc[part.id] = (acc[part.id] || 0) + part.qty;
-  });
-  return acc;
-}
-
 function initCraftPage() {
   const catalog = document.getElementById("catalog");
   const treeRoot = document.getElementById("tree-root");
-  const infoRoot = document.getElementById("info-root");
   const search = document.getElementById("craft-search");
   const tooltip = document.getElementById("tooltip");
   if (!catalog || !treeRoot) return;
 
   let currentId = GZ.CRAFTABLE[0];
-  let selectedId = currentId;
 
   function showTooltip(item, event) {
     if (!tooltip || !item) return;
@@ -133,50 +122,6 @@ function initCraftPage() {
     tooltip.style.top = y + "px";
   }
 
-  function renderInfo(id) {
-    const item = itemById(id);
-    if (!item || !infoRoot) return;
-    const totals = collectTotals(currentId);
-    const totalRows = Object.keys(totals)
-      .map((key) => {
-        const it = itemById(key);
-        return (
-          "<li><span>" +
-          it.name +
-          "</span><span>×" +
-          totals[key] +
-          "</span></li>"
-        );
-      })
-      .join("");
-
-    infoRoot.innerHTML =
-      '<img src="' +
-      item.image +
-      '" alt="' +
-      item.name +
-      '">' +
-      "<h3>" +
-      item.name +
-      "</h3>" +
-      '<div class="muted">' +
-      item.categoryLabel +
-      (item.tool ? " · не расходуется" : "") +
-      "</div>" +
-      '<div class="info-label">Описание</div>' +
-      "<p>" +
-      item.description +
-      "</p>" +
-      '<div class="info-label">Где найти</div>' +
-      "<p>" +
-      item.where +
-      "</p>" +
-      (item.qtyNote ? "<p class='note'>" + item.qtyNote + "</p>" : "") +
-      '<div class="totals"><div class="info-label">Нужно для станка</div><ul>' +
-      totalRows +
-      "</ul></div>";
-  }
-
   function renderNode(part, multiplier) {
     const item = itemById(part.id);
     if (!item) return "";
@@ -192,21 +137,15 @@ function initCraftPage() {
     }
 
     return (
-      '<div class="tree-node' +
-      (expandable ? "" : "") +
-      '" data-id="' +
+      '<div class="tree-node" data-id="' +
       item.id +
       '">' +
-      '<div class="tree-row' +
-      (selectedId === item.id ? " selected" : "") +
-      '" data-id="' +
+      '<div class="tree-row" data-id="' +
       item.id +
       '">' +
-      '<button class="tree-toggle' +
-      (expandable ? "" : " leaf") +
-      '" type="button" aria-label="Раскрыть">' +
-      (expandable ? "+" : "") +
-      "</button>" +
+      (expandable
+        ? '<button class="tree-toggle" type="button" aria-label="Раскрыть">+</button>'
+        : "") +
       '<img src="' +
       item.image +
       '" alt="' +
@@ -231,6 +170,7 @@ function initCraftPage() {
   function renderTree() {
     const item = itemById(currentId);
     if (!item) return;
+    const hasAnyExpandable = (item.recipe || []).some((part) => hasExpandable(itemById(part.id)));
     const nodes = (item.recipe || []).map((part) => renderNode(part, 1)).join("");
     treeRoot.innerHTML =
       '<div class="tree-result">' +
@@ -244,11 +184,13 @@ function initCraftPage() {
       "</h3><p class='muted'>" +
       item.description +
       "</p></div></div>" +
-      '<p class="tree-hint">Наведите на компонент, чтобы увидеть, где его искать. Нажмите на строку с «+», чтобы раскрыть ветку крафта.</p>' +
-      '<div class="tree-list">' +
+      '<p class="tree-hint">' +
+      (hasAnyExpandable
+        ? "Наведите на компонент, чтобы увидеть, где его искать. Нажмите «+», чтобы раскрыть ветку крафта."
+        : "Наведите на компонент, чтобы увидеть, где его искать.") +
+      '</p><div class="tree-list">' +
       nodes +
       "</div>";
-    renderInfo(selectedId);
   }
 
   function renderCatalog(filter) {
@@ -280,29 +222,18 @@ function initCraftPage() {
     const btn = event.target.closest(".catalog-item");
     if (!btn) return;
     currentId = btn.dataset.id;
-    selectedId = currentId;
-    renderCatalog(search.value);
+    renderCatalog(search ? search.value : "");
     renderTree();
   });
 
   treeRoot.addEventListener("click", (event) => {
     hideTooltip();
     const toggle = event.target.closest(".tree-toggle");
-    const row = event.target.closest(".tree-row");
-    if (toggle && !toggle.classList.contains("leaf")) {
+    if (toggle) {
       event.preventDefault();
       const node = toggle.closest(".tree-node");
       node.classList.toggle("open");
       toggle.textContent = node.classList.contains("open") ? "−" : "+";
-    }
-    if (row) {
-      selectedId = row.dataset.id;
-      treeRoot.querySelectorAll(".tree-row").forEach((el) => el.classList.remove("selected"));
-      row.classList.add("selected");
-      renderInfo(selectedId);
-      if (window.innerWidth < 980 && infoRoot) {
-        infoRoot.scrollIntoView({ behavior: "smooth", block: "nearest" });
-      }
     }
   });
 
@@ -323,9 +254,8 @@ function initCraftPage() {
   }
 
   const hashId = (location.hash || "").replace("#", "");
-  if (hashId && GZ.ITEMS[hashId]) {
+  if (hashId && GZ.ITEMS[hashId] && GZ.CRAFTABLE.includes(hashId)) {
     currentId = hashId;
-    selectedId = hashId;
   }
 
   renderCatalog("");

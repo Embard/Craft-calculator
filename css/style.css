@@ -1,7 +1,7 @@
 /* Справочник Грань Заката — в стиле основного сайта */
 
 html {
-  background-color: #121212;
+  background-color: #0c0b09;
   height: 100%;
 }
 
@@ -14,6 +14,52 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  position: relative;
+}
+
+/* Атмосфера: ночной лагерь / верстак */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -4;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 90% 55% at 50% -10%, rgba(255, 120, 40, 0.14), transparent 55%),
+    radial-gradient(ellipse 50% 40% at 15% 85%, rgba(90, 55, 20, 0.35), transparent 60%),
+    radial-gradient(ellipse 45% 35% at 88% 70%, rgba(40, 55, 35, 0.28), transparent 65%),
+    linear-gradient(180deg, #14110e 0%, #0f0e0c 42%, #0a0908 100%);
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -3;
+  pointer-events: none;
+  opacity: 0.45;
+  background-image:
+    linear-gradient(rgba(255, 140, 60, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 140, 60, 0.025) 1px, transparent 1px),
+    repeating-linear-gradient(
+      -12deg,
+      transparent,
+      transparent 11px,
+      rgba(0, 0, 0, 0.18) 11px,
+      rgba(0, 0, 0, 0.18) 12px
+    );
+  background-size: 48px 48px, 48px 48px, auto;
+  mask-image: radial-gradient(ellipse 80% 70% at 50% 40%, #000 20%, transparent 85%);
+}
+
+.atmosphere-haze {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 70% 35% at 50% 100%, rgba(255, 90, 20, 0.12), transparent 55%),
+    linear-gradient(180deg, transparent 55%, rgba(0, 0, 0, 0.55) 100%);
 }
 
 p {
@@ -104,10 +150,10 @@ nav a.link.external {
 }
 
 .panel {
-  background-color: rgba(30, 30, 30, 0.85);
+  background-color: rgba(26, 24, 21, 0.88);
   border-radius: 8px;
-  border: 1px solid #333;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3), 0 0 20px rgba(255, 100, 0, 0.08);
+  border: 1px solid #3a342c;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.35), 0 0 24px rgba(255, 100, 0, 0.08);
 }
 
 .panel-title {
@@ -438,8 +484,8 @@ nav a.link.external {
 
 .craft-layout {
   display: grid;
-  grid-template-columns: 240px 1fr 280px;
-  gap: 16px;
+  grid-template-columns: 260px 1fr;
+  gap: 18px;
 }
 
 .catalog-list {
@@ -492,13 +538,13 @@ nav a.link.external {
   box-shadow: 0 5px 15px rgba(255, 107, 0, 0.2);
 }
 
-.tree-wrap,
-.info-wrap {
-  background: rgba(37, 37, 37, 0.8);
-  border: 1px solid #333;
+.tree-wrap {
+  background: rgba(28, 26, 23, 0.82);
+  border: 1px solid #3a342c;
   border-radius: 8px;
   padding: 16px;
   min-height: 420px;
+  box-shadow: inset 0 1px 0 rgba(255, 140, 60, 0.05);
 }
 
 .tree-result {
@@ -586,10 +632,6 @@ nav a.link.external {
   padding: 0;
   cursor: pointer;
   flex-shrink: 0;
-}
-
-.tree-toggle.leaf {
-  visibility: hidden;
 }
 
 .tree-row img {
