@@ -17,7 +17,34 @@ body {
   position: relative;
 }
 
-/* Атмосфера: ночной лагерь / верстак */
+.bg-video {
+  position: fixed;
+  inset: 0;
+  z-index: -5;
+  overflow: hidden;
+  pointer-events: none;
+  background: #0c0b09;
+}
+
+.bg-video video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 65%;
+  filter: brightness(0.42) saturate(0.95) contrast(1.08);
+  transform: scale(1.04);
+}
+
+.bg-video::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(8, 7, 6, 0.72) 0%, rgba(8, 7, 6, 0.45) 35%, rgba(8, 7, 6, 0.55) 70%, rgba(5, 4, 3, 0.82) 100%),
+    radial-gradient(ellipse 70% 50% at 50% 40%, transparent 0%, rgba(0, 0, 0, 0.45) 100%);
+}
+
+/* Атмосфера поверх видео */
 body::before {
   content: "";
   position: fixed;
@@ -25,10 +52,8 @@ body::before {
   z-index: -4;
   pointer-events: none;
   background:
-    radial-gradient(ellipse 90% 55% at 50% -10%, rgba(255, 120, 40, 0.14), transparent 55%),
-    radial-gradient(ellipse 50% 40% at 15% 85%, rgba(90, 55, 20, 0.35), transparent 60%),
-    radial-gradient(ellipse 45% 35% at 88% 70%, rgba(40, 55, 35, 0.28), transparent 65%),
-    linear-gradient(180deg, #14110e 0%, #0f0e0c 42%, #0a0908 100%);
+    radial-gradient(ellipse 90% 45% at 50% -5%, rgba(255, 120, 40, 0.1), transparent 55%),
+    radial-gradient(ellipse 50% 35% at 20% 90%, rgba(255, 90, 20, 0.12), transparent 60%);
 }
 
 body::after {
@@ -37,19 +62,12 @@ body::after {
   inset: 0;
   z-index: -3;
   pointer-events: none;
-  opacity: 0.45;
+  opacity: 0.28;
   background-image:
     linear-gradient(rgba(255, 140, 60, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 140, 60, 0.025) 1px, transparent 1px),
-    repeating-linear-gradient(
-      -12deg,
-      transparent,
-      transparent 11px,
-      rgba(0, 0, 0, 0.18) 11px,
-      rgba(0, 0, 0, 0.18) 12px
-    );
-  background-size: 48px 48px, 48px 48px, auto;
-  mask-image: radial-gradient(ellipse 80% 70% at 50% 40%, #000 20%, transparent 85%);
+    linear-gradient(90deg, rgba(255, 140, 60, 0.02) 1px, transparent 1px);
+  background-size: 56px 56px;
+  mask-image: radial-gradient(ellipse 75% 65% at 50% 40%, #000 15%, transparent 80%);
 }
 
 .atmosphere-haze {
@@ -58,8 +76,19 @@ body::after {
   z-index: -2;
   pointer-events: none;
   background:
-    radial-gradient(ellipse 70% 35% at 50% 100%, rgba(255, 90, 20, 0.12), transparent 55%),
-    linear-gradient(180deg, transparent 55%, rgba(0, 0, 0, 0.55) 100%);
+    radial-gradient(ellipse 70% 35% at 50% 100%, rgba(255, 90, 20, 0.1), transparent 55%),
+    linear-gradient(180deg, transparent 60%, rgba(0, 0, 0, 0.45) 100%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bg-video video {
+    display: none;
+  }
+
+  .bg-video {
+    background:
+      #0c0b09 url("../img/bg/woods-night.jpg") center 65% / cover no-repeat;
+  }
 }
 
 p {
@@ -150,10 +179,11 @@ nav a.link.external {
 }
 
 .panel {
-  background-color: rgba(26, 24, 21, 0.88);
+  background-color: rgba(18, 16, 14, 0.9);
   border-radius: 8px;
   border: 1px solid #3a342c;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.35), 0 0 24px rgba(255, 100, 0, 0.08);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.45), 0 0 24px rgba(255, 100, 0, 0.08);
+  backdrop-filter: blur(6px);
 }
 
 .panel-title {
@@ -185,10 +215,11 @@ nav a.link.external {
 
 .news-card,
 .feature-card {
-  background: rgba(37, 37, 37, 0.8);
+  background: rgba(18, 16, 14, 0.88);
   border-radius: 8px;
   padding: 20px;
-  border: 1px solid #333;
+  border: 1px solid #3a342c;
+  backdrop-filter: blur(6px);
 }
 
 .news-card h3 {
@@ -341,6 +372,7 @@ nav a.link.external {
   left: 0;
   width: 100%;
   height: 400px;
+  opacity: 0.45;
   background:
     radial-gradient(ellipse 80% 100% at 20% 100%, rgba(255, 140, 0, 0.4) 0%, transparent 50%),
     radial-gradient(ellipse 80% 100% at 50% 100%, rgba(255, 120, 0, 0.6) 0%, transparent 60%),
