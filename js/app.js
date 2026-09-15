@@ -31,12 +31,12 @@ function initSparks() {
     }
 
     spark.classList.add(sparkType);
-    /* Искры поднимаются от зоны костра */
-    spark.style.left = 22 + Math.random() * 36 + "%";
-    spark.style.bottom = 4 + Math.random() * 10 + "%";
-    const maxHeight = 45 + Math.random() * 40;
-    const windDirection = (Math.random() - 0.35) * 2;
-    const windStrength = 40 + Math.random() * 120;
+    /* Точка старта — зона пламени костра в кадре */
+    spark.style.left = 38 + Math.random() * 24 + "%";
+    spark.style.bottom = 32 + Math.random() * 14 + "%";
+    const maxHeight = 28 + Math.random() * 32;
+    const windDirection = (Math.random() - 0.45) * 1.8;
+    const windStrength = 30 + Math.random() * 90;
 
     function getWindPoint(progress) {
       const baseWind = windDirection * windStrength * progress;
