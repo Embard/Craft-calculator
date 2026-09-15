@@ -32,9 +32,9 @@ body {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center 60%;
-  filter: brightness(0.78) saturate(1.05) contrast(1.02);
-  transform: scale(1.03);
+  object-position: center 72%;
+  filter: brightness(0.82) saturate(1.05) contrast(1.02);
+  transform: scale(1.02);
   opacity: 0;
   transition: opacity 1.4s ease-in-out;
 }
@@ -51,22 +51,13 @@ body {
   background:
     linear-gradient(
       180deg,
-      rgba(8, 7, 6, 0.68) 0%,
-      rgba(8, 7, 6, 0.5) 24%,
-      rgba(8, 7, 6, 0.28) 48%,
-      rgba(8, 7, 6, 0.1) 70%,
-      rgba(5, 4, 3, 0.38) 100%
-    ),
-    radial-gradient(ellipse 80% 55% at 50% 35%, transparent 0%, rgba(0, 0, 0, 0.28) 100%);
-}
-
-/* Атмосфера поверх видео */
-body::before {
-  content: none;
-}
-
-body::after {
-  content: none;
+      rgba(8, 7, 6, 0.78) 0%,
+      rgba(8, 7, 6, 0.58) 18%,
+      rgba(8, 7, 6, 0.28) 36%,
+      rgba(8, 7, 6, 0.06) 52%,
+      transparent 68%,
+      rgba(5, 4, 3, 0.25) 100%
+    );
 }
 
 .atmosphere-haze {
@@ -74,7 +65,7 @@ body::after {
   inset: 0;
   z-index: -2;
   pointer-events: none;
-  background: linear-gradient(180deg, transparent 68%, rgba(0, 0, 0, 0.32) 100%);
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.2) 0%, transparent 28%, transparent 78%, rgba(0, 0, 0, 0.35) 100%);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -84,7 +75,7 @@ body::after {
 
   .bg-video {
     background:
-      #0c0b09 url("../img/bg/woods-night.jpg") center 60% / cover no-repeat;
+      #0c0b09 url("../img/bg/woods-night.jpg") center 72% / cover no-repeat;
   }
 }
 
@@ -197,123 +188,82 @@ nav a.link.external {
 }
 
 .lead {
-  font-size: 22px;
-  font-weight: 400;
-  color: rgba(255, 248, 240, 0.94);
-  margin: 0 0 24px;
+  font-size: clamp(22px, 2.4vw, 30px);
+  font-weight: 500;
+  color: rgba(255, 248, 240, 0.96);
+  margin: 0 0 14px;
   text-align: center;
   letter-spacing: 0.02em;
+  line-height: 1.35;
+  text-shadow: 0 2px 24px rgba(0, 0, 0, 0.8);
+}
+
+.home-hero {
+  flex: 1;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  width: 100%;
+  padding: 36px 20px 0;
+  box-sizing: border-box;
+}
+
+.home-hero__content {
+  width: min(760px, 100%);
+  text-align: center;
+}
+
+.home-support {
+  margin: 0 auto 28px;
+  max-width: 620px;
+  color: rgba(220, 214, 204, 0.9);
+  font-size: 16px;
+  line-height: 1.6;
+  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.75);
+}
+
+.home-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.home-action {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  text-align: left;
+  padding: 18px 20px;
+  border-radius: 10px;
+  color: inherit;
+  background: rgba(10, 9, 8, 0.72);
+  border: 1px solid rgba(255, 140, 60, 0.18);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
+  transition: border-color 0.25s ease, background-color 0.25s ease, transform 0.25s ease;
+}
+
+.home-action:hover {
+  border-color: rgba(255, 107, 0, 0.55);
+  background: rgba(14, 12, 10, 0.86);
+  transform: translateY(-2px);
+}
+
+.home-action strong {
+  color: #fff;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.home-action > span:last-child {
+  color: rgba(180, 174, 164, 0.95);
+  font-size: 14px;
   line-height: 1.45;
-  text-shadow: 0 2px 20px rgba(0, 0, 0, 0.75);
 }
 
 .home-page {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  min-height: calc(100vh - 150px);
-  margin-top: 24px;
-  margin-bottom: 24px;
-}
-
-.home-stage {
-  width: 100%;
-}
-
-.home-grid {
-  display: grid;
-  grid-template-columns: 1.35fr 1fr;
-  gap: 18px;
-  align-items: stretch;
-}
-
-.news-card,
-.feature-card {
-  background: rgba(12, 11, 10, 0.82);
-  border-radius: 10px;
-  padding: 22px 24px;
-  border: 1px solid rgba(255, 140, 60, 0.14);
-  backdrop-filter: blur(10px);
-  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
-}
-
-.news-card {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-.news-card h3 {
-  margin: 0 0 14px;
-  color: #ff6b00;
-  border-bottom: 1px solid rgba(255, 107, 0, 0.28);
-  padding-bottom: 10px;
-  font-size: 15px;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-}
-
-.news-card p {
-  color: rgba(230, 224, 214, 0.92);
-  margin-bottom: 12px;
-}
-
-.news-card p:last-child {
-  margin-bottom: 0;
-}
-
-.featured-hero {
-  display: flex;
-  gap: 18px;
-  align-items: flex-start;
-}
-
-.featured-hero img {
-  width: 150px;
-  height: 150px;
-  object-fit: cover;
-  border-radius: 8px;
-  border: 1px solid #ff6b00;
-  background: #111;
-  flex-shrink: 0;
-}
-
-.featured-hero p:last-of-type {
-  margin-bottom: 16px;
-}
-
-.feature-list {
-  display: grid;
-  grid-template-rows: 1fr 1fr;
-  gap: 18px;
-  height: 100%;
-}
-
-.feature-card {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  color: inherit;
-  transition: border-color 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease;
-}
-
-.feature-card:hover {
-  border-color: rgba(255, 107, 0, 0.55);
-  background: rgba(18, 15, 12, 0.9);
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 107, 0, 0.12);
-}
-
-.feature-card h3 {
-  margin: 0 0 8px;
-  color: #fff;
-  font-size: 20px;
-}
-
-.feature-card p {
-  margin: 0;
-  color: rgba(180, 174, 164, 0.95);
-  font-size: 14px;
-  line-height: 1.5;
+  display: none;
 }
 
 .feature-kicker {
@@ -323,7 +273,7 @@ nav a.link.external {
   font-weight: 700;
   letter-spacing: 1.2px;
   text-transform: uppercase;
-  margin-bottom: 8px;
+  margin-bottom: 2px;
 }
 
 .muted {
@@ -858,31 +808,37 @@ footer {
   margin-top: auto;
   padding: 16px 20px 22px;
   text-align: center;
-  color: rgba(170, 164, 154, 0.75);
+  color: rgba(210, 200, 185, 0.7);
   font-size: 12px;
   letter-spacing: 0.03em;
-  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.7);
+  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.85);
+  position: relative;
+  z-index: 2;
+}
+
+body[data-page="home"] footer {
+  background: transparent;
 }
 
 @media (max-width: 980px) {
   .craft-layout,
-  .home-grid {
+  .home-grid,
+  .home-actions {
     grid-template-columns: 1fr;
   }
 
-  .home-page {
-    min-height: auto;
-    margin-top: 28px;
-    justify-content: flex-start;
+  .home-hero {
+    padding-top: 28px;
   }
 
-  .feature-list {
-    grid-template-rows: auto;
+  .home-support {
+    font-size: 15px;
+    margin-bottom: 22px;
   }
 
   .lead {
-    font-size: 18px;
-    margin-bottom: 18px;
+    font-size: 20px;
+    margin-bottom: 12px;
   }
 
   header {
