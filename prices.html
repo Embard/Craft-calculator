@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Цены — Грань Заката</title>
+  <link rel="icon" href="img/logo.png">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="prices">
+  <div class="campfire-glow"></div>
+  <div class="sparks-container"></div>
+
+  <header>
+    <div class="mobile-compact-header">
+      <a href="index.html"><img src="img/logo.png" alt="Logo" class="header-logo"></a>
+      <span class="mobile-title">Грань Заката</span>
+      <button class="menu-toggle" onclick="toggleHeader()" aria-label="Меню"><span></span><span></span><span></span></button>
+    </div>
+    <div class="full-header" id="full-header">
+      <a href="index.html" class="brand">
+        <img src="img/logo.png" alt="Грань Заката" class="header-logo">
+        <div class="brand-text">
+          <h1>Грань Заката</h1>
+          <span class="brand-badge">Справочник выжившего</span>
+        </div>
+      </a>
+      <nav>
+        <a href="index.html" class="link">Главная</a>
+        <a href="craft.html" class="link">Крафт</a>
+        <a href="prices.html" class="link active">Цены</a>
+        <a href="https://грань-заката.рф" class="link external" target="_blank" rel="noopener">Основной сайт</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="container">
+    <section class="panel">
+      <h2 class="panel-title">Гайды по ценам</h2>
+      <div class="panel-body">
+        <div class="empty-state">
+          <h3>Раздел ещё тлеет в костре</h3>
+          <p class="muted">Сюда пойдут цены торговцев, выгодные обмены и ориентиры по аукциону. Пока можно собирать 6Б45 в разделе крафта.</p>
+          <a class="btn" href="craft.html">К гайдам по крафту</a>
+        </div>
+        <table class="price-table" aria-hidden="true">
+          <thead>
+            <tr>
+              <th>Предмет</th>
+              <th>Торговец</th>
+              <th>Покупка</th>
+              <th>Продажа</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td colspan="4" class="muted">Таблица готова — строки появятся, когда сведём цены.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+
+  <footer>Помощник игроков сервера Грань Заката · PVE DayZ</footer>
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
