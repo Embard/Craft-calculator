@@ -8,12 +8,14 @@
 
 from __future__ import annotations
 
+import xml.etree.ElementTree as ET
 import json
 import re
 import shutil
-import xml.etree.ElementTree as ET
+import urllib.request
 from datetime import datetime
 from pathlib import Path
+from urllib.parse import quote
 
 ROOT = Path(__file__).resolve().parents[1]
 INCOMING = ROOT / "incoming"
@@ -26,6 +28,9 @@ SOURCES = INCOMING / "sources"
 DATA = ROOT / "data"
 IMG_ITEMS = ROOT / "img" / "items"
 GENERATED_JS = ROOT / "js" / "generated.js"
+SPLATOON_PAGE = "https://s-platoon.ru/online-tools/items/"
+SPLATOON_THUMB = "https://s-platoon.ru/uploads/dayz-items/thumb/"
+SPLATOON_CACHE = INCOMING / "splatoon-catalog.js"
 
 # Имена как на сервере. Другие xml/json парсер не трогает.
 SERVER_SOURCE_FILES = ("types.xml", "Loot.json", "HP_Crafter.json", "SearchForLoot.json")
@@ -129,6 +134,48 @@ def load_json(path: Path, default):
     except json.JSONDecodeError as exc:
         print(f"skip broken json {path}: {exc}")
         return default
+
+
+def _http_get(url: str) -> bytes:
+    req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0 GranZakataHandbook"})
+    with urllib.request.urlopen(req, timeout=30) as response:
+        return response.read()
+
+
+def fetch_splatoon_classnames() -> set[str]:
+    text = ""
+    try:
+        page = _http_get(SPLATOON_PAGE).decode("utf-8", "replace")
+        match = re.search(r"https://s-platoon\.ru/uploads/pages_media/[^\"']+app-ite[^\"']+\.js", page)
+        catalog_url = match.group(0) if match else ""
+        if catalog_url:
+            text = _http_get(catalog_url).decode("utf-8", "replace")
+            SPLATOON_CACHE.write_text(text, encoding="utf-8")
+            print(f"s-platoon catalog: {catalog_url}")
+    except Exception as exc:
+        print(f"s-platoon download failed: {exc}")
+    if not text and SPLATOON_CACHE.exists():
+        text = SPLATOON_CACHE.read_text(encoding="utf-8", errors="replace")
+        print("s-platoon catalog: cache")
+    marker = "window.SPL_DAYZ_ITEMS="
+    if marker not in text:
+        return set()
+    raw = text.split(marker, 1)[1]
+    raw = raw.strip()
+    if raw.endswith(";"):
+        raw = raw[:-1]
+    try:
+        items = json.loads(raw)
+    except json.JSONDecodeError as exc:
+        print(f"s-platoon json failed: {exc}")
+        return set()
+    names = {item.get("c") for item in items if isinstance(item, dict) and item.get("c")}
+    print(f"s-platoon images: {len(names)}")
+    return names
+
+
+def splatoon_thumb(classname: str) -> str:
+    return SPLATOON_THUMB + quote(classname, safe="") + ".webp"
 
 
 def xml_text(node: ET.Element, tag: str) -> str | None:
@@ -721,14 +768,21 @@ def main() -> None:
                 classnames.add(part["id"])
 
     icons = copy_icons(classnames)
+    splatoon = fetch_splatoon_classnames()
     catalog: dict[str, dict] = {}
 
     for raw in types_items:
         item = build_item(raw, names, icons)
+        local = item.get("image") or ""
+        if not local and raw["classname"] in splatoon:
+            item["image"] = splatoon_thumb(raw["classname"])
         item["loot"] = loot_index.get(raw["classname"], [])
-        if raw["classname"] in recipes:
-            item["recipe"] = recipes[raw["classname"]]
+        if raw["classname"] in hp_recipes:
+            item["recipe"] = hp_recipes[raw["classname"]]
             item["craftable"] = True
+        else:
+            item["craftable"] = False
+            item["recipe"] = []
         meta = craft_meta.get(raw["classname"])
         if meta:
             item["craftMeta"] = meta
@@ -736,19 +790,24 @@ def main() -> None:
                 item["description"] = meta["recipe_name"]
         catalog[item["id"]] = item
 
-    for recipe_id, parts in recipes.items():
+    for recipe_id, parts in hp_recipes.items():
         if recipe_id in catalog:
             catalog[recipe_id]["recipe"] = parts
             catalog[recipe_id]["craftable"] = True
+            if not catalog[recipe_id].get("image") and recipe_id in splatoon:
+                catalog[recipe_id]["image"] = splatoon_thumb(recipe_id)
             continue
         meta = craft_meta.get(recipe_id, {})
+        image = find_icon(recipe_id, icons)
+        if not image and recipe_id in splatoon:
+            image = splatoon_thumb(recipe_id)
         catalog[recipe_id] = {
             "id": recipe_id,
             "classname": recipe_id,
             "name": names.get(recipe_id) or humanize_classname(recipe_id),
             "category": "craftingbase",
             "categoryLabel": meta.get("category") or "Крафт",
-            "image": find_icon(recipe_id, icons),
+            "image": image,
             "craftable": True,
             "description": meta.get("recipe_name") or "",
             "where": "Получается крафтом на станке.",
@@ -788,9 +847,16 @@ def main() -> None:
         )
         if not merged.get("image"):
             merged["image"] = find_icon(merged.get("classname") or item_id, icons) or find_icon(item_id, icons)
-        if (merged.get("recipe") or merged.get("craftable")) and merged.get("rarity") in (None, "", "—"):
-            merged["rarity"] = "крафт"
+            classname = merged.get("classname") or item_id
+            if not merged.get("image") and classname in splatoon:
+                merged["image"] = splatoon_thumb(classname)
         catalog[merged["id"]] = merged
+
+    for item_id, item in catalog.items():
+        if not item.get("image") and item_id in splatoon:
+            item["image"] = splatoon_thumb(item_id)
+        elif not item.get("image") and item.get("classname") in splatoon:
+            item["image"] = splatoon_thumb(item["classname"])
 
     prices = collect_prices()
     for row in prices:
@@ -801,8 +867,8 @@ def main() -> None:
 
     craftable = [
         item_id
-        for item_id, item in catalog.items()
-        if item.get("craftable") or item.get("recipe")
+        for item_id in hp_recipes
+        if item_id in catalog
     ]
     craftable.sort(key=lambda item_id: catalog[item_id].get("name") or item_id)
 

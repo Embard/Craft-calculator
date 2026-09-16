@@ -37,8 +37,11 @@ function bootCatalog() {
 
   GZ.CRAFTABLE = GZ.CRAFTABLE.filter(function (id) {
     var item = GZ.ITEMS[id];
-    return item && ((item.recipe && item.recipe.length) || item.craftable);
+    return item && item.recipe && item.recipe.length;
   });
+  if (generated && generated.status && generated.status.fromServer && generated.craftable) {
+    GZ.CRAFTABLE = generated.craftable.slice();
+  }
 }
 
 function itemById(id) {
@@ -106,7 +109,7 @@ function initCraftPage() {
   if (!GZ.CRAFTABLE.length) {
     catalog.innerHTML = "";
     treeRoot.innerHTML =
-      '<div class="empty-state"><h3>Крафт ещё не подключён</h3><p class="muted">Когда в incoming появятся рецепты или types.xml с флагом crafted, список заполнится сам.</p></div>';
+      '<div class="empty-state"><h3>Крафт ещё не подключён</h3><p class="muted">Список берётся только из HP_Crafter.json — предметы станка крафта.</p></div>';
     return;
   }
 

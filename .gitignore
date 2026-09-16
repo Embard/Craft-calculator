@@ -15,4 +15,5 @@ incoming/icons/*
 incoming/sources/**
 !incoming/sources/.gitkeep
 data/catalog.json
+incoming/splatoon-catalog.js
 incoming/_admin-prototype/
