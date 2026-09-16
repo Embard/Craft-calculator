@@ -20,6 +20,7 @@ function bootCatalog() {
   GZ.CRAFTABLE = (GZ.SEED_CRAFTABLE || []).slice();
   GZ.PRICES = (GZ.SEED_PRICES || []).slice();
   GZ.STATUS = Object.assign({}, GZ.SEED_STATUS || {});
+  GZ.CRAFT_CATEGORIES = {};
 
   var generated = window.GZ_GENERATED;
   if (generated && generated.items && Object.keys(generated.items).length) {
@@ -31,6 +32,7 @@ function bootCatalog() {
     }
     if (generated.prices) GZ.PRICES = generated.prices.slice();
     if (generated.status) GZ.STATUS = generated.status;
+    if (generated.craftCategories) GZ.CRAFT_CATEGORIES = generated.craftCategories;
   }
 
   GZ.CRAFTABLE = GZ.CRAFTABLE.filter(function (id) {

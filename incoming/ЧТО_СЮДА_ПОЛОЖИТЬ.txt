@@ -1,94 +1,40 @@
-Полный список для админа сервера «Грань заката»
-Можно скинуть одним архивом. Чем полнее папки, тем точнее сайт.
+Полный список файлов с сервера для парсера.
+Имена должны быть такими же, как на сервере.
 
-1. Миссия сервера — обязательно
-Скопируйте целиком папку:
-  mpmissions\dayzOffline.chernarusplus
+incoming\sources\
+  types.xml
+  Loot.json
+  HP_Crafter.json
+  SearchForLoot.json
+  Mod_ce\
+    bl_typesitems.xml
+    bl_typesKIT.xml
+    bl_typesother.xml
+    bl_typesotheritems.xml
+    bl_typespainting.xml
+    Book.xml
+    BRDKhouse_types.xml
+    CaseS_types.xml
+    Case_types.xml
+    eoscar.xml
+    FC_types.xml
+    Garage_types.xml
+    Inedia_types.xml
+    Knife_types.xml
+    Loftd_1.xml ... Loftd_43.xml
+    modnospavn_types.xml
+    Morty_cfgspawnabletypes.xml
+    Morty_types.xml
+    PK_Materials_types.xml
+    rag_baseitems.xml
+    RUSForma_vehicles_types.xml
+    STRNKS_types.xml
+    STRNK_types.xml
+    Terej_Types.xml
+    VOSCassettes_types.xml
 
-Если целиком нельзя, то минимум эти файлы из неё:
-  db\types.xml
-  db\events.xml
-  cfgspawnabletypes.xml
-  cfgrandompresets.xml
-  cfglimitsdefinition.xml
-  cfgeconomycore.xml
-  mapgroupproto.xml
-  плюс все types_*.xml и другие xml, которые подключены в cfgeconomycore.xml
+Дополнительно, если будут:
+  incoming\profiles   — цены торговцев
+  incoming\icons      — PNG иконок: ClassName.png
 
-Кладём в:
-  incoming\mission
-
-2. Профили сервера — обязательно для цен
-Папка profiles (иногда instance или имя сервера).
-Особенно:
-  TraderPlus\
-  ExpansionMod\
-  любые JSON/XML с торговцами, крафтом, квестами, ключ-картами
-
-Кладём в:
-  incoming\profiles
-
-3. Свои моды сервера — обязательно
-Именно эти папки с сервера, не из публичного Workshop, если админ их правил:
-  @EOS_init1
-  @EOS_init2
-  @EOS_Cloth
-  @EOS_CARS
-  @WTLTEST
-  @willPripyat_init3
-  @Triumph Tent Fix
-
-4. Остальные моды сервера — очень желательно
-Нужны для иконок, названий и рецептов. Можно скопировать папки @модов с сервера:
-  @RaG_BeeHive
-  @RaG_BaseItems
-  @RaG_Core
-  @RaG_BaseBuilding
-  @DayZ-Expansion-AI
-  @DayZ-Expansion-Core
-  @Beetle_Animal_Call
-  @Ambient Animals Pack
-  @LoftDModGR Clothes Pack
-  @RUSForma_vehicles
-  @Search For Loot Improved
-  @FlipTransport
-  @Code Lock
-  @BS Patrol Helicopter
-  @DayZ-Dog
-  @TraderPlus
-  @Survivor Animations
-  @Radio
-  @Custom Keycards
-  @Vost_Cassettes
-  @Mortys Weapons
-  @FC_Fish_Equip
-  @InediaInfectedAI
-  @Gerphelius_CarXFence
-  @BuilderItems
-  @VPPAdminTools
-  @Dabs Framework
-  @CF
-
-Моды из пунктов 3 и 4 кладём в:
-  incoming\workshop
-
-5. Картинки предметов — желательно
-Если есть уже готовые PNG/JPG иконок, отдельной папкой:
-  имя файла = classname предмета
-  пример: AKM.png, PlateCarrierVest.jpg
-
-Кладём в:
-  incoming\icons
-
-Файлы .paa тоже можно приложить, но для сайта лучше сразу PNG.
-Если моды отдаются целиком (пункт 4), отдельные иконки не обязательны:
-скрипт заберёт png/jpg из папок модов сам.
-
-Самый простой вариант для админа
-Один архив с тремя папками:
-  mission     = mpmissions\dayzOffline.chernarusplus
-  profiles    = папка profiles сервера
-  workshop    = все папки @модов с сервера
-
-После получения архива запустить:
-  tools\собрать.bat
+После копирования запустить tools\собрать.bat

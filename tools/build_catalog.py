@@ -22,52 +22,88 @@ PROFILES = INCOMING / "profiles"
 WORKSHOP = INCOMING / "workshop"
 ICONS_IN = INCOMING / "icons"
 OVERRIDES = INCOMING / "overrides"
+SOURCES = INCOMING / "sources"
 DATA = ROOT / "data"
 IMG_ITEMS = ROOT / "img" / "items"
 GENERATED_JS = ROOT / "js" / "generated.js"
+
+# Имена как на сервере. Другие xml/json парсер не трогает.
+SERVER_SOURCE_FILES = ("types.xml", "Loot.json", "HP_Crafter.json", "SearchForLoot.json")
+SERVER_CE_DIR = "Mod_ce"
 
 CATEGORY_LABELS = {
     "weapons": "Оружие",
     "explosives": "Взрывчатка",
     "clothes": "Одежда",
-    "containers": "Контейнеры",
+    "containers": "Контейнеры и рюкзаки",
     "food": "Еда",
     "tools": "Инструменты",
     "craftingbase": "Крафт",
     "books": "Книги",
     "recipes": "Рецепты",
-    "vehiclesparts": "Запчасти",
+    "vehiclesparts": "Запчасти транспорта",
+    "vehicleparts": "Запчасти транспорта",
+    "vehicles": "Транспорт",
     "armor": "Броня",
     "material": "Материал",
     "medicine": "Медицина",
+    "medica": "Медицина",
     "ammo": "Патроны",
     "magazines": "Магазины",
+    "buildings": "Стройка",
+    "animals": "Животные",
+    "electronics": "Электроника",
+    "lootdispatch": "Лут",
 }
 
 USAGE_LABELS = {
-    "Military": "военные объекты",
-    "Police": "полиция",
-    "Medic": "больницы и медпункты",
-    "Firefighter": "пожарные части",
-    "Town": "города",
-    "Village": "деревни",
-    "Coast": "побережье",
-    "Farm": "фермы",
-    "Industrial": "промзоны",
-    "Hunting": "охотничьи угодья",
-    "School": "школы",
-    "Office": "офисы",
-    "Prison": "тюрьмы",
-    "Lunapark": "аттракционы",
-    "Historical": "исторические места",
+    "Military": "На военных объектах",
+    "Police": "В полицейских участках",
+    "Medic": "На медицинских объектах",
+    "Medical": "На медицинских объектах",
+    "Firefighter": "В пожарных частях",
+    "Town": "В городах",
+    "Village": "В деревнях",
+    "Coast": "На побережье",
+    "Farm": "На фермах",
+    "Industrial": "На заводах и складах",
+    "Hunting": "В охотничьих домиках",
+    "School": "В школах",
+    "Office": "В офисах",
+    "Prison": "В тюрьмах",
+    "Lunapark": "В парках аттракционов",
+    "Historical": "В исторических местах",
+    "Restaurant": "В кафе и ресторанах",
+    "Contaminated": "В заражённых зонах",
+    "Camp": "В лагерях",
+    "Work": "На рабочих местах",
+    "Railway": "На железной дороге",
+    "Airfield": "На аэродромах",
 }
 
 VALUE_LABELS = {
     "Tier1": "тир 1, побережье",
-    "Tier2": "тир 2",
-    "Tier3": "тир 3",
-    "Tier4": "тир 4, глубокая карта",
+    "Tier2": "тир 2, середина",
+    "Tier3": "тир 3, дальние деревни",
+    "Tier4": "тир 4, север",
     "Unique": "уникальный",
+}
+
+PLACE_LABELS = {
+    "Civilian": "Гражданские дома",
+    "Industrial": "Заводы и склады",
+    "Farm": "Фермы и сараи",
+    "Hunting": "Охотничьи домики",
+    "Police": "Полицейские участки",
+    "Medical": "Больницы и медпункты",
+    "Military": "Военные объекты",
+}
+
+SUBCAT_LABELS = {
+    "Food": "еда",
+    "Clothing": "одежда",
+    "Tools": "инструменты и барахло",
+    "Unique": "уникальные предметы",
 }
 
 
@@ -125,17 +161,26 @@ def category_label(raw: str | None) -> str:
 def rarity_from(nominal: int | None, crafted: bool) -> str:
     if crafted:
         return "крафт"
-    if nominal is None:
-        return "—"
-    if nominal <= 0:
+    if nominal is None or nominal <= 0:
         return "не в луте"
-    if nominal <= 4:
-        return "очень редкий"
-    if nominal <= 15:
-        return "редкий"
-    if nominal <= 40:
-        return "обычный"
-    return "частый"
+    if nominal >= 100:
+        return "очень часто"
+    if nominal >= 50:
+        return "часто"
+    if nominal >= 25:
+        return "средняя редкость"
+    if nominal >= 10:
+        return "редко"
+    return "очень редко"
+
+
+def clean_display_name(value: object, classname: str) -> str:
+    if not isinstance(value, str):
+        return humanize_classname(classname)
+    name = value.strip()
+    if not name or name.startswith("#") or name.startswith("STR_"):
+        return humanize_classname(classname)
+    return name
 
 
 def where_from_types(item: dict) -> str:
@@ -149,7 +194,7 @@ def where_from_types(item: dict) -> str:
     if tiers:
         parts.append("Зоны: " + ", ".join(tiers) + ".")
     nominal = item.get("nominal")
-    if nominal is not None:
+    if nominal not in (None, 0):
         parts.append(f"На карте цель экономики — около {nominal} шт.")
     if not parts:
         return "В файлах сервера нет точки спавна. Проверьте торговца, квест или крафт."
@@ -369,8 +414,11 @@ def collect_script_recipes() -> dict[str, list[dict]]:
 
 def collect_json_recipes() -> dict[str, list[dict]]:
     recipes: dict[str, list[dict]] = {}
+    skip = {"hp_crafter.json", "loot.json", "searchforloot.json"}
     for path in iter_files(INCOMING, ("*recipe*.json", "*craft*.json")):
         if "overrides" in path.parts:
+            continue
+        if path.name.lower() in skip:
             continue
         data = load_json(path, None)
         if not isinstance(data, (dict, list)):
@@ -395,6 +443,106 @@ def collect_json_recipes() -> dict[str, list[dict]]:
             if parsed:
                 recipes[result] = parsed
     return recipes
+
+
+def parse_loot_names(path: Path) -> dict[str, str]:
+    raw = load_json(path, {})
+    names: dict[str, str] = {}
+    if not isinstance(raw, dict):
+        return names
+    for classname, value in raw.items():
+        names[classname] = clean_display_name(value, classname)
+    return names
+
+
+def parse_hp_crafter(path: Path) -> tuple[dict[str, list[dict]], dict[str, dict], dict[str, list[str]]]:
+    craft: dict[str, list[dict]] = {}
+    meta: dict[str, dict] = {}
+    categories: dict[str, list[str]] = {}
+    raw = load_json(path, {})
+    classes = raw.get("m_CraftClasses") if isinstance(raw, dict) else {}
+    if not isinstance(classes, dict):
+        return craft, meta, categories
+    for cat in classes.get("CraftCategories") or []:
+        if not isinstance(cat, dict):
+            continue
+        cat_name = cat.get("CategoryName") or "Прочее"
+        categories.setdefault(cat_name, [])
+        for item in cat.get("CraftItems") or []:
+            if not isinstance(item, dict):
+                continue
+            result = item.get("Result")
+            if not result:
+                continue
+            comps = []
+            for component in item.get("CraftComponents") or []:
+                if not isinstance(component, dict) or not component.get("Classname"):
+                    continue
+                comps.append({"id": component["Classname"], "qty": int(component.get("Amount") or 1)})
+            craft[result] = comps
+            meta[result] = {
+                "recipe_name": item.get("RecipeName") or "",
+                "craft_type": item.get("CraftType") or "craftpic",
+                "category": cat_name,
+                "result_count": item.get("ResultCount") or 1,
+            }
+            if result not in categories[cat_name]:
+                categories[cat_name].append(result)
+    return craft, meta, categories
+
+
+def parse_search_for_loot(path: Path) -> dict[str, list[dict]]:
+    loot: dict[str, list[dict]] = {}
+    raw = load_json(path, {})
+    for cat in raw.get("SFLLootCategory") or []:
+        if not isinstance(cat, dict):
+            continue
+        cat_name = cat.get("name") or ""
+        rarity = cat.get("rarity", 50)
+        parts = cat_name.split("_")
+        prefix = parts[0] if parts else ""
+        tier = "—"
+        sub = "—"
+        for part in parts:
+            match = re.match(r"^Tier(\d+)$", part)
+            if match:
+                tier = "T" + str(min(int(match.group(1)), 4))
+            if part in SUBCAT_LABELS:
+                sub = part
+        if "Unique" in cat_name:
+            tier = "Uniq"
+        chance = f"{int(float(rarity))}%"
+        house = PLACE_LABELS.get(prefix, prefix)
+        for classname in cat.get("loot") or []:
+            if not classname:
+                continue
+            loot.setdefault(classname, []).append(
+                {
+                    "house": house,
+                    "category": SUBCAT_LABELS.get(sub, sub),
+                    "tier": tier,
+                    "chance": chance,
+                }
+            )
+    for classname, zones in loot.items():
+        seen = set()
+        unique = []
+        for zone in zones:
+            key = (zone["house"], zone["category"], zone["tier"])
+            if key in seen:
+                continue
+            seen.add(key)
+            unique.append(zone)
+        loot[classname] = unique
+    return loot
+
+
+def iter_server_ce_files():
+    ce_dir = SOURCES / SERVER_CE_DIR
+    if not ce_dir.exists():
+        return
+    for path in sorted(ce_dir.glob("*.xml")):
+        yield path
 
 
 def find_icon(classname: str, copied: dict[str, str]) -> str:
@@ -445,6 +593,7 @@ def build_item(raw: dict, names: dict[str, str], icons: dict[str, str]) -> dict:
     crafted = bool(raw.get("crafted"))
     nominal = raw.get("nominal")
     name = names.get(classname) or humanize_classname(classname)
+    name = clean_display_name(name, classname)
     return {
         "id": classname,
         "classname": classname,
@@ -477,59 +626,85 @@ def merge_override(item: dict, override: dict) -> dict:
 
 def write_generated(payload: dict) -> None:
     DATA.mkdir(parents=True, exist_ok=True)
-    (DATA / "catalog.json").write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+    compact = json.dumps(payload, ensure_ascii=False, separators=(",", ":"))
+    (DATA / "catalog.json").write_text(compact, encoding="utf-8")
     (DATA / "status.json").write_text(json.dumps(payload.get("status", {}), ensure_ascii=False, indent=2), encoding="utf-8")
-    js = "window.GZ_GENERATED = " + json.dumps(payload, ensure_ascii=False) + ";\n"
-    GENERATED_JS.write_text(js, encoding="utf-8")
+    GENERATED_JS.write_text("window.GZ_GENERATED = " + compact + ";\n", encoding="utf-8")
     print(f"wrote {GENERATED_JS}")
 
 
 def main() -> None:
-    for folder in (MISSION, PROFILES, WORKSHOP, ICONS_IN, OVERRIDES):
+    for folder in (MISSION, PROFILES, WORKSHOP, ICONS_IN, OVERRIDES, SOURCES):
         folder.mkdir(parents=True, exist_ok=True)
+    (SOURCES / SERVER_CE_DIR).mkdir(parents=True, exist_ok=True)
 
     missing = []
-    if not folder_has_files(MISSION):
-        missing.append("incoming/mission — нет файлов миссии")
+    source_types = SOURCES / "types.xml"
+    source_names = SOURCES / "Loot.json"
+    source_craft = SOURCES / "HP_Crafter.json"
+    source_loot = SOURCES / "SearchForLoot.json"
+    has_sources = source_types.exists()
+    if not has_sources:
+        missing.append("incoming/sources/types.xml")
+    for name in SERVER_SOURCE_FILES:
+        if not (SOURCES / name).exists():
+            missing.append(f"incoming/sources/{name}")
+    if not any((SOURCES / SERVER_CE_DIR).glob("*.xml")):
+        missing.append("incoming/sources/Mod_ce — нет XML модов")
     if not folder_has_files(PROFILES):
-        missing.append("incoming/profiles — нет цен и конфигов торговцев")
+        missing.append("incoming/profiles — нет цен торговцев")
     if not folder_has_files(WORKSHOP) and not folder_has_files(ICONS_IN):
-        missing.append("incoming/workshop или incoming/icons — нет картинок")
+        missing.append("incoming/icons — нет PNG иконок")
 
     override_items = load_json(OVERRIDES / "items.json", {})
     override_names = load_json(OVERRIDES / "names.json", {})
     override_recipes = load_json(OVERRIDES / "recipes.json", {})
-    string_names = parse_stringtables()
-    names = {**string_names, **override_names}
+
+    names = {}
+    names.update(parse_stringtables())
+    names.update(parse_loot_names(source_names))
+    names.update(override_names)
+
+    hp_recipes, craft_meta, craft_categories = parse_hp_crafter(source_craft)
+    loot_index = parse_search_for_loot(source_loot)
 
     types_items = []
-    for path in iter_files(MISSION, ("*.xml",)):
-        if "types" in path.name.lower() and "spawnable" not in path.name.lower():
-            types_items.extend(parse_types_xml(path))
-
-    spawn_rows = []
-    for path in iter_files(MISSION, ("*spawnabletypes*.xml", "cfgrandompresets.xml")):
-        spawn_rows.extend(parse_spawnable(path))
-
-    loot_index: dict[str, list[dict]] = {}
-    for row in spawn_rows:
-        item = row.get("item")
-        if not item:
+    if source_types.exists():
+        types_items.extend(parse_types_xml(source_types))
+        print(f"parsed {source_types.name}")
+    for path in iter_server_ce_files():
+        if "spawnable" in path.name.lower():
+            for row in parse_spawnable(path):
+                classname = row.get("item")
+                if not classname:
+                    continue
+                chance = row.get("chance")
+                chance_text = (
+                    f"{float(chance) * 100:.0f}%"
+                    if chance and str(chance).replace(".", "", 1).isdigit()
+                    else (chance or "")
+                )
+                loot_index.setdefault(classname, []).append(
+                    {
+                        "house": row.get("place") or "неизвестно",
+                        "category": row.get("kind") or "лут",
+                        "tier": "",
+                        "chance": chance_text,
+                    }
+                )
             continue
-        chance = row.get("chance")
-        chance_text = f"{float(chance) * 100:.0f}%" if chance and str(chance).replace(".", "", 1).isdigit() else (chance or "")
-        loot_index.setdefault(item, []).append(
-            {
-                "house": row.get("place") or "неизвестно",
-                "category": row.get("kind") or "лут",
-                "tier": "",
-                "chance": chance_text,
-            }
-        )
+        types_items.extend(parse_types_xml(path))
+        print(f"parsed Mod_ce/{path.name}")
+
+    if not types_items:
+        for path in iter_files(MISSION, ("*.xml",)):
+            if "types" in path.name.lower() and "spawnable" not in path.name.lower():
+                types_items.extend(parse_types_xml(path))
 
     recipes = {}
     recipes.update(collect_json_recipes())
     recipes.update(collect_script_recipes())
+    recipes.update(hp_recipes)
     recipes.update(override_recipes)
 
     classnames = {item["classname"] for item in types_items}
@@ -554,27 +729,36 @@ def main() -> None:
         if raw["classname"] in recipes:
             item["recipe"] = recipes[raw["classname"]]
             item["craftable"] = True
+        meta = craft_meta.get(raw["classname"])
+        if meta:
+            item["craftMeta"] = meta
+            if meta.get("recipe_name") and not item.get("description"):
+                item["description"] = meta["recipe_name"]
         catalog[item["id"]] = item
 
     for recipe_id, parts in recipes.items():
         if recipe_id in catalog:
+            catalog[recipe_id]["recipe"] = parts
+            catalog[recipe_id]["craftable"] = True
             continue
+        meta = craft_meta.get(recipe_id, {})
         catalog[recipe_id] = {
             "id": recipe_id,
             "classname": recipe_id,
             "name": names.get(recipe_id) or humanize_classname(recipe_id),
             "category": "craftingbase",
-            "categoryLabel": "Крафт",
+            "categoryLabel": meta.get("category") or "Крафт",
             "image": find_icon(recipe_id, icons),
             "craftable": True,
-            "description": "",
-            "where": "Получается крафтом.",
+            "description": meta.get("recipe_name") or "",
+            "where": "Получается крафтом на станке.",
             "tier": "—",
             "rarity": "крафт",
             "usage": [],
             "value": [],
             "loot": loot_index.get(recipe_id, []),
             "recipe": parts,
+            "craftMeta": meta,
         }
 
     for item_id, override in override_items.items():
@@ -630,13 +814,14 @@ def main() -> None:
         "lootRows": sum(len(item.get("loot") or []) for item in catalog.values()),
         "icons": sum(1 for item in catalog.values() if item.get("image")),
         "missing": missing,
-        "fromServer": folder_has_files(MISSION),
+        "fromServer": has_sources,
     }
 
     payload = {
         "status": status,
         "items": catalog,
         "craftable": craftable,
+        "craftCategories": craft_categories,
         "prices": prices,
     }
     write_generated(payload)
