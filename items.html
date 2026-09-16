@@ -1,14 +1,14 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Справочник выжившего — Грань Заката</title>
+  <title>Предметы — Грань Заката</title>
   <link rel="icon" href="img/logo.png">
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
 </head>
-<body data-page="home">
+<body data-page="items">
   <div class="bg-video" aria-hidden="true">
     <video class="bg-video__clip is-active" muted playsinline preload="auto" poster="img/bg/woods-night.jpg">
       <source src="img/bg/woods-night.mp4" type="video/mp4">
@@ -34,8 +34,8 @@
         </div>
       </a>
       <nav>
-        <a href="index.html" class="link active">Главная</a>
-        <a href="items.html" class="link">Предметы</a>
+        <a href="index.html" class="link">Главная</a>
+        <a href="items.html" class="link active">Предметы</a>
         <a href="craft.html" class="link">Крафт</a>
         <a href="prices.html" class="link">Цены</a>
         <a href="https://грань-заката.рф" class="link external" target="_blank" rel="noopener">Основной сайт</a>
@@ -43,33 +43,35 @@
     </div>
   </header>
 
-  <main class="home-hero">
-    <div class="home-hero__content">
-      <p class="lead">Добро пожаловать туда, где жизнь. На Грани заката.</p>
-      <p class="home-support">
-        Записная книжка выжившего у костра: где лежит предмет, с каким шансом,
-        как его скрафтить и почём продаёт торговец.
-      </p>
-      <div class="home-stats" id="home-stats"></div>
-      <div class="home-actions home-actions-3">
-        <a class="home-action" href="items.html">
-          <span class="feature-kicker">Каталог</span>
-          <strong>Предметы</strong>
-          <span>Где искать, редкость и шансы в контейнерах</span>
-        </a>
-        <a class="home-action" href="craft.html">
-          <span class="feature-kicker">Гайды</span>
-          <strong>Крафт</strong>
-          <span>Рецепты и дерево компонентов</span>
-        </a>
-        <a class="home-action" href="prices.html">
-          <span class="feature-kicker">Гайды</span>
-          <strong>Цены</strong>
-          <span>Торговцы, покупка и скупка</span>
-        </a>
+  <div class="container">
+    <div id="catalog-status" class="status-bar"></div>
+    <section class="panel">
+      <h2 class="panel-title">Каталог предметов</h2>
+      <div class="panel-body">
+        <div class="search-row">
+          <input id="items-search" type="search" placeholder="Введите предмет или classname...">
+          <div id="items-count" class="items-count"></div>
+        </div>
+        <div class="chips" id="items-chips"></div>
+        <div class="item-grid" id="items-grid"></div>
+        <button type="button" class="btn items-more" id="items-more" hidden>Показать ещё</button>
       </div>
+    </section>
+  </div>
+
+  <div class="itemdb-modal" id="item-modal">
+    <div class="itemdb-modal-inner">
+      <div class="itemdb-modal-head">
+        <div id="m-media" class="modal-media"></div>
+        <div>
+          <h2 id="m-title">—</h2>
+          <div class="sub" id="m-sub">—</div>
+        </div>
+        <button class="close" type="button" onclick="closeItemModal()">✕</button>
+      </div>
+      <div class="itemdb-modal-body" id="m-body"></div>
     </div>
-  </main>
+  </div>
 
   <footer>Помощник игроков сервера Грань Заката · PVE DayZ</footer>
   <script src="js/seed.js"></script>

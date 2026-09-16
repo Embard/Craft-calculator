@@ -4,3 +4,11 @@ site.html
 *.tmp
 .DS_Store
 Thumbs.db
+incoming/mission/*
+!incoming/mission/.gitkeep
+incoming/profiles/*
+!incoming/profiles/.gitkeep
+incoming/workshop/*
+!incoming/workshop/.gitkeep
+incoming/icons/*
+!incoming/icons/.gitkeep

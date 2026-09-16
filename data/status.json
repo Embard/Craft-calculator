@@ -1,0 +1,14 @@
+{
+  "generatedAt": "2026-09-16T09:42:14",
+  "items": 8,
+  "craftable": 1,
+  "prices": 0,
+  "lootRows": 0,
+  "icons": 8,
+  "missing": [
+    "incoming/mission — нет файлов миссии",
+    "incoming/profiles — нет цен и конфигов торговцев",
+    "incoming/workshop или incoming/icons — нет картинок"
+  ],
+  "fromServer": false
+}

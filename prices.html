@@ -35,6 +35,7 @@
       </a>
       <nav>
         <a href="index.html" class="link">Главная</a>
+        <a href="items.html" class="link">Предметы</a>
         <a href="craft.html" class="link">Крафт</a>
         <a href="prices.html" class="link active">Цены</a>
         <a href="https://грань-заката.рф" class="link external" target="_blank" rel="noopener">Основной сайт</a>
@@ -43,35 +44,38 @@
   </header>
 
   <div class="container">
+    <div id="catalog-status" class="status-bar"></div>
     <section class="panel">
       <h2 class="panel-title">Гайды по ценам</h2>
       <div class="panel-body">
-        <div class="empty-state">
-          <h3>Раздел ещё тлеет в костре</h3>
-          <p class="muted">Сюда пойдут цены торговцев, выгодные обмены и ориентиры по аукциону. Пока можно собирать 6Б45 в разделе крафта.</p>
+        <div id="prices-empty" class="empty-state">
+          <h3>Цен пока нет</h3>
+          <p class="muted">Положите папку profiles сервера в incoming\profiles — таблица заполнится из TraderPlus или Expansion Market.</p>
           <a class="btn" href="craft.html">К гайдам по крафту</a>
         </div>
-        <table class="price-table" aria-hidden="true">
-          <thead>
-            <tr>
-              <th>Предмет</th>
-              <th>Торговец</th>
-              <th>Покупка</th>
-              <th>Продажа</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td colspan="4" class="muted">Таблица готова — строки появятся, когда сведём цены.</td>
-            </tr>
-          </tbody>
-        </table>
+        <div id="prices-table-wrap" hidden>
+          <div class="search-row">
+            <input id="prices-search" type="search" placeholder="Найти предмет или торговца...">
+          </div>
+          <table class="price-table">
+            <thead>
+              <tr>
+                <th>Предмет</th>
+                <th>Торговец</th>
+                <th>Покупка</th>
+                <th>Продажа</th>
+              </tr>
+            </thead>
+            <tbody id="prices-body"></tbody>
+          </table>
+        </div>
       </div>
     </section>
   </div>
 
   <footer>Помощник игроков сервера Грань Заката · PVE DayZ</footer>
-  <script src="js/data.js"></script>
+  <script src="js/seed.js"></script>
+  <script src="js/generated.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>
