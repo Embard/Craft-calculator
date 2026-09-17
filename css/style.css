@@ -241,53 +241,13 @@ body[data-page="home"] .lead {
 }
 
 .home-lore {
-  margin: 0 auto 28px;
+  margin: 0 auto 0;
   max-width: 600px;
   color: rgba(190, 182, 170, 0.88);
   font-size: 15px;
   line-height: 1.7;
   text-shadow: 0 2px 14px rgba(0, 0, 0, 0.7);
   animation: home-fade-up 1.05s ease 0.16s both;
-}
-
-.home-camp {
-  position: relative;
-  margin: 8px auto 0;
-  width: min(640px, 100%);
-  animation: home-fade-up 1.15s ease 0.24s both;
-}
-
-.home-camp__img {
-  display: block;
-  width: 100%;
-  height: auto;
-  border-radius: 4px;
-  mask-image: linear-gradient(180deg, #000 72%, transparent 100%);
-  -webkit-mask-image: linear-gradient(180deg, #000 72%, transparent 100%);
-  filter: saturate(1.05) contrast(1.04);
-}
-
-.home-camp__glow {
-  position: absolute;
-  left: 50%;
-  top: 58%;
-  width: 42%;
-  height: 28%;
-  transform: translate(-50%, -50%);
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(255, 120, 30, 0.35) 0%, rgba(255, 90, 0, 0.12) 45%, transparent 72%);
-  pointer-events: none;
-  mix-blend-mode: screen;
-  animation: camp-flicker 2.8s ease-in-out infinite;
-}
-
-.home-camp__caption {
-  margin-top: -8px;
-  color: rgba(210, 200, 185, 0.72);
-  font-size: 13px;
-  letter-spacing: 0.04em;
-  font-style: italic;
-  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.8);
 }
 
 @keyframes home-fade-up {
@@ -301,29 +261,11 @@ body[data-page="home"] .lead {
   }
 }
 
-@keyframes camp-flicker {
-  0%,
-  100% {
-    opacity: 0.55;
-    transform: translate(-50%, -50%) scale(1);
-  }
-  40% {
-    opacity: 0.9;
-    transform: translate(-50%, -50%) scale(1.08);
-  }
-  70% {
-    opacity: 0.65;
-    transform: translate(-48%, -52%) scale(0.96);
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
   .home-kicker,
   body[data-page="home"] .lead,
   .home-support,
-  .home-lore,
-  .home-camp,
-  .home-camp__glow {
+  .home-lore {
     animation: none;
   }
 }
