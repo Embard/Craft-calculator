@@ -636,7 +636,6 @@ function initBgLoop() {
 
 document.addEventListener("DOMContentLoaded", function () {
   bootCatalog();
-  renderStatusBar();
   initBgLoop();
   var page = document.body.dataset.page;
   if (page === "home") initHomePage();
