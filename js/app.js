@@ -115,6 +115,7 @@ function initCraftPage() {
   var catalog = document.getElementById("catalog");
   var treeRoot = document.getElementById("tree-root");
   var search = document.getElementById("craft-search");
+  var chips = document.getElementById("craft-chips");
   var tooltip = document.getElementById("tooltip");
   if (!catalog || !treeRoot) return;
 
@@ -126,6 +127,48 @@ function initCraftPage() {
   }
 
   var currentId = GZ.CRAFTABLE[0];
+  var category = "";
+  var categoryMap = GZ.CRAFT_CATEGORIES || {};
+
+  function itemCategory(item) {
+    if (!item) return "";
+    if (item.craftMeta && item.craftMeta.category) return item.craftMeta.category;
+    return item.categoryLabel || "";
+  }
+
+  function categoryOrder() {
+    var keys = Object.keys(categoryMap);
+    if (keys.length) return keys;
+    var set = {};
+    GZ.CRAFTABLE.forEach(function (id) {
+      var cat = itemCategory(itemById(id));
+      if (cat) set[cat] = true;
+    });
+    return Object.keys(set).sort(function (a, b) {
+      return a.localeCompare(b, "ru");
+    });
+  }
+
+  function filteredIds() {
+    var q = ((search && search.value) || "").trim().toLowerCase();
+    return GZ.CRAFTABLE.filter(function (id) {
+      var item = itemById(id);
+      if (!item) return false;
+      if (category) {
+        var listed = categoryMap[category];
+        if (listed && listed.length) {
+          if (listed.indexOf(id) === -1) return false;
+        } else if (itemCategory(item) !== category) {
+          return false;
+        }
+      }
+      if (!q) return true;
+      return (
+        item.name.toLowerCase().indexOf(q) !== -1 ||
+        String(item.classname || "").toLowerCase().indexOf(q) !== -1
+      );
+    });
+  }
 
   function showTooltip(item, event) {
     if (!tooltip || !item) return;
@@ -221,41 +264,77 @@ function initCraftPage() {
         : '<div class="empty-state"><p class="muted">Рецепт для этого предмета ещё не найден в файлах админа.</p></div>');
   }
 
-  function renderCatalog(filter) {
-    var q = (filter || "").trim().toLowerCase();
-    catalog.innerHTML = GZ.CRAFTABLE.map(function (id) {
-      var item = itemById(id);
-      if (!item) return "";
-      if (
-        q &&
-        item.name.toLowerCase().indexOf(q) === -1 &&
-        String(item.classname || "").toLowerCase().indexOf(q) === -1
-      ) {
-        return "";
-      }
-      return (
-        '<button class="catalog-item' +
-        (id === currentId ? " active" : "") +
-        '" data-id="' +
-        escapeHtml(id) +
+  function renderChips() {
+    if (!chips) return;
+    var html =
+      '<button type="button" class="chip' +
+      (!category ? " active" : "") +
+      '" data-cat="">Все</button>';
+    categoryOrder().forEach(function (name) {
+      var count = (categoryMap[name] || []).length;
+      html +=
+        '<button type="button" class="chip' +
+        (category === name ? " active" : "") +
+        '" data-cat="' +
+        escapeHtml(name) +
         '">' +
-        itemImage(item) +
-        "<div><strong>" +
-        escapeHtml(item.name) +
-        "</strong><span>" +
-        escapeHtml(item.categoryLabel || "—") +
-        " · " +
-        ((item.recipe && item.recipe.length) || 0) +
-        " компонентов</span></div></button>"
-      );
-    }).join("");
+        escapeHtml(name) +
+        (count ? " · " + count : "") +
+        "</button>";
+    });
+    chips.innerHTML = html;
+  }
+
+  function renderCatalog() {
+    var list = filteredIds();
+    if (!list.length) {
+      catalog.innerHTML =
+        '<div class="empty-state"><p class="muted">В этой категории ничего не найдено.</p></div>';
+      return;
+    }
+    if (list.indexOf(currentId) === -1) {
+      currentId = list[0];
+      renderTree();
+    }
+    catalog.innerHTML = list
+      .map(function (id) {
+        var item = itemById(id);
+        if (!item) return "";
+        return (
+          '<button class="catalog-item' +
+          (id === currentId ? " active" : "") +
+          '" data-id="' +
+          escapeHtml(id) +
+          '">' +
+          itemImage(item) +
+          "<div><strong>" +
+          escapeHtml(item.name) +
+          "</strong><span>" +
+          escapeHtml(itemCategory(item) || "—") +
+          " · " +
+          ((item.recipe && item.recipe.length) || 0) +
+          " компонентов</span></div></button>"
+        );
+      })
+      .join("");
+  }
+
+  if (chips) {
+    chips.addEventListener("click", function (event) {
+      var btn = event.target.closest(".chip");
+      if (!btn) return;
+      category = btn.dataset.cat || "";
+      renderChips();
+      renderCatalog();
+      catalog.scrollTop = 0;
+    });
   }
 
   catalog.addEventListener("click", function (event) {
     var btn = event.target.closest(".catalog-item");
     if (!btn) return;
     currentId = btn.dataset.id;
-    renderCatalog(search ? search.value : "");
+    renderCatalog();
     renderTree();
   });
 
@@ -280,16 +359,22 @@ function initCraftPage() {
   });
   treeRoot.addEventListener("mouseleave", hideTooltip);
 
-  if (search) search.addEventListener("input", function () {
-    renderCatalog(search.value);
-  });
+  if (search) {
+    search.addEventListener("input", function () {
+      renderCatalog();
+      catalog.scrollTop = 0;
+    });
+  }
 
   var hashId = (location.hash || "").replace("#", "");
   if (hashId && itemById(hashId) && GZ.CRAFTABLE.indexOf(itemById(hashId).id) !== -1) {
     currentId = itemById(hashId).id;
+    var hashItem = itemById(hashId);
+    category = itemCategory(hashItem) || "";
   }
 
-  renderCatalog("");
+  renderChips();
+  renderCatalog();
   renderTree();
 }
 
