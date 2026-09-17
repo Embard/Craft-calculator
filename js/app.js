@@ -289,7 +289,7 @@ function initCraftPage() {
     var list = filteredIds();
     if (!list.length) {
       catalog.innerHTML =
-        '<div class="empty-state"><p class="muted">В этой категории ничего не найдено.</p></div>';
+        '<div class="empty-state" style="grid-column:1/-1"><p class="muted">В этой категории ничего не найдено.</p></div>';
       return;
     }
     if (list.indexOf(currentId) === -1) {
@@ -300,20 +300,19 @@ function initCraftPage() {
       .map(function (id) {
         var item = itemById(id);
         if (!item) return "";
+        var parts = (item.recipe && item.recipe.length) || 0;
         return (
-          '<button class="catalog-item' +
+          '<button class="item-tile' +
           (id === currentId ? " active" : "") +
-          '" data-id="' +
+          '" type="button" data-id="' +
           escapeHtml(id) +
-          '">' +
+          '"><span class="badge">' +
+          escapeHtml(parts ? parts + " комп." : "крафт") +
+          '</span><span class="img-box">' +
           itemImage(item) +
-          "<div><strong>" +
+          '</span><span class="label">' +
           escapeHtml(item.name) +
-          "</strong><span>" +
-          escapeHtml(itemCategory(item) || "—") +
-          " · " +
-          ((item.recipe && item.recipe.length) || 0) +
-          " компонентов</span></div></button>"
+          "</span></button>"
         );
       })
       .join("");
@@ -326,16 +325,19 @@ function initCraftPage() {
       category = btn.dataset.cat || "";
       renderChips();
       renderCatalog();
-      catalog.scrollTop = 0;
+      window.scrollTo({ top: 0, behavior: "smooth" });
     });
   }
 
   catalog.addEventListener("click", function (event) {
-    var btn = event.target.closest(".catalog-item");
+    var btn = event.target.closest(".item-tile");
     if (!btn) return;
     currentId = btn.dataset.id;
     renderCatalog();
     renderTree();
+    if (treeRoot) {
+      treeRoot.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }
   });
 
   treeRoot.addEventListener("click", function (event) {
@@ -362,7 +364,6 @@ function initCraftPage() {
   if (search) {
     search.addEventListener("input", function () {
       renderCatalog();
-      catalog.scrollTop = 0;
     });
   }
 
