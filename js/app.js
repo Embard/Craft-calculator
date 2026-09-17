@@ -74,8 +74,33 @@ function hasExpandable(item) {
 
 function whereText(item) {
   if (!item) return "Нет данных.";
-  if (item.where) return item.where;
-  return "В файлах сервера пока нет места добычи.";
+
+  var places = [];
+  var seen = {};
+  (item.loot || []).forEach(function (zone) {
+    var house = zone && zone.house;
+    if (!house || seen[house]) return;
+    seen[house] = true;
+    places.push(house);
+  });
+  if (places.length) return places.slice(0, 4).join(", ");
+
+  var raw = String(item.where || "").trim();
+  if (!raw) return "В файлах сервера пока нет места добычи.";
+
+  var sought = raw.match(/Ищется:\s*([^.]+)\./);
+  if (sought) return sought[1].trim();
+
+  return raw
+    .replace(/\s*На карте цель экономики[^.]*\.?/g, "")
+    .replace(/\s*Зоны:\s*[^.]*\.?/g, "")
+    .replace(/^Лут:\s*/i, "")
+    .replace(/\s*\([^)]*\)/g, "")
+    .replace(/,\s*шанс\s*[^;.]*/gi, "")
+    .replace(/;\s*/g, ", ")
+    .replace(/\s+/g, " ")
+    .replace(/[.,]\s*$/g, "")
+    .trim() || "Нет данных.";
 }
 
 function initCraftPage() {
