@@ -385,7 +385,7 @@ function openItemModal(id) {
 
   document.getElementById("m-media").innerHTML = itemImage(item);
   document.getElementById("m-title").textContent = item.name;
-  document.getElementById("m-sub").textContent = item.classname || item.id;
+  document.getElementById("m-sub").textContent = item.categoryLabel || "";
 
   function row(key, value) {
     return (
@@ -397,46 +397,37 @@ function openItemModal(id) {
     );
   }
 
-  var obtain = [];
-  if (item.recipe && item.recipe.length) obtain.push("крафт");
-  if ((item.usage && item.usage.length) || (item.loot && item.loot.length)) obtain.push("лут");
-  var traders = item.traders && item.traders.length
-    ? item.traders
-    : (GZ.PRICES || []).filter(function (price) {
-        return price.id === item.id || price.id === item.classname;
-      });
-  if (traders.length) obtain.push("торговец");
-  if (item.crafted || item.rarity === "крафт") obtain.push("только крафт");
+  function uniqTraderLines(list, priceKey) {
+    var seen = {};
+    var out = [];
+    list.forEach(function (t) {
+      var npc = t.npc || t.trader || "торговец";
+      var price = t[priceKey];
+      if (!price || price === "не продаёт" || price === "не покупает" || price === "—") return;
+      var key = npc + "|" + price;
+      if (seen[key]) return;
+      seen[key] = true;
+      out.push(
+        '<span class="itemdb-tag">' +
+          escapeHtml(npc) +
+          " · " +
+          escapeHtml(price) +
+          "</span>"
+      );
+    });
+    return out;
+  }
+
+  var traders =
+    item.traders && item.traders.length
+      ? item.traders
+      : (GZ.PRICES || []).filter(function (price) {
+          return price.id === item.id || price.id === item.classname;
+        });
 
   var html = "";
-  html += row("Категория", escapeHtml(item.categoryLabel || "—"));
   html += row("Редкость", '<span class="itemdb-tag">' + escapeHtml(item.rarity || "—") + "</span>");
-  if (item.nominal != null && item.nominal !== "") {
-    html += row("Nominal", escapeHtml(String(item.nominal)) + (item.min != null ? " · min " + escapeHtml(String(item.min)) : ""));
-  }
-  html += row("Как добыть", obtain.length ? escapeHtml(obtain.join(" · ")) : "нет данных");
   html += row("Где искать", escapeHtml(whereText(item)));
-
-  if (item.usage && item.usage.length) {
-    html += row(
-      "Типы локаций",
-      item.usage
-        .map(function (u) {
-          return '<span class="itemdb-tag">' + escapeHtml(u) + "</span>";
-        })
-        .join("")
-    );
-  }
-  if (item.value && item.value.length) {
-    html += row(
-      "Тиры",
-      item.value
-        .map(function (v) {
-          return '<span class="itemdb-tag">' + escapeHtml(v) + "</span>";
-        })
-        .join("")
-    );
-  }
 
   if (item.recipe && item.recipe.length) {
     html += row(
@@ -456,63 +447,20 @@ function openItemModal(id) {
     );
   }
 
-  if (item.loot && item.loot.length) {
-    html += row(
-      "Места и шансы",
-      item.loot
-        .slice(0, 20)
-        .map(function (zone) {
-          return (
-            '<span class="itemdb-tag">' +
-            escapeHtml(zone.house) +
-            (zone.category ? " · " + escapeHtml(zone.category) : "") +
-            (zone.tier ? " · " + escapeHtml(zone.tier) : "") +
-            (zone.chance ? " · " + escapeHtml(zone.chance) : "") +
-            "</span>"
-          );
-        })
-        .join("")
-    );
-  }
-
-  if (traders.length) {
-    var buyRows = traders.filter(function (t) { return t.canBuy || (t.buy && t.buy !== "не продаёт" && t.buy !== "—"); });
-    var sellRows = traders.filter(function (t) { return t.canSell || (t.sell && t.sell !== "не покупает" && t.sell !== "—"); });
-    if (buyRows.length) {
-      html += row(
-        "Купить у",
-        buyRows
-          .map(function (t) {
-            return (
-              '<span class="itemdb-tag">' +
-              escapeHtml(t.npc || t.trader || "торговец") +
-              " · " +
-              escapeHtml(t.buy) +
-              (t.category ? " · " + escapeHtml(t.category) : "") +
-              "</span>"
-            );
-          })
-          .join("")
-      );
-    }
-    if (sellRows.length) {
-      html += row(
-        "Продать",
-        sellRows
-          .map(function (t) {
-            return (
-              '<span class="itemdb-tag">' +
-              escapeHtml(t.npc || t.trader || "торговец") +
-              " · " +
-              escapeHtml(t.sell) +
-              (t.category ? " · " + escapeHtml(t.category) : "") +
-              "</span>"
-            );
-          })
-          .join("")
-      );
-    }
-  }
+  var buyLines = uniqTraderLines(
+    traders.filter(function (t) {
+      return t.canBuy || (t.buy && t.buy !== "не продаёт" && t.buy !== "—");
+    }),
+    "buy"
+  );
+  var sellLines = uniqTraderLines(
+    traders.filter(function (t) {
+      return t.canSell || (t.sell && t.sell !== "не покупает" && t.sell !== "—");
+    }),
+    "sell"
+  );
+  if (buyLines.length) html += row("Купить у", buyLines.join(""));
+  if (sellLines.length) html += row("Продать", sellLines.join(""));
 
   document.getElementById("m-body").innerHTML = html;
   modal.classList.add("open");
