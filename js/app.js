@@ -78,27 +78,6 @@ function whereText(item) {
   return "В файлах сервера пока нет места добычи.";
 }
 
-function renderStatusBar() {
-  var box = document.getElementById("catalog-status");
-  if (!box) return;
-  var status = GZ.STATUS || {};
-  if (status.fromServer) {
-    box.className = "status-bar is-ready";
-    box.innerHTML =
-      "Каталог собран из файлов сервера · " +
-      escapeHtml(status.items || 0) +
-      " предметов · " +
-      escapeHtml(status.craftable || 0) +
-      " крафт · " +
-      escapeHtml(status.prices || 0) +
-      " цен";
-    return;
-  }
-  box.className = "status-bar";
-  box.innerHTML =
-    "Пока показан пример 6Б45. Положите файлы админа в <code>incoming</code> и запустите <code>tools\\собрать.bat</code>.";
-}
-
 function initCraftPage() {
   var catalog = document.getElementById("catalog");
   var treeRoot = document.getElementById("tree-root");
@@ -286,7 +265,6 @@ function initItemsPage() {
   var search = document.getElementById("items-search");
   var chips = document.getElementById("items-chips");
   var more = document.getElementById("items-more");
-  var count = document.getElementById("items-count");
   if (!grid) return;
 
   var PAGE = 120;
@@ -341,7 +319,6 @@ function initItemsPage() {
 
   function renderGrid() {
     var list = filtered();
-    if (count) count.textContent = list.length + " предметов";
     if (!list.length) {
       grid.innerHTML =
         '<div class="empty-state" style="grid-column:1/-1"><h3>Ничего не найдено</h3><p class="muted">Измените поиск или дождитесь файлов админа.</p></div>';
