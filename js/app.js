@@ -16,13 +16,21 @@ function escapeHtml(value) {
 
 function bootCatalog() {
   window.GZ = window.GZ || {};
-  GZ.ITEMS = Object.assign({}, GZ.SEED_ITEMS || {});
-  GZ.CRAFTABLE = (GZ.SEED_CRAFTABLE || []).slice();
-  GZ.PRICES = (GZ.SEED_PRICES || []).slice();
+  GZ.ITEMS = {};
+  GZ.CRAFTABLE = [];
+  GZ.PRICES = [];
   GZ.STATUS = Object.assign({}, GZ.SEED_STATUS || {});
   GZ.CRAFT_CATEGORIES = {};
 
   var generated = window.GZ_GENERATED;
+  var fromServer = generated && generated.status && generated.status.fromServer;
+
+  if (!fromServer) {
+    GZ.ITEMS = Object.assign({}, GZ.SEED_ITEMS || {});
+    GZ.CRAFTABLE = (GZ.SEED_CRAFTABLE || []).slice();
+    GZ.PRICES = (GZ.SEED_PRICES || []).slice();
+  }
+
   if (generated && generated.items && Object.keys(generated.items).length) {
     Object.keys(generated.items).forEach(function (id) {
       GZ.ITEMS[id] = Object.assign({}, GZ.ITEMS[id] || {}, generated.items[id]);
@@ -39,7 +47,7 @@ function bootCatalog() {
     var item = GZ.ITEMS[id];
     return item && item.recipe && item.recipe.length;
   });
-  if (generated && generated.status && generated.status.fromServer && generated.craftable) {
+  if (fromServer && generated.craftable) {
     GZ.CRAFTABLE = generated.craftable.slice();
   }
 }
