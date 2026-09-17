@@ -5,7 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Справочник выжившего — Грань Заката</title>
   <link rel="icon" href="img/logo.png">
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body data-page="home">
@@ -45,29 +47,29 @@
 
   <main class="home-hero">
     <div class="home-hero__content">
+      <p class="home-kicker">Справочник выжившего</p>
       <p class="lead">Добро пожаловать туда, где жизнь. На Грани заката.</p>
       <p class="home-support">
-        Записная книжка выжившего у костра: где лежит предмет, с каким шансом,
-        как его скрафтить и почём продаёт торговец.
+        Здесь тихо, как у костра после долгого перехода: можно открыть записную книжку
+        и вспомнить, где лежит предмет, с каким шансом он выпадает, как его собрать
+        на станке и кому из торговцев поселения его продать.
       </p>
-      <div class="home-stats" id="home-stats"></div>
-      <div class="home-actions home-actions-3">
-        <a class="home-action" href="items.html">
-          <span class="feature-kicker">Каталог</span>
-          <strong>Предметы</strong>
-          <span>Где искать, редкость и шансы в контейнерах</span>
-        </a>
-        <a class="home-action" href="craft.html">
-          <span class="feature-kicker">Гайды</span>
-          <strong>Крафт</strong>
-          <span>Рецепты и дерево компонентов</span>
-        </a>
-        <a class="home-action" href="prices.html">
-          <span class="feature-kicker">Гайды</span>
-          <strong>Цены</strong>
-          <span>Торговцы, покупка и скупка</span>
-        </a>
-      </div>
+      <p class="home-lore">
+        Сервер PvE — без охоты на чужой рюкзак. В поселении ждут Леший, Кира, Вера
+        и остальные: оружие, еда, аптечка, запчасти. А в лесу рядом всегда найдётся
+        кто-то верный, кто греется у огня и ждёт, пока ты вернёшься с рейда.
+      </p>
+      <figure class="home-camp">
+        <img
+          src="img/home/campfire-dog.png"
+          alt="Собака сидит у костра в ночном лесу"
+          class="home-camp__img"
+          width="1280"
+          height="720"
+        >
+        <div class="home-camp__glow" aria-hidden="true"></div>
+        <figcaption class="home-camp__caption">У огня всегда кто-то ждёт.</figcaption>
+      </figure>
     </div>
   </main>
 
