@@ -34,7 +34,10 @@ incoming\sources\
     VOSCassettes_types.xml
 
 Дополнительно, если будут:
-  incoming\profiles   — цены торговцев
-  incoming\icons      — PNG иконок: ClassName.png
+  TraderPlusPriceConfig.json
+  TraderPlusIDsConfig.json
+  ZoneCore_npcs.json
+  Recipes.json            — крафт в руках (не стол)
+  incoming\icons          — PNG иконок: ClassName.png
 
 После копирования запустить tools\собрать.bat

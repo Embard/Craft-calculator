@@ -34,6 +34,11 @@ SPLATOON_CACHE = INCOMING / "splatoon-catalog.js"
 
 # Имена как на сервере. Другие xml/json парсер не трогает.
 SERVER_SOURCE_FILES = ("types.xml", "Loot.json", "HP_Crafter.json", "SearchForLoot.json")
+SERVER_TRADER_FILES = (
+    "TraderPlusPriceConfig.json",
+    "TraderPlusIDsConfig.json",
+    "ZoneCore_npcs.json",
+)
 SERVER_CE_DIR = "Mod_ce"
 
 CATEGORY_LABELS = {
@@ -208,8 +213,10 @@ def category_label(raw: str | None) -> str:
 def rarity_from(nominal: int | None, crafted: bool) -> str:
     if crafted:
         return "крафт"
-    if nominal is None or nominal <= 0:
-        return "не в луте"
+    if nominal is None:
+        return "—"
+    if nominal <= 0:
+        return "не в экономике"
     if nominal >= 100:
         return "очень часто"
     if nominal >= 50:
@@ -231,8 +238,6 @@ def clean_display_name(value: object, classname: str) -> str:
 
 
 def where_from_types(item: dict) -> str:
-    if item.get("crafted"):
-        return "Не лутается в готовом виде — только крафт или выдача."
     places = [USAGE_LABELS.get(u, u) for u in item.get("usage") or []]
     tiers = [VALUE_LABELS.get(v, v) for v in item.get("value") or []]
     parts = []
@@ -246,6 +251,30 @@ def where_from_types(item: dict) -> str:
     if not parts:
         return "В файлах сервера нет точки спавна. Проверьте торговца, квест или крафт."
     return " ".join(parts)
+
+
+def where_from_loot(item: dict) -> str:
+    loot = item.get("loot") or []
+    if not loot:
+        return where_from_types(item)
+    places = []
+    seen = set()
+    for zone in loot[:8]:
+        house = zone.get("house") or ""
+        if not house or house in seen:
+            continue
+        seen.add(house)
+        bit = house
+        if zone.get("tier"):
+            bit += f" ({zone['tier']})"
+        if zone.get("chance"):
+            bit += f", шанс {zone['chance']}"
+        places.append(bit)
+    text = "Лут: " + "; ".join(places) + "."
+    base = where_from_types({**item, "usage": item.get("usage") or [], "value": item.get("value") or []})
+    if base.startswith("В файлах"):
+        return text
+    return text + " " + base
 
 
 def parse_types_xml(path: Path) -> list[dict]:
@@ -368,72 +397,236 @@ def parse_stringtables() -> dict[str, str]:
     return names
 
 
-def parse_traderplus(obj, trader_name: str, prices: list[dict]) -> None:
-    if isinstance(obj, list):
-        for entry in obj:
-            parse_traderplus(entry, trader_name, prices)
-        return
-    if not isinstance(obj, dict):
-        return
+def _price_number(raw) -> int | None:
+    if raw in (None, "", "-1", -1):
+        return None
+    try:
+        value = int(float(str(raw).strip()))
+    except ValueError:
+        return None
+    return value if value >= 0 else None
 
-    category = (
-        obj.get("CategoryName")
-        or obj.get("Category")
-        or obj.get("m_Name")
-        or trader_name
-    )
 
-    products = obj.get("Products") or obj.get("Items") or obj.get("m_TraderPlusItems") or []
-    if isinstance(products, list):
-        for product in products:
+def _format_money(value: int | None, currency: str) -> str:
+    if value is None:
+        return "—"
+    if currency == "золото":
+        return f"{value} зол."
+    return f"{value} ₽"
+
+
+def _currency_label(accepted: list | None) -> str:
+    joined = " ".join(str(x) for x in (accepted or [])).lower()
+    if "nugget" in joined or "goldbar" in joined:
+        return "золото"
+    return "рубли"
+
+
+def parse_zone_traders(path: Path) -> dict[int, dict]:
+    """DialogId / TraderPlus Id → NPC."""
+    raw = load_json(path, {})
+    traders: dict[int, dict] = {}
+    for npc in raw.get("NPCs") or []:
+        if not isinstance(npc, dict):
+            continue
+        trader_ids = []
+        for link in npc.get("Links") or []:
+            if isinstance(link, dict) and str(link.get("Type", "")).lower() == "traderplus":
+                try:
+                    trader_ids.append(int(link.get("Id")))
+                except (TypeError, ValueError):
+                    continue
+        if not trader_ids and npc.get("DialogId") is not None:
+            try:
+                trader_ids.append(int(npc.get("DialogId")))
+            except (TypeError, ValueError):
+                pass
+        pos = npc.get("Position") or []
+        for trader_id in trader_ids:
+            traders[trader_id] = {
+                "id": trader_id,
+                "name": npc.get("DisplayName") or f"Торговец {trader_id}",
+                "shop": next(
+                    (
+                        link.get("Label")
+                        for link in (npc.get("Links") or [])
+                        if isinstance(link, dict)
+                        and str(link.get("Type", "")).lower() == "traderplus"
+                        and int(link.get("Id", -1)) == trader_id
+                    ),
+                    "",
+                ),
+                "position": pos,
+            }
+    return traders
+
+
+def parse_trader_ids(path: Path) -> dict[int, dict]:
+    raw = load_json(path, {})
+    mapping: dict[int, dict] = {}
+    for entry in raw.get("IDs") or []:
+        if not isinstance(entry, dict) or entry.get("Id") is None:
+            continue
+        try:
+            trader_id = int(entry["Id"])
+        except (TypeError, ValueError):
+            continue
+        mapping[trader_id] = {
+            "categories": list(entry.get("Categories") or []),
+            "currency": _currency_label(entry.get("CurrenciesAccepted")),
+        }
+    return mapping
+
+
+def parse_trader_products(path: Path) -> dict[str, list[dict]]:
+    """CategoryName → product rows."""
+    raw = load_json(path, {})
+    by_category: dict[str, list[dict]] = {}
+    for cat in raw.get("TraderCategories") or []:
+        if not isinstance(cat, dict):
+            continue
+        category = cat.get("CategoryName") or "Прочее"
+        products = []
+        for product in cat.get("Products") or []:
+            classname = None
+            buy_raw = None
+            sell_raw = None
             if isinstance(product, str):
+                # ClassName,Coefficient,MaxStock,TradeQuantity,BuyPrice,SellPrice
                 parts = [p.strip() for p in product.split(",")]
                 if not parts or not parts[0]:
                     continue
                 classname = parts[0]
-                buy = parts[2] if len(parts) > 2 else ""
-                sell = parts[3] if len(parts) > 3 else ""
-                prices.append(
-                    {
-                        "id": classname,
-                        "item": classname,
-                        "trader": category,
-                        "buy": buy if buy not in {"", "-1"} else "не покупает",
-                        "sell": sell if sell not in {"", "-1"} else "не принимает",
-                    }
-                )
+                buy_raw = parts[4] if len(parts) > 4 else None
+                sell_raw = parts[5] if len(parts) > 5 else None
             elif isinstance(product, dict):
                 classname = product.get("ClassName") or product.get("Classname") or product.get("Name")
-                if not classname:
-                    continue
-                buy = product.get("BuyPrice", product.get("Buy", product.get("MaxPriceThreshold")))
-                sell = product.get("SellPrice", product.get("Sell", product.get("MinPriceThreshold")))
-                prices.append(
-                    {
-                        "id": classname,
-                        "item": classname,
-                        "trader": category,
-                        "buy": "не покупает" if buy in (None, -1, "-1") else str(buy),
-                        "sell": "не принимает" if sell in (None, -1, "-1") else str(sell),
-                    }
-                )
-
-    for key in ("TraderCategories", "Categories", "MarketItems", "Items"):
-        if key in obj:
-            parse_traderplus(obj[key], category or trader_name, prices)
+                buy_raw = product.get("BuyPrice", product.get("Buy", product.get("MaxPriceThreshold")))
+                sell_raw = product.get("SellPrice", product.get("Sell", product.get("MinPriceThreshold")))
+            if not classname:
+                continue
+            products.append(
+                {
+                    "id": classname,
+                    "buy": _price_number(buy_raw),
+                    "sell": _price_number(sell_raw),
+                }
+            )
+        by_category[category] = products
+    return by_category
 
 
 def collect_prices() -> list[dict]:
+    """Цены с привязкой к NPC из TraderPlus + ZoneCore."""
+    price_path = SOURCES / "TraderPlusPriceConfig.json"
+    ids_path = SOURCES / "TraderPlusIDsConfig.json"
+    npc_path = SOURCES / "ZoneCore_npcs.json"
+
+    # Fallback: старый путь profiles, если админ положил туда
+    if not price_path.exists():
+        for path in iter_files(PROFILES, ("*TraderPlusPrice*.json", "*PriceConfig*.json")):
+            price_path = path
+            break
+    if not ids_path.exists():
+        for path in iter_files(PROFILES, ("*TraderPlusIDs*.json", "*IDsConfig*.json")):
+            ids_path = path
+            break
+    if not npc_path.exists():
+        for path in iter_files(PROFILES, ("*ZoneCore*npc*.json", "*npc*.json")):
+            npc_path = path
+            break
+
+    if not price_path.exists():
+        return []
+
+    products_by_cat = parse_trader_products(price_path)
+    trader_ids = parse_trader_ids(ids_path) if ids_path.exists() else {}
+    npcs = parse_zone_traders(npc_path) if npc_path.exists() else {}
+
+    category_owners: dict[str, list[dict]] = {}
+    for trader_id, meta in trader_ids.items():
+        npc = npcs.get(trader_id, {})
+        owner = {
+            "traderId": trader_id,
+            "npc": npc.get("name") or f"Торговец #{trader_id}",
+            "shop": npc.get("shop") or "",
+            "currency": meta.get("currency") or "рубли",
+        }
+        for category in meta.get("categories") or []:
+            category_owners.setdefault(category, []).append(owner)
+
     prices: list[dict] = []
-    for path in iter_files(PROFILES, ("*.json",)):
-        low = path.name.lower()
-        if not any(token in low for token in ("trader", "market", "price", "product")):
-            continue
-        data = load_json(path, None)
-        if data is None:
-            continue
-        parse_traderplus(data, path.stem, prices)
+    seen = set()
+    for category, products in products_by_cat.items():
+        owners = category_owners.get(category)
+        if not owners:
+            owners = [
+                {
+                    "traderId": None,
+                    "npc": category,
+                    "shop": category,
+                    "currency": "рубли",
+                }
+            ]
+        for product in products:
+            for owner in owners:
+                key = (product["id"], owner.get("traderId"), owner["npc"], category, product["buy"], product["sell"])
+                if key in seen:
+                    continue
+                seen.add(key)
+                currency = owner["currency"]
+                buy = product["buy"]
+                sell = product["sell"]
+                prices.append(
+                    {
+                        "id": product["id"],
+                        "item": product["id"],
+                        "trader": owner["npc"],
+                        "npc": owner["npc"],
+                        "shop": owner.get("shop") or category,
+                        "category": category,
+                        "traderId": owner.get("traderId"),
+                        "currency": currency,
+                        "buy": _format_money(buy, currency) if buy is not None else "не продаёт",
+                        "sell": _format_money(sell, currency) if sell is not None else "не покупает",
+                        "buyValue": buy,
+                        "sellValue": sell,
+                        "canBuy": buy is not None,
+                        "canSell": sell is not None,
+                    }
+                )
     return prices
+
+
+def attach_traders_to_items(catalog: dict[str, dict], prices: list[dict]) -> None:
+    by_item: dict[str, list[dict]] = {}
+    for row in prices:
+        by_item.setdefault(row["id"], []).append(row)
+    for item_id, item in catalog.items():
+        rows = by_item.get(item_id) or by_item.get(item.get("classname") or "", [])
+        if not rows:
+            item["traders"] = []
+            continue
+        # компактный список для карточки предмета
+        compact = []
+        seen = set()
+        for row in rows:
+            key = (row.get("npc"), row.get("buyValue"), row.get("sellValue"), row.get("category"))
+            if key in seen:
+                continue
+            seen.add(key)
+            compact.append(
+                {
+                    "npc": row.get("npc") or row.get("trader"),
+                    "shop": row.get("shop") or "",
+                    "category": row.get("category") or "",
+                    "buy": row.get("buy"),
+                    "sell": row.get("sell"),
+                    "canBuy": bool(row.get("canBuy")),
+                    "canSell": bool(row.get("canSell")),
+                }
+            )
+        item["traders"] = compact
 
 
 def collect_script_recipes() -> dict[str, list[dict]]:
@@ -461,11 +654,13 @@ def collect_script_recipes() -> dict[str, list[dict]]:
 
 def collect_json_recipes() -> dict[str, list[dict]]:
     recipes: dict[str, list[dict]] = {}
-    skip = {"hp_crafter.json", "loot.json", "searchforloot.json"}
+    skip = {"hp_crafter.json", "loot.json", "searchforloot.json", "recipes.json", "recipes.html"}
     for path in iter_files(INCOMING, ("*recipe*.json", "*craft*.json")):
         if "overrides" in path.parts:
             continue
         if path.name.lower() in skip:
+            continue
+        if path.name.lower().endswith(".html"):
             continue
         data = load_json(path, None)
         if not isinstance(data, (dict, list)):
@@ -637,7 +832,7 @@ def folder_has_files(folder: Path) -> bool:
 
 def build_item(raw: dict, names: dict[str, str], icons: dict[str, str]) -> dict:
     classname = raw["classname"]
-    crafted = bool(raw.get("crafted"))
+    # «крафт» в карточке только для стола HP_Crafter; флаг types.xml тут не используем
     nominal = raw.get("nominal")
     name = names.get(classname) or humanize_classname(classname)
     name = clean_display_name(name, classname)
@@ -648,17 +843,18 @@ def build_item(raw: dict, names: dict[str, str], icons: dict[str, str]) -> dict:
         "category": (raw.get("category") or "other").lower(),
         "categoryLabel": category_label(raw.get("category")),
         "image": find_icon(classname, icons),
-        "craftable": crafted,
+        "craftable": False,
         "description": "",
         "where": where_from_types(raw),
         "tier": (raw.get("value") or ["—"])[0],
-        "rarity": rarity_from(nominal, crafted),
+        "rarity": rarity_from(nominal, False),
         "usage": raw.get("usage") or [],
         "value": raw.get("value") or [],
         "nominal": nominal,
         "min": raw.get("min"),
         "loot": [],
         "recipe": [],
+        "traders": [],
     }
 
 
@@ -698,8 +894,11 @@ def main() -> None:
             missing.append(f"incoming/sources/{name}")
     if not any((SOURCES / SERVER_CE_DIR).glob("*.xml")):
         missing.append("incoming/sources/Mod_ce — нет XML модов")
-    if not folder_has_files(PROFILES):
-        missing.append("incoming/profiles — нет цен торговцев")
+    if not folder_has_files(PROFILES) and not (SOURCES / "TraderPlusPriceConfig.json").exists():
+        missing.append("incoming/sources/TraderPlusPriceConfig.json — нет цен торговцев")
+    for name in SERVER_TRADER_FILES:
+        if not (SOURCES / name).exists() and name != "TraderPlusPriceConfig.json":
+            missing.append(f"incoming/sources/{name}")
     if not folder_has_files(WORKSHOP) and not folder_has_files(ICONS_IN):
         missing.append("incoming/icons — нет PNG иконок")
 
@@ -780,9 +979,23 @@ def main() -> None:
         if raw["classname"] in hp_recipes:
             item["recipe"] = hp_recipes[raw["classname"]]
             item["craftable"] = True
+            item["rarity"] = "крафт"
+            item["where"] = "Крафт на станке HP_Crafter."
         else:
             item["craftable"] = False
             item["recipe"] = []
+            if item["loot"]:
+                item["where"] = where_from_loot(item)
+                if (item.get("nominal") or 0) <= 0:
+                    # есть точки в SearchForLoot, но nominal=0
+                    chances = []
+                    for zone in item["loot"]:
+                        ch = str(zone.get("chance") or "").replace("%", "")
+                        if ch.replace(".", "", 1).isdigit():
+                            chances.append(float(ch))
+                    avg = sum(chances) / len(chances) if chances else 50
+                    # rarity шкалуем от шанса SFL
+                    item["rarity"] = rarity_from(100 if avg >= 80 else 50 if avg >= 50 else 25 if avg >= 30 else 10 if avg >= 15 else 5, False)
         meta = craft_meta.get(raw["classname"])
         if meta:
             item["craftMeta"] = meta
@@ -864,6 +1077,7 @@ def main() -> None:
         if item:
             row["item"] = item["name"]
             row["image"] = item.get("image") or ""
+    attach_traders_to_items(catalog, prices)
 
     craftable = [
         item_id

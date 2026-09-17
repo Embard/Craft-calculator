@@ -423,16 +423,43 @@ function openItemModal(id) {
   var obtain = [];
   if (item.recipe && item.recipe.length) obtain.push("крафт");
   if ((item.usage && item.usage.length) || (item.loot && item.loot.length)) obtain.push("лут");
-  if ((GZ.PRICES || []).some(function (price) { return price.id === item.id || price.id === item.classname; })) {
-    obtain.push("торговец");
-  }
+  var traders = item.traders && item.traders.length
+    ? item.traders
+    : (GZ.PRICES || []).filter(function (price) {
+        return price.id === item.id || price.id === item.classname;
+      });
+  if (traders.length) obtain.push("торговец");
   if (item.crafted || item.rarity === "крафт") obtain.push("только крафт");
 
   var html = "";
   html += row("Категория", escapeHtml(item.categoryLabel || "—"));
   html += row("Редкость", '<span class="itemdb-tag">' + escapeHtml(item.rarity || "—") + "</span>");
+  if (item.nominal != null && item.nominal !== "") {
+    html += row("Nominal", escapeHtml(String(item.nominal)) + (item.min != null ? " · min " + escapeHtml(String(item.min)) : ""));
+  }
   html += row("Как добыть", obtain.length ? escapeHtml(obtain.join(" · ")) : "нет данных");
   html += row("Где искать", escapeHtml(whereText(item)));
+
+  if (item.usage && item.usage.length) {
+    html += row(
+      "Типы локаций",
+      item.usage
+        .map(function (u) {
+          return '<span class="itemdb-tag">' + escapeHtml(u) + "</span>";
+        })
+        .join("")
+    );
+  }
+  if (item.value && item.value.length) {
+    html += row(
+      "Тиры",
+      item.value
+        .map(function (v) {
+          return '<span class="itemdb-tag">' + escapeHtml(v) + "</span>";
+        })
+        .join("")
+    );
+  }
 
   if (item.recipe && item.recipe.length) {
     html += row(
@@ -454,14 +481,15 @@ function openItemModal(id) {
 
   if (item.loot && item.loot.length) {
     html += row(
-      "Шансы",
+      "Места и шансы",
       item.loot
-        .slice(0, 12)
+        .slice(0, 20)
         .map(function (zone) {
           return (
             '<span class="itemdb-tag">' +
             escapeHtml(zone.house) +
             (zone.category ? " · " + escapeHtml(zone.category) : "") +
+            (zone.tier ? " · " + escapeHtml(zone.tier) : "") +
             (zone.chance ? " · " + escapeHtml(zone.chance) : "") +
             "</span>"
           );
@@ -470,26 +498,43 @@ function openItemModal(id) {
     );
   }
 
-  var prices = (GZ.PRICES || []).filter(function (price) {
-    return price.id === item.id || price.id === item.classname;
-  });
-  if (prices.length) {
-    html += row(
-      "Торговец",
-      prices
-        .map(function (price) {
-          return (
-            '<span class="itemdb-tag">' +
-            escapeHtml(price.trader) +
-            " · покупка " +
-            escapeHtml(price.buy) +
-            " · продажа " +
-            escapeHtml(price.sell) +
-            "</span>"
-          );
-        })
-        .join("")
-    );
+  if (traders.length) {
+    var buyRows = traders.filter(function (t) { return t.canBuy || (t.buy && t.buy !== "не продаёт" && t.buy !== "—"); });
+    var sellRows = traders.filter(function (t) { return t.canSell || (t.sell && t.sell !== "не покупает" && t.sell !== "—"); });
+    if (buyRows.length) {
+      html += row(
+        "Купить у",
+        buyRows
+          .map(function (t) {
+            return (
+              '<span class="itemdb-tag">' +
+              escapeHtml(t.npc || t.trader || "торговец") +
+              " · " +
+              escapeHtml(t.buy) +
+              (t.category ? " · " + escapeHtml(t.category) : "") +
+              "</span>"
+            );
+          })
+          .join("")
+      );
+    }
+    if (sellRows.length) {
+      html += row(
+        "Продать",
+        sellRows
+          .map(function (t) {
+            return (
+              '<span class="itemdb-tag">' +
+              escapeHtml(t.npc || t.trader || "торговец") +
+              " · " +
+              escapeHtml(t.sell) +
+              (t.category ? " · " + escapeHtml(t.category) : "") +
+              "</span>"
+            );
+          })
+          .join("")
+      );
+    }
   }
 
   document.getElementById("m-body").innerHTML = html;
@@ -527,11 +572,15 @@ function initPricesPage() {
     if (tableWrap) tableWrap.hidden = false;
     body.innerHTML = rows
       .map(function (row) {
+        var traderLabel = row.npc || row.trader || "—";
+        if (row.shop && row.shop !== traderLabel) {
+          traderLabel += " · " + row.shop;
+        }
         return (
           "<tr><td>" +
           escapeHtml(row.item || row.id) +
           "</td><td>" +
-          escapeHtml(row.trader || "—") +
+          escapeHtml(traderLabel) +
           "</td><td>" +
           escapeHtml(row.buy || "—") +
           "</td><td>" +

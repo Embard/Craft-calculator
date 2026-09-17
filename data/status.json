@@ -1,12 +1,11 @@
 {
-  "generatedAt": "2026-09-16T15:57:28",
+  "generatedAt": "2026-09-17T15:25:00",
   "items": 6599,
   "craftable": 161,
-  "prices": 0,
+  "prices": 3216,
   "lootRows": 2820,
   "icons": 2049,
   "missing": [
-    "incoming/profiles — нет цен торговцев",
     "incoming/icons — нет PNG иконок"
   ],
   "fromServer": true
