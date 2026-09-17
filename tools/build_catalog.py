@@ -41,6 +41,12 @@ SERVER_TRADER_FILES = (
 )
 SERVER_CE_DIR = "Mod_ce"
 
+CATEGORY_ALIASES = {
+    "lootdispatch": "vehiclesparts",
+    "vehicleparts": "vehiclesparts",
+    "medica": "medicine",
+}
+
 CATEGORY_LABELS = {
     "weapons": "Оружие",
     "explosives": "Взрывчатка",
@@ -52,18 +58,13 @@ CATEGORY_LABELS = {
     "books": "Книги",
     "recipes": "Рецепты",
     "vehiclesparts": "Запчасти транспорта",
-    "vehicleparts": "Запчасти транспорта",
     "vehicles": "Транспорт",
-    "armor": "Броня",
-    "material": "Материал",
     "medicine": "Медицина",
-    "medica": "Медицина",
     "ammo": "Патроны",
     "magazines": "Магазины",
     "buildings": "Стройка",
     "animals": "Животные",
     "electronics": "Электроника",
-    "lootdispatch": "Лут",
 }
 
 USAGE_LABELS = {
@@ -204,19 +205,25 @@ def humanize_classname(name: str) -> str:
     return re.sub(r"\s+", " ", clean).strip()
 
 
+def normalize_category(raw: str | None) -> str:
+    key = (raw or "other").strip().lower() or "other"
+    return CATEGORY_ALIASES.get(key, key)
+
+
 def category_label(raw: str | None) -> str:
     if not raw:
         return "Прочее"
-    return CATEGORY_LABELS.get(raw.lower(), raw)
+    key = normalize_category(raw)
+    return CATEGORY_LABELS.get(key, raw)
 
 
 def rarity_from(nominal: int | None, crafted: bool) -> str:
     if crafted:
-        return "крафт"
+        return "можно скрафтить"
     if nominal is None:
         return "—"
     if nominal <= 0:
-        return "не в экономике"
+        return "не встречается на карте"
     if nominal >= 100:
         return "очень часто"
     if nominal >= 50:
@@ -226,6 +233,45 @@ def rarity_from(nominal: int | None, crafted: bool) -> str:
     if nominal >= 10:
         return "редко"
     return "очень редко"
+
+
+def refine_unmapped_rarity(catalog: dict[str, dict]) -> None:
+    """Для nominal=0 пишем понятнее: крафт / купить у торговца / не на карте."""
+    old_labels = {"не в экономике", "не встречается на карте"}
+    for item in catalog.values():
+        rarity = str(item.get("rarity") or "")
+        nominal = item.get("nominal")
+        zero_economy = nominal is not None and int(nominal) <= 0
+        if not zero_economy and rarity not in old_labels:
+            if rarity == "не встречается на карте":
+                item["where"] = "—"
+            continue
+
+        craftable = bool(item.get("craftable") or (item.get("recipe") and len(item["recipe"])))
+        traders = item.get("traders") or []
+        can_buy = any(
+            t.get("canBuy") or (t.get("buy") and t.get("buy") not in ("не продаёт", "—", "", None))
+            for t in traders
+        )
+        can_sell_only = (not can_buy) and any(
+            t.get("canSell") or (t.get("sell") and t.get("sell") not in ("не покупает", "—", "", None))
+            for t in traders
+        )
+
+        if craftable and can_buy:
+            item["rarity"] = "крафт / у торговца"
+            if not str(item.get("where") or "").startswith("Крафт"):
+                item["where"] = "—"
+        elif craftable:
+            item["rarity"] = "можно скрафтить"
+            if not str(item.get("where") or "").startswith("Крафт"):
+                item["where"] = "Крафт на станке HP_Crafter."
+        elif can_buy:
+            item["rarity"] = "у торговца"
+            item["where"] = "—"
+        else:
+            item["rarity"] = "не встречается на карте"
+            item["where"] = "—"
 
 
 def clean_display_name(value: object, classname: str) -> str:
@@ -238,6 +284,10 @@ def clean_display_name(value: object, classname: str) -> str:
 
 
 def where_from_types(item: dict) -> str:
+    nominal = item.get("nominal")
+    # nominal=0 / None — предмет не в экономике карты, usage в types.xml не значит спавн
+    if nominal is None or int(nominal) <= 0:
+        return "—"
     places = [USAGE_LABELS.get(u, u) for u in item.get("usage") or []]
     tiers = [VALUE_LABELS.get(v, v) for v in item.get("value") or []]
     parts = []
@@ -245,15 +295,16 @@ def where_from_types(item: dict) -> str:
         parts.append("Ищется: " + ", ".join(places) + ".")
     if tiers:
         parts.append("Зоны: " + ", ".join(tiers) + ".")
-    nominal = item.get("nominal")
-    if nominal not in (None, 0):
-        parts.append(f"На карте цель экономики — около {nominal} шт.")
+    parts.append(f"На карте цель экономики — около {nominal} шт.")
     if not parts:
-        return "В файлах сервера нет точки спавна. Проверьте торговца, квест или крафт."
+        return "—"
     return " ".join(parts)
 
 
 def where_from_loot(item: dict) -> str:
+    nominal = item.get("nominal")
+    if nominal is None or int(nominal) <= 0:
+        return "—"
     loot = item.get("loot") or []
     if not loot:
         return where_from_types(item)
@@ -272,7 +323,7 @@ def where_from_loot(item: dict) -> str:
         places.append(bit)
     text = "Лут: " + "; ".join(places) + "."
     base = where_from_types({**item, "usage": item.get("usage") or [], "value": item.get("value") or []})
-    if base.startswith("В файлах"):
+    if base == "—":
         return text
     return text + " " + base
 
@@ -840,7 +891,7 @@ def build_item(raw: dict, names: dict[str, str], icons: dict[str, str]) -> dict:
         "id": classname,
         "classname": classname,
         "name": name,
-        "category": (raw.get("category") or "other").lower(),
+        "category": normalize_category(raw.get("category")),
         "categoryLabel": category_label(raw.get("category")),
         "image": find_icon(classname, icons),
         "craftable": False,
@@ -979,23 +1030,17 @@ def main() -> None:
         if raw["classname"] in hp_recipes:
             item["recipe"] = hp_recipes[raw["classname"]]
             item["craftable"] = True
-            item["rarity"] = "крафт"
+            item["rarity"] = "можно скрафтить"
             item["where"] = "Крафт на станке HP_Crafter."
         else:
             item["craftable"] = False
             item["recipe"] = []
             if item["loot"]:
-                item["where"] = where_from_loot(item)
                 if (item.get("nominal") or 0) <= 0:
-                    # есть точки в SearchForLoot, но nominal=0
-                    chances = []
-                    for zone in item["loot"]:
-                        ch = str(zone.get("chance") or "").replace("%", "")
-                        if ch.replace(".", "", 1).isdigit():
-                            chances.append(float(ch))
-                    avg = sum(chances) / len(chances) if chances else 50
-                    # rarity шкалуем от шанса SFL
-                    item["rarity"] = rarity_from(100 if avg >= 80 else 50 if avg >= 50 else 25 if avg >= 30 else 10 if avg >= 15 else 5, False)
+                    # SFL-точки при nominal=0 не считаем спавном на карте
+                    item["where"] = "—"
+                else:
+                    item["where"] = where_from_loot(item)
         meta = craft_meta.get(raw["classname"])
         if meta:
             item["craftMeta"] = meta
@@ -1025,7 +1070,7 @@ def main() -> None:
             "description": meta.get("recipe_name") or "",
             "where": "Получается крафтом на станке.",
             "tier": "—",
-            "rarity": "крафт",
+            "rarity": "можно скрафтить",
             "usage": [],
             "value": [],
             "loot": loot_index.get(recipe_id, []),
@@ -1078,6 +1123,7 @@ def main() -> None:
             row["item"] = item["name"]
             row["image"] = item.get("image") or ""
     attach_traders_to_items(catalog, prices)
+    refine_unmapped_rarity(catalog)
 
     craftable = [
         item_id

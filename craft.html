@@ -3,10 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Крафт — Грань Заката</title>
+  <title>Книга крафта — Грань Заката</title>
   <link rel="icon" href="img/logo.png">
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Oswald:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css?v=33">
 </head>
 <body data-page="craft">
   <div class="bg-video" aria-hidden="true">
@@ -24,45 +26,45 @@
     <div class="mobile-compact-header">
       <a href="index.html"><img src="img/logo.png" alt="Logo" class="header-logo"></a>
       <span class="mobile-title">Грань Заката</span>
-      <button class="menu-toggle" onclick="toggleHeader()" aria-label="Меню"><span></span><span></span><span></span></button>
     </div>
     <div class="full-header" id="full-header">
       <a href="index.html" class="brand">
         <img src="img/logo.png" alt="Грань Заката" class="header-logo">
         <div class="brand-text">
           <h1>Грань Заката</h1>
-          <span class="brand-badge">Справочник выжившего</span>
         </div>
       </a>
-      <nav>
-        <a href="index.html" class="link">Главная</a>
-        <a href="items.html" class="link">Предметы</a>
-        <a href="craft.html" class="link active">Крафт</a>
-        <a href="prices.html" class="link">Цены</a>
-        <a href="https://грань-заката.рф" class="link external" target="_blank" rel="noopener">Основной сайт</a>
-      </nav>
     </div>
   </header>
 
-  <div class="container">
-    <section class="panel">
-      <h2 class="panel-title">Гайды по крафту</h2>
-      <div class="panel-body">
-        <div class="craft-toolbar" id="craft-toolbar">
-          <div class="search-row">
-            <input id="craft-search" type="search" placeholder="Найти предмет...">
-          </div>
-          <div class="chips craft-chips" id="craft-chips"></div>
+  <main class="craft-book-stage">
+    <section class="craft-book" aria-label="Книга крафта">
+      <a href="index.html" class="craft-book__close" aria-label="Закрыть книгу">&times;</a>
+
+      <div class="craft-book__shell">
+        <div class="craft-book__rings" aria-hidden="true">
+          <span></span><span></span><span></span><span></span><span></span><span></span>
         </div>
-        <div class="item-grid craft-grid" id="catalog"></div>
-        <div class="tree-wrap craft-tree" id="tree-root"></div>
+
+        <div class="craft-book__sheet craft-book__sheet--index">
+          <h1 class="craft-book__title">Книга<br>крафта</h1>
+          <div class="search-row craft-book__search">
+            <input id="craft-search" type="search" placeholder="Найти рецепт…">
+          </div>
+          <nav class="book-toc craft-toc" id="craft-chips" aria-label="Разделы крафта"></nav>
+        </div>
+
+        <div class="craft-book__sheet craft-book__sheet--work">
+          <div class="item-grid craft-grid" id="catalog"></div>
+          <div class="tree-wrap craft-tree" id="tree-root" hidden></div>
+        </div>
       </div>
     </section>
-  </div>
+  </main>
 
   <footer>Помощник игроков сервера Грань Заката · PVE DayZ</footer>
   <script src="js/seed.js?v=6"></script>
   <script src="js/generated.js?v=6"></script>
-  <script src="js/app.js?v=6"></script>
+  <script src="js/app.js?v=21"></script>
 </body>
 </html>

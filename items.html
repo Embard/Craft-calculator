@@ -3,10 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Предметы — Грань Заката</title>
+  <title>Каталог предметов — Грань Заката</title>
   <link rel="icon" href="img/logo.png">
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Oswald:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css?v=33">
 </head>
 <body data-page="items">
   <div class="bg-video" aria-hidden="true">
@@ -18,44 +20,46 @@
     </video>
   </div>
   <div class="atmosphere-haze"></div>
+  <div class="tooltip tooltip--rich" id="tooltip"></div>
 
   <header>
     <div class="mobile-compact-header">
       <a href="index.html"><img src="img/logo.png" alt="Logo" class="header-logo"></a>
       <span class="mobile-title">Грань Заката</span>
-      <button class="menu-toggle" onclick="toggleHeader()" aria-label="Меню"><span></span><span></span><span></span></button>
     </div>
     <div class="full-header" id="full-header">
       <a href="index.html" class="brand">
         <img src="img/logo.png" alt="Грань Заката" class="header-logo">
         <div class="brand-text">
           <h1>Грань Заката</h1>
-          <span class="brand-badge">Справочник выжившего</span>
         </div>
       </a>
-      <nav>
-        <a href="index.html" class="link">Главная</a>
-        <a href="items.html" class="link active">Предметы</a>
-        <a href="craft.html" class="link">Крафт</a>
-        <a href="prices.html" class="link">Цены</a>
-        <a href="https://грань-заката.рф" class="link external" target="_blank" rel="noopener">Основной сайт</a>
-      </nav>
     </div>
   </header>
 
-  <div class="container">
-    <section class="panel">
-      <h2 class="panel-title">Каталог предметов</h2>
-      <div class="panel-body">
-        <div class="search-row">
-          <input id="items-search" type="search" placeholder="Введите предмет или classname...">
+  <main class="open-book-stage">
+    <section class="open-book" aria-label="Каталог предметов">
+      <a href="index.html" class="open-book__close" aria-label="Закрыть книгу">&times;</a>
+      <div class="open-book__cover">
+        <div class="open-book__spread">
+          <div class="open-book__page open-book__page--left">
+            <h1 class="open-book__toc-heading">Оглавление</h1>
+            <div class="search-row open-book__search">
+              <input id="items-search" type="search" placeholder="Найти…">
+            </div>
+            <nav class="book-toc" id="items-chips" aria-label="Разделы каталога"></nav>
+          </div>
+
+          <div class="open-book__gutter" aria-hidden="true"></div>
+
+          <div class="open-book__page open-book__page--right">
+            <div class="item-grid" id="items-grid"></div>
+            <button type="button" class="btn items-more" id="items-more" hidden>Показать ещё</button>
+          </div>
         </div>
-        <div class="chips" id="items-chips"></div>
-        <div class="item-grid" id="items-grid"></div>
-        <button type="button" class="btn items-more" id="items-more" hidden>Показать ещё</button>
       </div>
     </section>
-  </div>
+  </main>
 
   <div class="itemdb-modal" id="item-modal">
     <div class="itemdb-modal-inner">
@@ -74,6 +78,6 @@
   <footer>Помощник игроков сервера Грань Заката · PVE DayZ</footer>
   <script src="js/seed.js?v=6"></script>
   <script src="js/generated.js?v=6"></script>
-  <script src="js/app.js?v=6"></script>
+  <script src="js/app.js?v=20"></script>
 </body>
 </html>

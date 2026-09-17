@@ -81,7 +81,24 @@ function hasExpandable(item) {
 }
 
 function whereText(item) {
-  if (!item) return "Нет данных.";
+  if (!item) return "—";
+
+  var rarity = String(item.rarity || "");
+  if (
+    rarity === "не встречается на карте" ||
+    rarity === "у торговца" ||
+    rarity === "крафт / у торговца"
+  ) {
+    return "—";
+  }
+  if (rarity === "можно скрафтить") {
+    var craftWhere = String(item.where || "").trim();
+    if (craftWhere.indexOf("Крафт") === 0) return craftWhere;
+    return "—";
+  }
+
+  var nominal = item.nominal;
+  if (nominal === 0 || nominal === "0") return "—";
 
   var places = [];
   var seen = {};
@@ -91,10 +108,12 @@ function whereText(item) {
     seen[house] = true;
     places.push(house);
   });
-  if (places.length) return places.slice(0, 4).join(", ");
+  if (places.length && nominal != null && Number(nominal) > 0) {
+    return places.slice(0, 4).join(", ");
+  }
 
   var raw = String(item.where || "").trim();
-  if (!raw) return "В файлах сервера пока нет места добычи.";
+  if (!raw || raw === "—" || raw.indexOf("В файлах сервера") === 0) return "—";
 
   var sought = raw.match(/Ищется:\s*([^.]+)\./);
   if (sought) return sought[1].trim();
@@ -108,7 +127,86 @@ function whereText(item) {
     .replace(/;\s*/g, ", ")
     .replace(/\s+/g, " ")
     .replace(/[.,]\s*$/g, "")
-    .trim() || "Нет данных.";
+    .trim() || "—";
+}
+
+function itemTraders(item) {
+  if (!item) return [];
+  if (item.traders && item.traders.length) return item.traders;
+  return (GZ.PRICES || []).filter(function (price) {
+    return price.id === item.id || price.id === item.classname;
+  });
+}
+
+function uniqTraderLines(list, priceKey) {
+  var seen = {};
+  var out = [];
+  list.forEach(function (t) {
+    var npc = t.npc || t.trader || "торговец";
+    var price = t[priceKey];
+    if (!price || price === "не продаёт" || price === "не покупает" || price === "—") return;
+    var key = npc + "|" + price;
+    if (seen[key]) return;
+    seen[key] = true;
+    out.push(escapeHtml(npc) + " · " + escapeHtml(price));
+  });
+  return out;
+}
+
+function buildItemPreviewHtml(item) {
+  if (!item) return "";
+  var traders = itemTraders(item);
+  var buyLines = uniqTraderLines(
+    traders.filter(function (t) {
+      return t.canBuy || (t.buy && t.buy !== "не продаёт" && t.buy !== "—");
+    }),
+    "buy"
+  );
+  var sellLines = uniqTraderLines(
+    traders.filter(function (t) {
+      return t.canSell || (t.sell && t.sell !== "не покупает" && t.sell !== "—");
+    }),
+    "sell"
+  );
+  var html =
+    "<strong>" +
+    escapeHtml(item.name || "Предмет") +
+    "</strong>" +
+    '<p class="tooltip-meta">' +
+    escapeHtml(item.categoryLabel || "—") +
+    (item.rarity ? " · " + escapeHtml(item.rarity) : "") +
+    "</p>";
+  if (item.description) {
+    html += "<p>" + escapeHtml(item.description) + "</p>";
+  }
+  html += "<p><b>Где искать:</b> " + escapeHtml(whereText(item)) + "</p>";
+  if (item.recipe && item.recipe.length) {
+    html +=
+      "<p><b>Крафт:</b> " +
+      item.recipe
+        .map(function (part) {
+          var ing = itemById(part.id);
+          return escapeHtml(ing ? ing.name : part.id) + " ×" + escapeHtml(part.qty || 1);
+        })
+        .join(", ") +
+      "</p>";
+  }
+  if (buyLines.length) html += "<p><b>Купить:</b> " + buyLines.join("; ") + "</p>";
+  if (sellLines.length) html += "<p><b>Продать:</b> " + sellLines.join("; ") + "</p>";
+  return html;
+}
+
+function moveFloatingTooltip(tooltip, event, width) {
+  if (!tooltip) return;
+  var w = width || 340;
+  var x = Math.min(event.clientX + 16, window.innerWidth - w - 12);
+  var y = Math.min(event.clientY + 16, window.innerHeight - 24);
+  var rectH = tooltip.offsetHeight || 180;
+  if (y + rectH > window.innerHeight - 12) {
+    y = Math.max(12, event.clientY - rectH - 12);
+  }
+  tooltip.style.left = Math.max(8, x) + "px";
+  tooltip.style.top = Math.max(8, y) + "px";
 }
 
 function initCraftPage() {
@@ -126,7 +224,8 @@ function initCraftPage() {
     return;
   }
 
-  var currentId = GZ.CRAFTABLE[0];
+  var currentId = null;
+  var expanded = false;
   var category = "";
   var categoryMap = GZ.CRAFT_CATEGORIES || {};
 
@@ -193,11 +292,7 @@ function initCraftPage() {
   }
 
   function moveTooltip(event) {
-    if (!tooltip) return;
-    var x = Math.min(event.clientX + 16, window.innerWidth - 340);
-    var y = Math.min(event.clientY + 16, window.innerHeight - 160);
-    tooltip.style.left = x + "px";
-    tooltip.style.top = y + "px";
+    moveFloatingTooltip(tooltip, event, 340);
   }
 
   function renderNode(part, multiplier) {
@@ -244,7 +339,10 @@ function initCraftPage() {
 
   function renderTree() {
     var item = itemById(currentId);
-    if (!item) return;
+    if (!item) {
+      treeRoot.innerHTML = "";
+      return;
+    }
     var nodes = (item.recipe || [])
       .map(function (part) {
         return renderNode(part, 1);
@@ -258,71 +356,129 @@ function initCraftPage() {
       "</h3><p class='muted'>" +
       escapeHtml(item.description || whereText(item)) +
       "</p></div></div>" +
-      '<p class="tree-hint">Наведите на компонент, чтобы увидеть, где его искать.</p>' +
+      '<p class="tree-hint">Наведите на компонент, чтобы увидеть, где его искать. Повторный клик по предмету свернёт рецепт.</p>' +
       (nodes
         ? '<div class="tree-list">' + nodes + "</div>"
         : '<div class="empty-state"><p class="muted">Рецепт для этого предмета ещё не найден в файлах админа.</p></div>');
   }
 
+  function placeTreeAfterSelected() {
+    var slot = document.getElementById("craft-expand-slot");
+    if (!slot || !treeRoot) return;
+    if (treeRoot.parentElement !== slot) {
+      slot.appendChild(treeRoot);
+    }
+    treeRoot.hidden = false;
+    treeRoot.classList.add("is-expanded");
+  }
+
+  function hideCraftTree() {
+    if (!treeRoot) return;
+    treeRoot.hidden = true;
+    treeRoot.classList.remove("is-expanded");
+    if (catalog.contains(treeRoot)) {
+      catalog.after(treeRoot);
+    }
+  }
+
   function renderChips() {
     if (!chips) return;
-    var html =
-      '<button type="button" class="chip' +
-      (!category ? " active" : "") +
-      '" data-cat="">Все</button>';
-    categoryOrder().forEach(function (name) {
+    var useToc = chips.classList.contains("book-toc");
+    var html = useToc
+      ? '<button type="button" class="book-toc__row' +
+        (!category ? " is-active" : "") +
+        '" data-cat=""><span class="book-toc__name">Все рецепты</span><span class="book-toc__dots" aria-hidden="true"></span><span class="book-toc__num">—</span></button>'
+      : '<button type="button" class="chip' +
+        (!category ? " active" : "") +
+        '" data-cat="">Все</button>';
+    categoryOrder().forEach(function (name, index) {
       var count = (categoryMap[name] || []).length;
-      html +=
-        '<button type="button" class="chip' +
-        (category === name ? " active" : "") +
-        '" data-cat="' +
-        escapeHtml(name) +
-        '">' +
-        escapeHtml(name) +
-        (count ? " · " + count : "") +
-        "</button>";
+      var n = index + 1;
+      var num = n < 10 ? "0" + n : String(n);
+      if (useToc) {
+        html +=
+          '<button type="button" class="book-toc__row' +
+          (category === name ? " is-active" : "") +
+          '" data-cat="' +
+          escapeHtml(name) +
+          '"><span class="book-toc__name">' +
+          escapeHtml(name) +
+          '</span><span class="book-toc__dots" aria-hidden="true"></span><span class="book-toc__num">' +
+          num +
+          "</span></button>";
+      } else {
+        html +=
+          '<button type="button" class="chip' +
+          (category === name ? " active" : "") +
+          '" data-cat="' +
+          escapeHtml(name) +
+          '">' +
+          escapeHtml(name) +
+          (count ? " · " + count : "") +
+          "</button>";
+      }
     });
     chips.innerHTML = html;
   }
 
   function renderCatalog() {
+    if (treeRoot && catalog.contains(treeRoot)) {
+      treeRoot.hidden = true;
+      catalog.after(treeRoot);
+    }
+
     var list = filteredIds();
     if (!list.length) {
       catalog.innerHTML =
         '<div class="empty-state" style="grid-column:1/-1"><p class="muted">В этой категории ничего не найдено.</p></div>';
+      hideCraftTree();
       return;
     }
-    if (list.indexOf(currentId) === -1) {
-      currentId = list[0];
-      renderTree();
+    if (expanded && currentId && list.indexOf(currentId) === -1) {
+      expanded = false;
+      currentId = null;
     }
     catalog.innerHTML = list
       .map(function (id) {
         var item = itemById(id);
         if (!item) return "";
         var parts = (item.recipe && item.recipe.length) || 0;
-        return (
+        var isOpen = expanded && id === currentId;
+        var tile =
           '<button class="item-tile' +
-          (id === currentId ? " active" : "") +
+          (isOpen ? " active" : "") +
           '" type="button" data-id="' +
           escapeHtml(id) +
+          '" aria-expanded="' +
+          (isOpen ? "true" : "false") +
           '"><span class="badge">' +
           escapeHtml(parts ? parts + " комп." : "крафт") +
           '</span><span class="img-box">' +
           itemImage(item) +
           '</span><span class="label">' +
           escapeHtml(item.name) +
-          "</span></button>"
-        );
+          "</span></button>";
+        if (isOpen) {
+          tile += '<div class="craft-expand" id="craft-expand-slot"></div>';
+        }
+        return tile;
       })
       .join("");
+    if (expanded && currentId) {
+      placeTreeAfterSelected();
+      renderTree();
+    } else {
+      hideCraftTree();
+    }
   }
 
   if (chips) {
     chips.addEventListener("click", function (event) {
-      var btn = event.target.closest(".chip");
+      var btn = event.target.closest(".chip, .book-toc__row");
       if (!btn) return;
       category = btn.dataset.cat || "";
+      expanded = false;
+      currentId = null;
       renderChips();
       renderCatalog();
       window.scrollTo({ top: 0, behavior: "smooth" });
@@ -332,11 +488,24 @@ function initCraftPage() {
   catalog.addEventListener("click", function (event) {
     var btn = event.target.closest(".item-tile");
     if (!btn) return;
-    currentId = btn.dataset.id;
+    var id = btn.dataset.id;
+    var scrollY = window.scrollY;
+    if (expanded && currentId === id) {
+      expanded = false;
+      currentId = null;
+    } else {
+      currentId = id;
+      expanded = true;
+    }
     renderCatalog();
-    renderTree();
-    if (treeRoot) {
-      treeRoot.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    window.scrollTo(0, scrollY);
+    var active = catalog.querySelector(".item-tile.active");
+    if (active) {
+      var rect = active.getBoundingClientRect();
+      var headerOffset = 120;
+      if (rect.top < headerOffset || rect.bottom > window.innerHeight) {
+        active.scrollIntoView({ block: "nearest", behavior: "smooth" });
+      }
     }
   });
 
@@ -370,13 +539,13 @@ function initCraftPage() {
   var hashId = (location.hash || "").replace("#", "");
   if (hashId && itemById(hashId) && GZ.CRAFTABLE.indexOf(itemById(hashId).id) !== -1) {
     currentId = itemById(hashId).id;
+    expanded = true;
     var hashItem = itemById(hashId);
     category = itemCategory(hashItem) || "";
   }
 
   renderChips();
   renderCatalog();
-  renderTree();
 }
 
 function initItemsPage() {
@@ -384,11 +553,13 @@ function initItemsPage() {
   var search = document.getElementById("items-search");
   var chips = document.getElementById("items-chips");
   var more = document.getElementById("items-more");
+  var tooltip = document.getElementById("tooltip");
   if (!grid) return;
 
-  var PAGE = 120;
+  var PAGE = 60;
   var shown = PAGE;
-  var category = "";
+  var categoryKey = "";
+  var categoryLabel = "";
 
   function allItems() {
     return Object.keys(GZ.ITEMS)
@@ -403,7 +574,13 @@ function initItemsPage() {
   function filtered() {
     var q = ((search && search.value) || "").trim().toLowerCase();
     return allItems().filter(function (item) {
-      if (category && item.category !== category && item.categoryLabel !== category) return false;
+      if (categoryKey || categoryLabel) {
+        if (categoryLabel) {
+          if (item.categoryLabel !== categoryLabel) return false;
+        } else if (item.category !== categoryKey) {
+          return false;
+        }
+      }
       if (!q) return true;
       return (
         (item.name || "").toLowerCase().indexOf(q) !== -1 ||
@@ -414,24 +591,37 @@ function initItemsPage() {
 
   function renderChips() {
     if (!chips) return;
-    var set = {};
+    var byLabel = {};
     allItems().forEach(function (item) {
-      if (item.categoryLabel) set[item.category] = item.categoryLabel;
+      var label = item.categoryLabel;
+      if (!label) return;
+      if (!byLabel[label]) byLabel[label] = item.category || label;
     });
-    var html = '<button type="button" class="chip' + (!category ? " active" : "") + '" data-cat="">Все</button>';
-    Object.keys(set)
+    var html =
+      '<button type="button" class="book-toc__row' +
+      (!categoryKey && !categoryLabel ? " is-active" : "") +
+      '" data-cat="" data-label=""><span class="book-toc__name">Все предметы</span><span class="book-toc__dots" aria-hidden="true"></span><span class="book-toc__num">—</span></button>';
+    Object.keys(byLabel)
       .sort(function (a, b) {
-        return set[a].localeCompare(set[b], "ru");
+        return a.localeCompare(b, "ru");
       })
-      .forEach(function (key) {
+      .forEach(function (label, index) {
+        var key = byLabel[label];
+        var n = index + 1;
+        var num = n < 10 ? "0" + n : String(n);
+        var active = categoryLabel === label;
         html +=
-          '<button type="button" class="chip' +
-          (category === key ? " active" : "") +
+          '<button type="button" class="book-toc__row' +
+          (active ? " is-active" : "") +
           '" data-cat="' +
           escapeHtml(key) +
-          '">' +
-          escapeHtml(set[key]) +
-          "</button>";
+          '" data-label="' +
+          escapeHtml(label) +
+          '"><span class="book-toc__name">' +
+          escapeHtml(label) +
+          '</span><span class="book-toc__dots" aria-hidden="true"></span><span class="book-toc__num">' +
+          num +
+          "</span></button>";
       });
     chips.innerHTML = html;
   }
@@ -440,7 +630,7 @@ function initItemsPage() {
     var list = filtered();
     if (!list.length) {
       grid.innerHTML =
-        '<div class="empty-state" style="grid-column:1/-1"><h3>Ничего не найдено</h3><p class="muted">Измените поиск или дождитесь файлов админа.</p></div>';
+        '<div class="empty-state" style="grid-column:1/-1"><h3>Ничего не найдено</h3><p class="muted">Измените поиск.</p></div>';
       if (more) more.hidden = true;
       return;
     }
@@ -463,16 +653,43 @@ function initItemsPage() {
     if (more) more.hidden = list.length <= shown;
   }
 
+  function hideTooltip() {
+    if (tooltip) tooltip.classList.remove("visible");
+  }
+
+  function showItemTooltip(item, event) {
+    if (!tooltip || !item) return;
+    tooltip.classList.add("tooltip--rich");
+    tooltip.innerHTML = buildItemPreviewHtml(item);
+    tooltip.classList.add("visible");
+    moveFloatingTooltip(tooltip, event, 360);
+  }
+
   grid.addEventListener("click", function (event) {
     var tile = event.target.closest(".item-tile");
     if (tile) openItemModal(tile.dataset.id);
   });
+  grid.addEventListener("mouseover", function (event) {
+    var tile = event.target.closest(".item-tile");
+    if (!tile || !tooltip) return;
+    if (tooltip.dataset.id === tile.dataset.id && tooltip.classList.contains("visible")) return;
+    tooltip.dataset.id = tile.dataset.id;
+    showItemTooltip(itemById(tile.dataset.id), event);
+  });
+  grid.addEventListener("mousemove", function (event) {
+    if (!tooltip || !tooltip.classList.contains("visible")) return;
+    if (event.target.closest(".item-tile")) moveFloatingTooltip(tooltip, event, 360);
+  });
+  grid.addEventListener("mouseleave", hideTooltip);
+
   if (chips) {
     chips.addEventListener("click", function (event) {
-      var btn = event.target.closest(".chip");
+      var btn = event.target.closest(".book-toc__row, .chip");
       if (!btn) return;
-      category = btn.dataset.cat || "";
+      categoryKey = btn.getAttribute("data-cat") || "";
+      categoryLabel = btn.getAttribute("data-label") || "";
       shown = PAGE;
+      hideTooltip();
       renderChips();
       renderGrid();
     });
@@ -480,6 +697,7 @@ function initItemsPage() {
   if (search) {
     search.addEventListener("input", function () {
       shown = PAGE;
+      hideTooltip();
       renderGrid();
     });
   }
@@ -516,34 +734,7 @@ function openItemModal(id) {
     );
   }
 
-  function uniqTraderLines(list, priceKey) {
-    var seen = {};
-    var out = [];
-    list.forEach(function (t) {
-      var npc = t.npc || t.trader || "торговец";
-      var price = t[priceKey];
-      if (!price || price === "не продаёт" || price === "не покупает" || price === "—") return;
-      var key = npc + "|" + price;
-      if (seen[key]) return;
-      seen[key] = true;
-      out.push(
-        '<span class="itemdb-tag">' +
-          escapeHtml(npc) +
-          " · " +
-          escapeHtml(price) +
-          "</span>"
-      );
-    });
-    return out;
-  }
-
-  var traders =
-    item.traders && item.traders.length
-      ? item.traders
-      : (GZ.PRICES || []).filter(function (price) {
-          return price.id === item.id || price.id === item.classname;
-        });
-
+  var traders = itemTraders(item);
   var html = "";
   html += row("Редкость", '<span class="itemdb-tag">' + escapeHtml(item.rarity || "—") + "</span>");
   html += row("Где искать", escapeHtml(whereText(item)));
@@ -571,13 +762,17 @@ function openItemModal(id) {
       return t.canBuy || (t.buy && t.buy !== "не продаёт" && t.buy !== "—");
     }),
     "buy"
-  );
+  ).map(function (line) {
+    return '<span class="itemdb-tag">' + line + "</span>";
+  });
   var sellLines = uniqTraderLines(
     traders.filter(function (t) {
       return t.canSell || (t.sell && t.sell !== "не покупает" && t.sell !== "—");
     }),
     "sell"
-  );
+  ).map(function (line) {
+    return '<span class="itemdb-tag">' + line + "</span>";
+  });
   if (buyLines.length) html += row("Купить у", buyLines.join(""));
   if (sellLines.length) html += row("Продать", sellLines.join(""));
 
@@ -641,16 +836,208 @@ function initPricesPage() {
 
 function initHomePage() {
   var box = document.getElementById("home-stats");
-  if (!box) return;
-  var status = GZ.STATUS || {};
-  box.innerHTML =
-    '<div class="stat">' +
-    escapeHtml(status.items || Object.keys(GZ.ITEMS).length) +
-    "<span>предметов</span></div><div class=\"stat\">" +
-    escapeHtml(status.craftable || GZ.CRAFTABLE.length) +
-    "<span>крафт</span></div><div class=\"stat\">" +
-    escapeHtml(status.prices || GZ.PRICES.length) +
-    "<span>цен</span></div>";
+  if (box) {
+    var status = GZ.STATUS || {};
+    box.innerHTML =
+      '<div class="stat">' +
+      escapeHtml(status.items || Object.keys(GZ.ITEMS).length) +
+      "<span>предметов</span></div><div class=\"stat\">" +
+      escapeHtml(status.craftable || GZ.CRAFTABLE.length) +
+      "<span>крафт</span></div><div class=\"stat\">" +
+      escapeHtml(status.prices || GZ.PRICES.length) +
+      "<span>цен</span></div>";
+  }
+  initSurvivorJournal();
+}
+
+function initSurvivorJournal() {
+  var openBtn = document.getElementById("journal-open");
+  var modal = document.getElementById("journal-modal");
+  var bookWrap = document.querySelector(".journal-book-wrap");
+  var bookEl = document.getElementById("survivor-book");
+  var introEl = document.getElementById("journal-intro");
+  var introOpenBtn = document.getElementById("journal-intro-open");
+  var hintEl = document.getElementById("journal-hint");
+  if (!openBtn || !modal || !bookWrap || !bookEl || !window.St || !St.PageFlip) return;
+
+  var pageFlip = null;
+  var pagesHtml = bookEl.innerHTML;
+  var prevBtn = document.getElementById("journal-prev");
+  var nextBtn = document.getElementById("journal-next");
+  var lastFocus = null;
+  var onCover = true;
+
+  function ensureBookElement() {
+    bookEl = document.getElementById("survivor-book");
+    if (bookEl) return bookEl;
+    bookEl = document.createElement("div");
+    bookEl.id = "survivor-book";
+    bookEl.className = "journal-book";
+    bookEl.innerHTML = pagesHtml;
+    bookWrap.insertBefore(bookEl, nextBtn || null);
+    return bookEl;
+  }
+
+  function bookSize() {
+    var maxW = Math.min(window.innerWidth - 120, 980);
+    var pageW = Math.floor(maxW / 2);
+    pageW = Math.max(160, Math.min(pageW, 460));
+    if (window.innerWidth < 640) {
+      pageW = Math.max(150, Math.min(window.innerWidth - 88, 280));
+    }
+    var pageH = Math.round(pageW * 1.28);
+    var maxH = window.innerHeight - 160;
+    if (pageH > maxH) {
+      pageH = maxH;
+      pageW = Math.round(pageH / 1.28);
+    }
+    return { width: pageW, height: pageH };
+  }
+
+  function setCoverMode(enabled) {
+    onCover = enabled;
+    document.body.classList.toggle("journal-on-cover", enabled);
+    if (introEl) introEl.hidden = !enabled;
+    if (bookEl) bookEl.hidden = enabled;
+    if (hintEl) {
+      hintEl.textContent = enabled
+        ? "Нажми на обложку или стрелку, чтобы открыть · Esc — закрыть"
+        : "Тяни за угол страницы или жми стрелки · Esc — закрыть";
+    }
+    if (prevBtn) prevBtn.disabled = enabled;
+    if (nextBtn) nextBtn.disabled = false;
+  }
+
+  function updateChrome() {
+    if (onCover || !pageFlip) return;
+    var idx = pageFlip.getCurrentPageIndex();
+    var count = pageFlip.getPageCount();
+    if (prevBtn) prevBtn.disabled = idx <= 0;
+    if (nextBtn) nextBtn.disabled = idx >= count - 1;
+  }
+
+  function destroyBook() {
+    if (pageFlip) {
+      try {
+        pageFlip.destroy();
+      } catch (e) {}
+      pageFlip = null;
+    }
+    bookEl = ensureBookElement();
+    bookEl.innerHTML = pagesHtml;
+    bookEl.hidden = true;
+  }
+
+  function createBook(startPage) {
+    var keepPage = typeof startPage === "number" ? startPage : 0;
+    destroyBook();
+    bookEl.hidden = false;
+    var size = bookSize();
+    var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    pageFlip = new St.PageFlip(bookEl, {
+      width: size.width,
+      height: size.height,
+      size: "fixed",
+      minWidth: 140,
+      maxWidth: 500,
+      minHeight: 180,
+      maxHeight: 680,
+      drawShadow: true,
+      flippingTime: reduced ? 200 : 850,
+      usePortrait: window.innerWidth < 720,
+      startZIndex: 5,
+      autoSize: true,
+      maxShadowOpacity: 0.35,
+      showCover: false,
+      mobileScrollSupport: false,
+      useMouseEvents: true,
+      swipeDistance: 30,
+      clickEventForward: true,
+      disableFlipByClick: false
+    });
+    pageFlip.loadFromHTML(bookEl.querySelectorAll(".journal-page"));
+    pageFlip.on("flip", updateChrome);
+    pageFlip.on("changeState", updateChrome);
+    if (keepPage > 0) pageFlip.turnToPage(keepPage);
+    updateChrome();
+  }
+
+  function openPages() {
+    if (!onCover) return;
+    setCoverMode(false);
+    createBook(0);
+  }
+
+  function openJournal() {
+    lastFocus = document.activeElement;
+    modal.hidden = false;
+    modal.setAttribute("aria-hidden", "false");
+    document.body.classList.add("journal-open");
+    destroyBook();
+    setCoverMode(true);
+    var closeBtn = modal.querySelector(".journal-modal__close");
+    if (closeBtn) closeBtn.focus();
+  }
+
+  function closeJournal() {
+    modal.hidden = true;
+    modal.setAttribute("aria-hidden", "true");
+    document.body.classList.remove("journal-open");
+    document.body.classList.remove("journal-on-cover");
+    destroyBook();
+    setCoverMode(true);
+    if (lastFocus && typeof lastFocus.focus === "function") lastFocus.focus();
+  }
+
+  function goNext() {
+    if (onCover) {
+      openPages();
+      return;
+    }
+    if (pageFlip) pageFlip.flipNext("bottom");
+  }
+
+  function goPrev() {
+    if (onCover) return;
+    if (!pageFlip) return;
+    if (pageFlip.getCurrentPageIndex() <= 0) {
+      destroyBook();
+      setCoverMode(true);
+      return;
+    }
+    pageFlip.flipPrev("bottom");
+  }
+
+  openBtn.addEventListener("click", openJournal);
+  if (introOpenBtn) introOpenBtn.addEventListener("click", openPages);
+  modal.querySelectorAll("[data-journal-close]").forEach(function (el) {
+    el.addEventListener("click", closeJournal);
+  });
+  if (prevBtn) prevBtn.addEventListener("click", goPrev);
+  if (nextBtn) nextBtn.addEventListener("click", goNext);
+
+  document.addEventListener("keydown", function (event) {
+    if (modal.hidden) return;
+    if (event.key === "Escape") {
+      event.preventDefault();
+      closeJournal();
+    } else if (event.key === "ArrowLeft") {
+      event.preventDefault();
+      goPrev();
+    } else if (event.key === "ArrowRight") {
+      event.preventDefault();
+      goNext();
+    }
+  });
+
+  var resizeTimer = null;
+  window.addEventListener("resize", function () {
+    if (modal.hidden || onCover || !pageFlip) return;
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(function () {
+      createBook(pageFlip ? pageFlip.getCurrentPageIndex() : 0);
+    }, 180);
+  });
 }
 
 function initBgLoop() {

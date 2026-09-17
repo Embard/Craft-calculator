@@ -4,6 +4,8 @@ site.html
 *.tmp
 .DS_Store
 Thumbs.db
+__pycache__/
+*.pyc
 incoming/mission/*
 !incoming/mission/.gitkeep
 incoming/profiles/*

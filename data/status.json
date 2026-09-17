@@ -1,10 +1,10 @@
 {
-  "generatedAt": "2026-09-17T17:39:36",
-  "items": 6599,
+  "generatedAt": "2026-09-17T21:27:46",
+  "items": 6591,
   "craftable": 161,
   "prices": 3216,
-  "lootRows": 2820,
-  "icons": 2048,
+  "lootRows": 2787,
+  "icons": 2040,
   "missing": [
     "incoming/icons — нет PNG иконок"
   ],

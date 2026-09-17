@@ -7,8 +7,8 @@
   <link rel="icon" href="img/logo.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Oswald:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css?v=32">
 </head>
 <body data-page="home">
   <div class="bg-video" aria-hidden="true">
@@ -20,51 +20,126 @@
     </video>
   </div>
   <div class="atmosphere-haze"></div>
+  <div class="home-embers" aria-hidden="true"></div>
 
-  <header>
-    <div class="mobile-compact-header">
-      <a href="index.html"><img src="img/logo.png" alt="Logo" class="header-logo"></a>
-      <span class="mobile-title">Грань Заката</span>
-      <button class="menu-toggle" onclick="toggleHeader()" aria-label="Меню"><span></span><span></span><span></span></button>
-    </div>
-    <div class="full-header" id="full-header">
-      <a href="index.html" class="brand">
-        <img src="img/logo.png" alt="Грань Заката" class="header-logo">
-        <div class="brand-text">
-          <h1>Грань Заката</h1>
-          <span class="brand-badge">Справочник выжившего</span>
-        </div>
-      </a>
-      <nav>
-        <a href="index.html" class="link active">Главная</a>
-        <a href="items.html" class="link">Предметы</a>
-        <a href="craft.html" class="link">Крафт</a>
-        <a href="prices.html" class="link">Цены</a>
-        <a href="https://грань-заката.рф" class="link external" target="_blank" rel="noopener">Основной сайт</a>
-      </nav>
-    </div>
+  <header class="home-top">
+    <a href="index.html" class="brand">
+      <img src="img/logo.png" alt="Грань Заката" class="header-logo">
+      <div class="brand-text">
+        <h1>Грань Заката</h1>
+      </div>
+    </a>
+    <a href="https://грань-заката.рф" class="home-ext" target="_blank" rel="noopener">Основной сайт</a>
   </header>
 
-  <main class="home-hero">
-    <div class="home-hero__content">
+  <main class="home-landing">
+    <section class="home-intro">
       <p class="home-kicker">Справочник выжившего</p>
-      <p class="lead">Добро пожаловать туда, где жизнь. На Грани заката.</p>
+      <h2 class="home-title">Добро пожаловать туда, где жизнь. На&nbsp;Грани заката.</h2>
       <p class="home-support">
         Здесь тихо, как у костра после долгого похода: можно открыть записную книжку
         и вспомнить, где лежит предмет, или найти тот, который ты ещё не встречал,
         и кому из торговцев его продать. Узнать о крафте и выбрать для себя то,
         что поможет тебе в выживании.
       </p>
-      <p class="home-lore">
-        Сервер PvE — без охоты на чужой рюкзак. В поселении ждут Леший, Кира, Вера
-        и остальные, кто выбрал своё дело.
-      </p>
-    </div>
+    </section>
+
+    <section class="home-library" aria-label="Библиотека выжившего">
+      <div class="home-library__head">
+        <span class="home-library__line" aria-hidden="true"></span>
+        <h3 class="home-library__title">Библиотека выжившего</h3>
+        <span class="home-library__line" aria-hidden="true"></span>
+      </div>
+
+      <div class="home-books">
+        <button type="button" class="home-book" id="journal-open" aria-haspopup="dialog" aria-controls="journal-modal">
+          <span class="home-book__glow" aria-hidden="true"></span>
+          <img class="home-book__art" src="img/library/book-journal.png?v=7" alt="" width="768" height="1024" loading="lazy">
+          <span class="home-book__label">Журнал выживших</span>
+        </button>
+
+        <a class="home-book" href="items.html">
+          <span class="home-book__glow" aria-hidden="true"></span>
+          <img class="home-book__art" src="img/library/book-items.png?v=7" alt="" width="768" height="1024" loading="lazy">
+          <span class="home-book__label">Каталог предметов</span>
+        </a>
+
+        <a class="home-book" href="craft.html">
+          <span class="home-book__glow" aria-hidden="true"></span>
+          <img class="home-book__art" src="img/library/book-craft.png?v=7" alt="" width="768" height="1024" loading="lazy">
+          <span class="home-book__label">Книга крафта</span>
+        </a>
+      </div>
+    </section>
   </main>
 
+  <div class="journal-modal" id="journal-modal" hidden aria-hidden="true" role="dialog" aria-modal="true" aria-label="Журнал выживших">
+    <div class="journal-modal__backdrop" data-journal-close></div>
+    <div class="journal-modal__panel">
+      <div class="journal-modal__top journal-modal__top--bare">
+        <button type="button" class="journal-modal__close" data-journal-close aria-label="Закрыть журнал">&times;</button>
+      </div>
+      <div class="journal-book-wrap">
+        <button type="button" class="journal-nav journal-nav--prev" id="journal-prev" aria-label="Предыдущая страница">‹</button>
+
+        <div class="journal-intro" id="journal-intro">
+          <button type="button" class="journal-intro__open" id="journal-intro-open" aria-label="Открыть журнал">
+            <img class="journal-intro__img" src="img/library/book-journal.png?v=7" alt="Журнал выживших">
+            <span class="journal-intro__hint">Нажми, чтобы открыть</span>
+          </button>
+        </div>
+
+        <div class="journal-book" id="survivor-book" hidden>
+          <div class="journal-page">
+            <div class="journal-page__face journal-page__face--half journal-page__face--left" style="background-image:url('img/journal/leshiy.jpg')"></div>
+          </div>
+          <div class="journal-page">
+            <div class="journal-page__face journal-page__face--half journal-page__face--right" style="background-image:url('img/journal/leshiy.jpg')"></div>
+          </div>
+          <div class="journal-page">
+            <div class="journal-page__face journal-page__face--half journal-page__face--left" style="background-image:url('img/journal/vera.jpg')"></div>
+          </div>
+          <div class="journal-page">
+            <div class="journal-page__face journal-page__face--half journal-page__face--right" style="background-image:url('img/journal/vera.jpg')"></div>
+          </div>
+          <div class="journal-page">
+            <div class="journal-page__face journal-page__face--half journal-page__face--left" style="background-image:url('img/journal/ship.jpg')"></div>
+          </div>
+          <div class="journal-page">
+            <div class="journal-page__face journal-page__face--half journal-page__face--right" style="background-image:url('img/journal/ship.jpg')"></div>
+          </div>
+          <div class="journal-page">
+            <div class="journal-page__face journal-page__face--half journal-page__face--left" style="background-image:url('img/journal/petr.jpg')"></div>
+          </div>
+          <div class="journal-page">
+            <div class="journal-page__face journal-page__face--half journal-page__face--right" style="background-image:url('img/journal/petr.jpg')"></div>
+          </div>
+          <div class="journal-page">
+            <div class="journal-page__face journal-page__face--half journal-page__face--left" style="background-image:url('img/journal/roman.jpg')"></div>
+          </div>
+          <div class="journal-page">
+            <div class="journal-page__face journal-page__face--half journal-page__face--right" style="background-image:url('img/journal/roman.jpg')"></div>
+          </div>
+          <div class="journal-page">
+            <div class="journal-page__face journal-page__face--back journal-page__face--back-left"></div>
+          </div>
+          <div class="journal-page">
+            <div class="journal-page__face journal-page__face--back">
+              <span>Грань Заката</span>
+              <small>Записи с края поселения</small>
+            </div>
+          </div>
+        </div>
+        <button type="button" class="journal-nav journal-nav--next" id="journal-next" aria-label="Следующая страница">›</button>
+      </div>
+      <p class="journal-modal__hint" id="journal-hint">Нажми на обложку или стрелку, чтобы открыть · Esc — закрыть</p>
+    </div>
+  </div>
+
   <footer>Помощник игроков сервера Грань Заката · PVE DayZ</footer>
+  <script src="js/vendor/page-flip.browser.js"></script>
   <script src="js/seed.js?v=6"></script>
   <script src="js/generated.js?v=6"></script>
-  <script src="js/app.js?v=6"></script>
+  <script src="js/app.js?v=23"></script>
 </body>
 </html>
