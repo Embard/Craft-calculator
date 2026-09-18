@@ -38,6 +38,14 @@ incoming\sources\
   TraderPlusIDsConfig.json
   ZoneCore_npcs.json
   Recipes.json            — крафт в руках (не стол)
-  incoming\icons          — PNG иконок: ClassName.png
+
+Иконки предметов (самое важное для картинок модов):
+  incoming\icons\ClassName.png
+  Пример: WasteLandZ_backpack.png, TTC_AKM.png
+  Имя файла = classname предмета (как в types.xml).
+  Ваниль уже подтягивается с s-platoon.ru автоматически.
+  Моды (Loftd, rag, TTC, машины и т.д.) в S-Platoon обычно нет —
+  их PNG нужно положить сюда вручную или выгрузить Icon Dumper'ом / из GUI-иконок мода.
+  После добавления иконок снова запустить tools\собрать.bat
 
 После копирования запустить tools\собрать.bat

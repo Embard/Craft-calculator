@@ -180,6 +180,17 @@ def fetch_splatoon_classnames() -> set[str]:
     return names
 
 
+def splatoon_lookup(classname: str, splatoon: set[str], splatoon_ci: dict[str, str] | None = None) -> str:
+    """Exact classname, then case-insensitive match against S-Platoon catalog."""
+    if not classname:
+        return ""
+    if classname in splatoon:
+        return classname
+    if splatoon_ci is None:
+        return ""
+    return splatoon_ci.get(classname.lower(), "")
+
+
 def splatoon_thumb(classname: str) -> str:
     return SPLATOON_THUMB + quote(classname, safe="") + ".webp"
 
@@ -1019,13 +1030,21 @@ def main() -> None:
 
     icons = copy_icons(classnames)
     splatoon = fetch_splatoon_classnames()
+    splatoon_ci = {name.lower(): name for name in splatoon}
     catalog: dict[str, dict] = {}
+
+    def apply_splatoon_image(item: dict, *candidates: str) -> None:
+        if item.get("image"):
+            return
+        for candidate in candidates:
+            matched = splatoon_lookup(candidate or "", splatoon, splatoon_ci)
+            if matched:
+                item["image"] = splatoon_thumb(matched)
+                return
 
     for raw in types_items:
         item = build_item(raw, names, icons)
-        local = item.get("image") or ""
-        if not local and raw["classname"] in splatoon:
-            item["image"] = splatoon_thumb(raw["classname"])
+        apply_splatoon_image(item, raw["classname"])
         item["loot"] = loot_index.get(raw["classname"], [])
         if raw["classname"] in hp_recipes:
             item["recipe"] = hp_recipes[raw["classname"]]
@@ -1052,13 +1071,10 @@ def main() -> None:
         if recipe_id in catalog:
             catalog[recipe_id]["recipe"] = parts
             catalog[recipe_id]["craftable"] = True
-            if not catalog[recipe_id].get("image") and recipe_id in splatoon:
-                catalog[recipe_id]["image"] = splatoon_thumb(recipe_id)
+            apply_splatoon_image(catalog[recipe_id], recipe_id)
             continue
         meta = craft_meta.get(recipe_id, {})
         image = find_icon(recipe_id, icons)
-        if not image and recipe_id in splatoon:
-            image = splatoon_thumb(recipe_id)
         catalog[recipe_id] = {
             "id": recipe_id,
             "classname": recipe_id,
@@ -1077,6 +1093,7 @@ def main() -> None:
             "recipe": parts,
             "craftMeta": meta,
         }
+        apply_splatoon_image(catalog[recipe_id], recipe_id)
 
     for item_id, override in override_items.items():
         if not isinstance(override, dict):
@@ -1105,16 +1122,11 @@ def main() -> None:
         )
         if not merged.get("image"):
             merged["image"] = find_icon(merged.get("classname") or item_id, icons) or find_icon(item_id, icons)
-            classname = merged.get("classname") or item_id
-            if not merged.get("image") and classname in splatoon:
-                merged["image"] = splatoon_thumb(classname)
+        apply_splatoon_image(merged, merged.get("classname") or "", item_id)
         catalog[merged["id"]] = merged
 
     for item_id, item in catalog.items():
-        if not item.get("image") and item_id in splatoon:
-            item["image"] = splatoon_thumb(item_id)
-        elif not item.get("image") and item.get("classname") in splatoon:
-            item["image"] = splatoon_thumb(item["classname"])
+        apply_splatoon_image(item, item_id, item.get("classname") or "")
 
     prices = collect_prices()
     for row in prices:
