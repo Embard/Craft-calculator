@@ -65,6 +65,7 @@ function itemImage(item) {
   if (!src) {
     return '<span class="img-fallback">' + fallback + "</span>";
   }
+  if (src.indexOf("?") === -1) src += "?v=3";
   return (
     '<img src="' +
     escapeHtml(src) +
@@ -138,6 +139,18 @@ function itemTraders(item) {
   });
 }
 
+function itemBuyPrice(item) {
+  var traders = itemTraders(item);
+  for (var i = 0; i < traders.length; i++) {
+    var t = traders[i];
+    if (!t) continue;
+    if (t.canBuy || (t.buy && t.buy !== "не продаёт" && t.buy !== "—")) {
+      if (t.buy && t.buy !== "не продаёт" && t.buy !== "—") return t.buy;
+    }
+  }
+  return "";
+}
+
 function uniqTraderLines(list, priceKey) {
   var seen = {};
   var out = [];
@@ -179,6 +192,10 @@ function buildItemPreviewHtml(item) {
   if (item.description) {
     html += "<p>" + escapeHtml(item.description) + "</p>";
   }
+  var buyPrice = itemBuyPrice(item);
+  if (buyPrice) {
+    html += "<p><b>Цена:</b> " + escapeHtml(buyPrice) + "</p>";
+  }
   html += "<p><b>Где искать:</b> " + escapeHtml(whereText(item)) + "</p>";
   if (item.recipe && item.recipe.length) {
     html +=
@@ -191,7 +208,7 @@ function buildItemPreviewHtml(item) {
         .join(", ") +
       "</p>";
   }
-  if (buyLines.length) html += "<p><b>Купить:</b> " + buyLines.join("; ") + "</p>";
+  if (buyLines.length) html += "<p><b>Купить у:</b> " + buyLines.join("; ") + "</p>";
   if (sellLines.length) html += "<p><b>Продать:</b> " + sellLines.join("; ") + "</p>";
   return html;
 }
@@ -295,29 +312,35 @@ function initCraftPage() {
     moveFloatingTooltip(tooltip, event, 340);
   }
 
-  function renderNode(part, multiplier) {
+  function renderNode(part, multiplier, ancestors) {
     var item = itemById(part.id) || {
       id: part.id,
       name: part.id,
       categoryLabel: "Компонент",
       image: ""
     };
+    var nodeId = String(item.id || part.id);
+    var chain = ancestors || [];
+    var looping = chain.indexOf(nodeId) !== -1;
     var qty = (part.qty || 1) * multiplier;
-    var expandable = hasExpandable(item);
+    var expandable = !looping && hasExpandable(item);
     var toolMark = item.tool ? '<span class="tool-tag">инструмент</span>' : "";
     var children = [];
-    (item.recipe || []).forEach(function (child) {
-      children.push(renderNode(child, qty));
-    });
-    (item.tools || []).forEach(function (child) {
-      children.push(renderNode(child, 1));
-    });
+    if (expandable) {
+      var nextChain = chain.concat([nodeId]);
+      (item.recipe || []).forEach(function (child) {
+        children.push(renderNode(child, qty, nextChain));
+      });
+      (item.tools || []).forEach(function (child) {
+        children.push(renderNode(child, 1, nextChain));
+      });
+    }
 
     return (
       '<div class="tree-node" data-id="' +
-      escapeHtml(item.id) +
+      escapeHtml(nodeId) +
       '"><div class="tree-row" data-id="' +
-      escapeHtml(item.id) +
+      escapeHtml(nodeId) +
       '">' +
       (expandable
         ? '<button class="tree-toggle" type="button" aria-label="Раскрыть">+</button>'
@@ -328,7 +351,7 @@ function initCraftPage() {
       toolMark +
       '</div><div class="tree-sub">' +
       escapeHtml(item.categoryLabel || "—") +
-      (expandable ? " · есть крафт" : "") +
+      (expandable ? " · есть крафт" : looping ? " · уже в цепочке" : "") +
       '</div></div><div class="tree-qty">×' +
       escapeHtml(qty) +
       "</div></div>" +
@@ -343,11 +366,22 @@ function initCraftPage() {
       treeRoot.innerHTML = "";
       return;
     }
-    var nodes = (item.recipe || [])
-      .map(function (part) {
-        return renderNode(part, 1);
-      })
-      .join("");
+    var nodes = "";
+    try {
+      nodes = (item.recipe || [])
+        .map(function (part) {
+          return renderNode(part, 1, [String(item.id)]);
+        })
+        .join("");
+    } catch (err) {
+      treeRoot.innerHTML =
+        '<div class="tree-result">' +
+        itemImage(item) +
+        "<div><h3>" +
+        escapeHtml(item.name) +
+        '</h3><p class="muted">Не удалось построить дерево рецепта.</p></div></div>';
+      return;
+    }
     treeRoot.innerHTML =
       '<div class="tree-result">' +
       itemImage(item) +
@@ -566,6 +600,66 @@ function initItemsPage() {
       .map(function (id) {
         return GZ.ITEMS[id];
       })
+      .filter(function (item) {
+        if (!item) return false;
+        // book=false — заражённые, животные, AI, без иконок и т.п.
+        if (item.book === false) return false;
+        var cn = String(item.classname || item.id || "").toLowerCase();
+        var name = String(item.name || "").toLowerCase();
+        if (
+          cn.indexOf("zmb") !== -1 ||
+          cn.indexOf("zombie") !== -1 ||
+          cn.indexOf("ecolog") !== -1 ||
+          cn.indexOf("creature_urban3") !== -1 ||
+          cn.indexOf("evg_") === 0 ||
+          name.indexOf("инфицирован") !== -1 ||
+          name.indexOf("зараженн") !== -1 ||
+          name.indexOf("заражённ") !== -1 ||
+          name === "курильщик" ||
+          (name.indexOf("ворот") !== -1 && name.indexOf("воротник") === -1) ||
+          name.indexOf("лестниц") !== -1 ||
+          name.indexOf("тент") !== -1 ||
+          name === "маленькое окно" ||
+          name === "окно" ||
+          name === "медсестра" ||
+          name.indexOf("могильный крест") !== -1 ||
+          name.indexOf("пистолетный кейс") !== -1 ||
+          name.indexOf("площадка для укрытия") !== -1 ||
+          name.indexOf("поддон") !== -1 ||
+          name === "стена" ||
+          name === "столб" ||
+          name === "набор для стены" ||
+          name === "набор для столба" ||
+          name === "пол" ||
+          name === "набор для пола" ||
+          name.indexOf("ракушк") !== -1 ||
+          name === "рампа" ||
+          name.indexOf("набор для изготовления рампы") !== -1 ||
+          name.indexOf("сборщик дождя") !== -1 ||
+          name.indexOf("свернутый календар") !== -1 ||
+          name.indexOf("свёрнутый календар") !== -1 ||
+          name.indexOf("brdk house") !== -1 ||
+          name.indexOf("вагон") !== -1 ||
+          name.indexOf("power wagon") !== -1 ||
+          name.indexOf("evg ") === 0 ||
+          name.indexOf("evg_") === 0
+        ) {
+          return false;
+        }
+        var img = String(item.image || "").trim();
+        if (!img) {
+          // резиновые лодки без картинки — скрыть даже в «Авто»
+          if (name === "резиновая лодка") return false;
+          if (name.indexOf("спортивная сумка") !== -1) return false;
+          if (name.indexOf("куртка") !== -1) return false;
+          if (name.indexOf("тактический ремень") !== -1) return false;
+          if (cn.indexOf("loftd_") === 0) return false;
+          if (item.categoryLabel === "Прочее") return false;
+          // машины в «Авто» можно без картинки; остальное — нет
+          return item.categoryLabel === "Авто" || item.category === "vehicles";
+        }
+        return true;
+      })
       .sort(function (a, b) {
         return (a.name || "").localeCompare(b.name || "", "ru");
       });
@@ -597,32 +691,34 @@ function initItemsPage() {
       if (!label) return;
       if (!byLabel[label]) byLabel[label] = item.category || label;
     });
+    // «Авто» всегда первой тематической строкой после «Все»
+    var labels = Object.keys(byLabel).sort(function (a, b) {
+      if (a === "Авто") return -1;
+      if (b === "Авто") return 1;
+      return a.localeCompare(b, "ru");
+    });
     var html =
       '<button type="button" class="book-toc__row' +
       (!categoryKey && !categoryLabel ? " is-active" : "") +
       '" data-cat="" data-label=""><span class="book-toc__name">Все предметы</span><span class="book-toc__dots" aria-hidden="true"></span><span class="book-toc__num">—</span></button>';
-    Object.keys(byLabel)
-      .sort(function (a, b) {
-        return a.localeCompare(b, "ru");
-      })
-      .forEach(function (label, index) {
-        var key = byLabel[label];
-        var n = index + 1;
-        var num = n < 10 ? "0" + n : String(n);
-        var active = categoryLabel === label;
-        html +=
-          '<button type="button" class="book-toc__row' +
-          (active ? " is-active" : "") +
-          '" data-cat="' +
-          escapeHtml(key) +
-          '" data-label="' +
-          escapeHtml(label) +
-          '"><span class="book-toc__name">' +
-          escapeHtml(label) +
-          '</span><span class="book-toc__dots" aria-hidden="true"></span><span class="book-toc__num">' +
-          num +
-          "</span></button>";
-      });
+    labels.forEach(function (label, index) {
+      var key = byLabel[label];
+      var n = index + 1;
+      var num = n < 10 ? "0" + n : String(n);
+      var active = categoryLabel === label;
+      html +=
+        '<button type="button" class="book-toc__row' +
+        (active ? " is-active" : "") +
+        '" data-cat="' +
+        escapeHtml(key) +
+        '" data-label="' +
+        escapeHtml(label) +
+        '"><span class="book-toc__name">' +
+        escapeHtml(label) +
+        '</span><span class="book-toc__dots" aria-hidden="true"></span><span class="book-toc__num">' +
+        num +
+        "</span></button>";
+    });
     chips.innerHTML = html;
   }
 
@@ -640,9 +736,8 @@ function initItemsPage() {
         return (
           '<button class="item-tile" type="button" data-id="' +
           escapeHtml(item.id) +
-          '"><span class="badge">' +
-          escapeHtml(item.rarity || item.tier || "—") +
-          '</span><span class="img-box">' +
+          '">' +
+          '<span class="img-box">' +
           itemImage(item) +
           '</span><span class="label">' +
           escapeHtml(item.name) +
@@ -736,6 +831,10 @@ function openItemModal(id) {
 
   var traders = itemTraders(item);
   var html = "";
+  var buyPrice = itemBuyPrice(item);
+  if (buyPrice) {
+    html += row("Цена", '<span class="itemdb-tag">' + escapeHtml(buyPrice) + "</span>");
+  }
   html += row("Редкость", '<span class="itemdb-tag">' + escapeHtml(item.rarity || "—") + "</span>");
   html += row("Где искать", escapeHtml(whereText(item)));
 

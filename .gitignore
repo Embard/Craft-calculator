@@ -6,6 +6,7 @@ site.html
 Thumbs.db
 __pycache__/
 *.pyc
+*.log
 incoming/mission/*
 !incoming/mission/.gitkeep
 incoming/profiles/*
@@ -17,5 +18,11 @@ incoming/icons/*
 incoming/sources/**
 !incoming/sources/.gitkeep
 data/catalog.json
+data/icon_report.json
+data/missing_icons.txt
+data/missing_icons_remain.txt
 incoming/splatoon-catalog.js
 incoming/_admin-prototype/
+dayz_icon_dumper/
+tools/icon_dumper/
+tools/*.log

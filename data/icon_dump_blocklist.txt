@@ -1,0 +1,3 @@
+﻿# Crash / CREATE_FAILED hard crashers — never dump
+Loftd_baby
+Loftd_babyBandage

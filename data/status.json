@@ -1,12 +1,18 @@
 {
-  "generatedAt": "2026-09-18T08:26:34",
+  "generatedAt": "2026-09-19T14:15:29",
   "items": 6591,
   "craftable": 161,
   "prices": 3216,
   "lootRows": 2787,
-  "icons": 2054,
-  "missing": [
-    "incoming/icons — нет PNG иконок"
-  ],
-  "fromServer": true
+  "icons": 4294,
+  "missing": [],
+  "fromServer": true,
+  "iconReport": {
+    "items": 6591,
+    "withImage": 4294,
+    "withoutImage": 2297,
+    "dump": 130,
+    "review": 6,
+    "ignore": 2161
+  }
 }

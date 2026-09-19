@@ -1351,8 +1351,52 @@ body[data-page="craft"] .muted {
   color: rgba(40, 45, 30, 0.72);
 }
 
-body[data-page="craft"] .tree-name {
+body[data-page="craft"] .tree-result h3 {
   color: #1a2014;
+}
+
+body[data-page="craft"] .tree-result {
+  border-bottom-color: rgba(70, 60, 35, 0.22);
+  color: #1e2218;
+}
+
+body[data-page="craft"] .tree-row {
+  background: rgba(255, 252, 245, 0.95);
+  border-color: rgba(70, 60, 35, 0.28);
+  color: #1a2014;
+}
+
+body[data-page="craft"] .tree-row:hover,
+body[data-page="craft"] .tree-row.selected {
+  background: #fffdf8;
+  border-color: #c45a12;
+}
+
+body[data-page="craft"] .tree-name {
+  color: #141810;
+}
+
+body[data-page="craft"] .tree-sub {
+  color: rgba(28, 32, 22, 0.78);
+}
+
+body[data-page="craft"] .tree-qty {
+  color: #c04500;
+}
+
+body[data-page="craft"] .tree-toggle {
+  background: #f3efe4;
+  border-color: rgba(70, 60, 35, 0.4);
+  color: #c04500;
+}
+
+body[data-page="craft"] .tree-children {
+  border-left-color: rgba(70, 60, 35, 0.28);
+}
+
+body[data-page="craft"] .tree-row img {
+  border-color: rgba(70, 60, 35, 0.3);
+  background: #1a1814;
 }
 
 @media (max-width: 900px) {
