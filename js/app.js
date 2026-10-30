@@ -43,6 +43,8 @@ function bootCatalog() {
     if (generated.craftCategories) GZ.CRAFT_CATEGORIES = generated.craftCategories;
   }
 
+  applyBackpackDetails();
+
   GZ.CRAFTABLE = GZ.CRAFTABLE.filter(function (id) {
     var item = GZ.ITEMS[id];
     return item && item.recipe && item.recipe.length;
@@ -50,6 +52,36 @@ function bootCatalog() {
   if (fromServer && generated.craftable) {
     GZ.CRAFTABLE = generated.craftable.slice();
   }
+}
+
+function applyBackpackDetails() {
+  var models = window.GZ_BACKPACK_MODELS || [];
+  Object.keys(GZ.ITEMS).forEach(function (id) {
+    var item = GZ.ITEMS[id];
+    var classname = item.classname || id;
+    var model = models.find(function (entry) {
+      return classname === entry.prefix || classname.indexOf(entry.prefix + "_") === 0;
+    });
+    if (!model) return;
+    item.capacitySlots = model.slots;
+    // Existing descriptions identify the colour; preserve it in the visible name.
+    var colour = String(item.description || "").match(/\([^()]+\)$/);
+    item.name = model.name + (colour ? " " + colour[0] : "");
+  });
+}
+
+function capacityText(item) {
+  var slots = item && item.capacitySlots;
+  if (!Number.isInteger(slots) || slots <= 0) return "";
+  var last = slots % 10;
+  var teen = slots % 100 >= 11 && slots % 100 <= 14;
+  return slots + " " + (teen ? "слотов" : last === 1 ? "слот" : last >= 2 && last <= 4 ? "слота" : "слотов");
+}
+
+function capacityBadge(item) {
+  var capacity = capacityText(item);
+  if (!capacity) return "";
+  return '<span class="item-capacity" title="Вместимость: ' + escapeHtml(capacity) + '">' + escapeHtml(capacity) + "</span>";
 }
 
 function itemById(id) {
@@ -191,6 +223,9 @@ function buildItemPreviewHtml(item) {
     "</p>";
   if (item.description) {
     html += "<p>" + escapeHtml(item.description) + "</p>";
+  }
+  if (capacityText(item)) {
+    html += "<p><b>Вместимость:</b> " + escapeHtml(capacityText(item)) + "</p>";
   }
   var buyPrice = itemBuyPrice(item);
   if (buyPrice) {
@@ -351,6 +386,7 @@ function initCraftPage() {
       toolMark +
       '</div><div class="tree-sub">' +
       escapeHtml(item.categoryLabel || "—") +
+      (capacityText(item) ? " · " + escapeHtml(capacityText(item)) : "") +
       (expandable ? " · есть крафт" : looping ? " · уже в цепочке" : "") +
       '</div></div><div class="tree-qty">×' +
       escapeHtml(qty) +
@@ -389,7 +425,9 @@ function initCraftPage() {
       escapeHtml(item.name) +
       "</h3><p class='muted'>" +
       escapeHtml(item.description || whereText(item)) +
-      "</p></div></div>" +
+      "</p>" +
+      (capacityText(item) ? "<p class='item-capacity-detail'>Вместимость: <strong>" + escapeHtml(capacityText(item)) + "</strong></p>" : "") +
+      "</div></div>" +
       '<p class="tree-hint">Наведите на компонент, чтобы увидеть, где его искать. Повторный клик по предмету свернёт рецепт.</p>' +
       (nodes
         ? '<div class="tree-list">' + nodes + "</div>"
@@ -489,6 +527,7 @@ function initCraftPage() {
           escapeHtml(parts ? parts + " комп." : "крафт") +
           '</span><span class="img-box">' +
           itemImage(item) +
+          capacityBadge(item) +
           '</span><span class="label">' +
           escapeHtml(item.name) +
           "</span></button>";
@@ -739,6 +778,7 @@ function initItemsPage() {
           '">' +
           '<span class="img-box">' +
           itemImage(item) +
+          capacityBadge(item) +
           '</span><span class="label">' +
           escapeHtml(item.name) +
           "</span></button>"
@@ -831,6 +871,9 @@ function openItemModal(id) {
 
   var traders = itemTraders(item);
   var html = "";
+  if (capacityText(item)) {
+    html += row("Вместимость", '<span class="itemdb-tag">' + escapeHtml(capacityText(item)) + "</span>");
+  }
   var buyPrice = itemBuyPrice(item);
   if (buyPrice) {
     html += row("Цена", '<span class="itemdb-tag">' + escapeHtml(buyPrice) + "</span>");
